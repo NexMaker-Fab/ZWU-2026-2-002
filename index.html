@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>V-JESH's Fab Academy 2026 | Digital Fabrication</title>
+    <!-- Modern Minimalist: light beige + gray accents, black emphasis -->
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #F9F7F3;  /* light beige base */
+            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+            color: #1F1F1F; /* black emphasis */
+            line-height: 1.4;
+            scroll-behavior: smooth;
+        }
+
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E8E5DF;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #D64047;
+            border-radius: 6px;
+        }
+
+        /* progress bar */
+        .progress-bar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #E8E5DF;
+            z-index: 2000;
+        }
+        .progress-fill {
+            width: 0%;
+            height: 100%;
+            background-color: #D64047;
+            transition: width 0.08s linear;
+        }
+
+        /* navbar */
+        .navbar {
+            position: fixed;
+            top: 12px;
+            left: 0;
+            width: 100%;
+            background: rgba(249, 247, 243, 0.92);
+            backdrop-filter: blur(12px);
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            padding: 0.9rem 2rem;
+            z-index: 1999;
+            border-bottom: 1px solid rgba(0,0,0,0.04);
+            font-weight: 500;
+        }
+        .navbar a {
+            text-decoration: none;
+            color: #2C2C2C;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+            padding: 0.2rem 0;
+            border-bottom: 2px solid transparent;
+        }
+        .navbar a:hover, .navbar a.active-nav {
+            color: #D64047;
+            border-bottom-color: #D64047;
+        }
+        @media (max-width: 600px) {
+            .navbar { gap: 1.2rem; padding: 0.7rem 1rem; }
+            .navbar a { font-size: 0.8rem; }
+        }
+
+        main {
+            margin-top: 58px;
+        }
+
+        .section {
+            padding: 5rem 2rem;
+            max-width: 1280px;
+            margin: 0 auto;
+            border-bottom: 1px solid #EFEBE5;
+        }
+        .section:last-child {
+            border-bottom: none;
+        }
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: left;
+        }
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 600;
+            letter-spacing: -0.02em;
+            color: #1F1F1F;
+            position: relative;
+            display: inline-block;
+        }
+        .section-header h2:after {
+            content: '';
+            position: absolute;
+            bottom: -12px;
+            left: 0;
+            width: 48px;
+            height: 3px;
+            background: #D64047;
+        }
+
+        .weekly-grid, .final-preview-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .week-card, .final-card, .about-preview-card {
+            background: #FFFFFF;
+            border-radius: 24px;
+            padding: 1.8rem;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
+            border: 1px solid #F0EDE8;
+            transition: transform 0.2s ease, box-shadow 0.2s;
+        }
+        .week-card:hover, .final-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
+        }
+        .week-title {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            margin-bottom: 1rem;
+            font-weight: 600;
+            font-size: 1.35rem;
+        }
+        .week-badge {
+            background: #F1EFEA;
+            padding: 0.2rem 0.8rem;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .status {
+            color: #D64047;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .preview-text {
+            color: #4A4A4A;
+            margin: 0.8rem 0 1rem;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+        .btn-detail, .btn-submit {
+            display: inline-flex;
+            align-items: center;
+            background: transparent;
+            border: 1px solid #DCD6CD;
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2C2C2C;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            background-color: #FCFAF7;
+            margin-right: 0.75rem;
+            margin-top: 0.5rem;
+        }
+        .btn-detail:hover, .btn-submit:hover {
+            background: #D64047;
+            border-color: #D64047;
+            color: white;
+        }
+        .upload-area {
+            margin-top: 1rem;
+            padding-top: 0.8rem;
+            border-top: 1px dashed #E2DCD3;
+        }
+        .upload-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #5E5A54;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        .file-input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            align-items: center;
+            margin-bottom: 0.8rem;
+        }
+        .file-list {
+            font-size: 0.75rem;
+            background: #F4F1EC;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            display: inline-block;
+        }
+        .gallery-thumb {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin: 0.8rem 0;
+        }
+        .thumb-img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #E2DCD3;
+        }
+        .file-link {
+            font-size: 0.7rem;
+            background: #EFEBE5;
+            padding: 0.2rem 0.6rem;
+            border-radius: 16px;
+            text-decoration: none;
+            color: #1F1F1F;
+        }
+        .final-basic-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin: 1rem 0;
+        }
+        .info-tag {
+            background: #F2EFEA;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+        }
+        .team-members {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.2rem;
+            margin: 1.2rem 0;
+        }
+        .member {
+            background: #F9F7F3;
+            padding: 0.4rem 1rem;
+            border-radius: 100px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            border: 1px solid #EAE4DC;
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 3000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            visibility: hidden;
+            opacity: 0;
+            transition: visibility 0.2s, opacity 0.2s;
+        }
+        .modal-overlay.active {
+            visibility: visible;
+            opacity: 1;
+        }
+        .detail-modal {
+            background: #FFFFFF;
+            width: 90%;
+            max-width: 880px;
+            max-height: 85vh;
+            border-radius: 32px;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+        }
+        .detail-modal h3 {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #D64047;
+        }
+        .close-modal {
+            position: absolute;
+            top: 1.2rem;
+            right: 1.5rem;
+            font-size: 1.8rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+        footer {
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.75rem;
+            color: #AAA49C;
+        }
+        @media (max-width: 720px) {
+            .section { padding: 3rem 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="progress-bar-container">
+    <div class="progress-fill" id="progressFill"></div>
+</div>
+
+<nav class="navbar">
+    <a href="#" data-nav="home">Home</a>
+    <a href="#" data-nav="weekly">Weekly work</a>
+    <a href="#" data-nav="final">Final work</a>
+    <a href="#" data-nav="about">About us</a>
+</nav>
+
+<main>
+    <!-- HOME SECTION -->
+    <section id="home" class="section">
+        <div class="section-header">
+            <h2>V-JESH's Fab Academy 2026</h2>
+        </div>
+        <div class="home-content" style="display: flex; flex-direction: column; gap: 2rem;">
+            <div class="hero-area" style="background: #F2EFEA; border-radius: 32px; padding: 3rem 2rem; text-align: center;">
+                <p style="font-size: 1.6rem; font-weight: 500;">welcome to our pages</p>
+                <p style="margin-top: 0.8rem; color: #5E5A54;">Explore digital fabrication, innovation & collaboration</p>
+                <div style="margin-top: 2rem;">
+                    <a href="#" data-nav="weekly" class="btn-detail" style="background: #D64047; color: white; border: none;">view our work →</a>
+                </div>
+            </div>
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+                <div style="flex:1;"><strong>📡 Course Intro</strong><br>Global Digital Fabrication Program</div>
+                <div style="flex:1;"><strong>🛠️ Core Practice</strong><br>Weekly projects + final integration</div>
+                <div style="flex:1;"><strong>🌟 Team Collaboration</strong><br>Cross-disciplinary innovation</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- WEEKLY WORK SECTION with user uploads for images & files -->
+    <section id="weekly" class="section">
+        <div class="section-header">
+            <h2>Weekly Work</h2>
+        </div>
+        <div class="weekly-grid" id="weeklyGrid"></div>
+    </section>
+
+    <!-- FINAL WORK SECTION with uploads for process images/files -->
+    <section id="final" class="section">
+        <div class="section-header">
+            <h2>Final Work</h2>
+        </div>
+        <div class="final-card" id="finalCardArea">
+            <div class="final-basic-info">
+                <span class="info-tag">Project Overview</span>
+                <span class="info-tag">Concept</span>
+                <span class="info-tag">Fabrication</span>
+                <span class="info-tag">Programming</span>
+                <span class="info-tag">Project Gallery</span>
+            </div>
+            <h3 style="margin-top: 0.2rem;">Symbiotic Interface · Interactive Installation</h3>
+            <div class="preview-text">
+                <strong>User research, product design, core features:</strong> Environment-aware interactive light sculpture combining sensors and dynamic feedback.
+            </div>
+            <div id="finalGalleryPreview" class="gallery-thumb"></div>
+            <div class="upload-area" id="finalUploadArea">
+                <span class="upload-label">📎 Upload process screenshots & documents (images/PDF)</span>
+                <div class="file-input-group">
+                    <input type="file" id="finalFilesInput" multiple accept="image/*,application/pdf,.jpg,.png,.gif,.pdf">
+                    <button class="btn-submit" id="uploadFinalBtn">Upload to Final Work</button>
+                </div>
+                <div id="finalFileList" class="file-list" style="margin-top: 0.5rem; display: inline-block;"></div>
+            </div>
+            <div style="margin-top: 1.5rem;">
+                <button class="btn-detail" data-detail="final">View Full Details →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ABOUT US -->
+    <section id="about" class="section">
+        <div class="section-header">
+            <h2>V-JESH's Team</h2>
+        </div>
+        <div class="about-preview-card">
+            <div class="team-members">
+                <span class="member">Susie</span><span class="member">Hance</span><span class="member">Joker</span>
+                <span class="member">Echo</span><span class="member">Vanessa</span>
+            </div>
+            <div class="preview-text">
+                <strong>Team portrait & core statement:</strong><br>
+                We are makers in digital fabrication, interaction design & engineering. Fab Academy 2026 embodies transdisciplinary creation.<br>
+                ✨ Motto: Make the future, innovate now.
+            </div>
+            <button class="btn-detail" data-detail="about">View Team Details →</button>
+        </div>
+    </section>
+    <footer>© 2026 V-JESH's Fab Academy — Minimalist | Progress bar | User uploads for documentation</footer>
+</main>
+
+<!-- MODAL for detail pages -->
+<div id="detailModal" class="modal-overlay">
+    <div class="detail-modal">
+        <button class="close-modal" id="closeModalBtn">&times;</button>
+        <div id="modalDynamicContent"></div>
+        <a href="#" class="btn-detail" id="backHomeFromModal" style="margin-top:1.5rem; display:inline-block;">← Back to Home</a>
+    </div>
+</div>
+
+<script>
+    // ---------- WEEKLY DATA (8 weeks) ----------
+    const weeklyData = [
+        { week: 1, title: "Digital Fabrication Principles & 2D Design", status: "In progress", overview: "CAD modeling & laser cutting basics", process: "Parametric sketches, laser cutter tests, design files.", uploads: [] },
+        { week: 2, title: "Electronics Production", status: "Completed", overview: "PCB design & milling", process: "Circuit design, SRM-20 milling, soldering.", uploads: [] },
+        { week: 3, title: "Computer-Controlled Machining", status: "Completed", overview: "CNC machining", process: "Mold design, ShopBot processing.", uploads: [] },
+        { week: 4, title: "Embedded Programming", status: "In progress", overview: "Microcontroller programming", process: "Arduino, sensor integration.", uploads: [] },
+        { week: 5, title: "3D Scanning & Printing", status: "Completed", overview: "Additive manufacturing", process: "Joint models, 3D print optimization.", uploads: [] },
+        { week: 6, title: "Electronic Design & Applications", status: "In progress", overview: "Sensors & interfaces", process: "I2C sensor PCB design.", uploads: [] },
+        { week: 7, title: "Machine Design", status: "Pending", overview: "Motion systems", process: "Group project: drawing machine.", uploads: [] },
+        { week: 8, title: "Applications & Integration", status: "Pending", overview: "Final project pre-integration", process: "Combine all skills for prototype.", uploads: [] }
+    ];
+
+    // Helper: store uploads in localStorage (persist user submissions across reloads)
+    function loadStoredUploads() {
+        const storedWeekly = localStorage.getItem('fab_weekly_uploads');
+        if (storedWeekly) {
+            const parsed = JSON.parse(storedWeekly);
+            for (let i = 0; i < weeklyData.length; i++) {
+                if (parsed[i]) weeklyData[i].uploads = parsed[i];
+            }
+        }
+        // final work uploads
+        const storedFinal = localStorage.getItem('fab_final_uploads');
+        if (storedFinal) {
+            finalUploads = JSON.parse(storedFinal);
+        } else {
+            finalUploads = [];
+        }
+        renderFinalUploads();
+    }
+
+    function saveWeeklyUploads() {
+        const toStore = weeklyData.map(w => w.uploads);
+        localStorage.setItem('fab_weekly_uploads', JSON.stringify(toStore));
+    }
+
+    let finalUploads = []; // array of { name, url, type }
+
+    function saveFinalUploads() {
+        localStorage.setItem('fab_final_uploads', JSON.stringify(finalUploads));
+        renderFinalUploads();
+    }
+
+    // convert file to base64 for demo persistence (real app would send to server)
+    function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => resolve(reader.result);
+            reader.onerror = error => reject(error);
+        });
+    }
+
+    async function addWeeklyUpload(weekIndex, files) {
+        for (let file of files) {
+            if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+                const base64 = await fileToBase64(file);
+                weeklyData[weekIndex].uploads.push({ name: file.name, url: base64, type: file.type });
+            }
+        }
+        saveWeeklyUploads();
+        renderWeeklyGrid();
+    }
+
+    async function addFinalUpload(files) {
+        for (let file of files) {
+            if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+                const base64 = await fileToBase64(file);
+                finalUploads.push({ name: file.name, url: base64, type: file.type });
+            }
+        }
+        saveFinalUploads();
+    }
+
+    function renderFinalUploads() {
+        const container = document.getElementById('finalFileList');
+        const galleryDiv = document.getElementById('finalGalleryPreview');
+        if (!container) return;
+        if (finalUploads.length === 0) {
+            container.innerHTML = 'No files uploaded yet.';
+            galleryDiv.innerHTML = '';
+        } else {
+            container.innerHTML = finalUploads.map((f, idx) => `<span style="margin-right:8px;">📄 ${f.name}</span>`).join('');
+            // show gallery thumbnails for images
+            let galleryHtml = '';
+            finalUploads.forEach((f, idx) => {
+                if (f.type.startsWith('image/')) {
+                    galleryHtml += `<img src="${f.url}" class="thumb-img" alt="upload preview" />`;
+                } else {
+                    galleryHtml += `<a href="${f.url}" target="_blank" class="file-link">${f.name}</a> `;
+                }
+            });
+            galleryDiv.innerHTML = galleryHtml || '<span class="file-list">No image previews, but files ready</span>';
+        }
+    }
+
+    function renderWeeklyGrid() {
+        const container = document.getElementById('weeklyGrid');
+        if (!container) return;
+        container.innerHTML = '';
+        weeklyData.forEach((item, idx) => {
+            const card = document.createElement('div');
+            card.className = 'week-card';
+            // generate upload previews for this week
+            let uploadsHtml = '';
+            if (item.uploads && item.uploads.length > 0) {
+                uploadsHtml = `<div class="gallery-thumb" style="margin-top:8px;">`;
+                item.uploads.forEach(upload => {
+                    if (upload.type.startsWith('image/')) {
+                        uploadsHtml += `<img src="${upload.url}" class="thumb-img" alt="upload" />`;
+                    } else {
+                        uploadsHtml += `<a href="${upload.url}" target="_blank" class="file-link">📄 ${upload.name}</a> `;
+                    }
+                });
+                uploadsHtml += `</div>`;
+            }
+            card.innerHTML = `
+                <div class="week-title">
+                    <span>Week ${item.week} · ${item.title}</span>
+                    <span class="week-badge">Week ${item.week}</span>
+                </div>
+                <div class="status">${item.status}</div>
+                <div class="preview-text"><strong>Assignment Overview</strong><br>${item.overview}</div>
+                <div class="preview-text"><strong>Assignment Process</strong><br>${item.process.substring(0, 100)}${item.process.length > 100 ? '…' : ''}</div>
+                ${uploadsHtml}
+                <div class="upload-area">
+                    <span class="upload-label">📎 Upload screenshots / files (images/PDF)</span>
+                    <div class="file-input-group">
+                        <input type="file" id="weekFile_${idx}" multiple accept="image/*,application/pdf,.jpg,.png,.gif,.pdf">
+                        <button class="btn-submit" data-week-upload="${idx}">Upload to Week ${item.week}</button>
+                    </div>
+                    <div id="weekFileList_${idx}" class="file-list" style="font-size:0.7rem;">${item.uploads.length ? `${item.uploads.length} file(s) attached` : 'No attachments yet'}</div>
+                </div>
+                <div style="margin-top: 0.8rem;">
+                    <button class="btn-detail" data-detail="weekly" data-week-idx="${idx}">View Full Details →</button>
+                </div>
+            `;
+            container.appendChild(card);
+        });
+        // bind upload buttons for each week
+        document.querySelectorAll('[data-week-upload]').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                const weekIdx = parseInt(btn.getAttribute('data-week-upload'));
+                const fileInput = document.getElementById(`weekFile_${weekIdx}`);
+                if (fileInput && fileInput.files.length) {
+                    await addWeeklyUpload(weekIdx, Array.from(fileInput.files));
+                    fileInput.value = '';
+                    alert(`Uploaded to Week ${weekIdx+1}! Refresh preview.`);
+                } else {
+                    alert('Please select files first.');
+                }
+            });
+        });
+        // bind detail buttons for weekly (dynamic)
+        document.querySelectorAll('[data-detail="weekly"]').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const weekIdx = btn.getAttribute('data-week-idx');
+                if (weekIdx !== null) showWeeklyDetail(weeklyData[parseInt(weekIdx)], parseInt(weekIdx));
+            });
+        });
+    }
+
+    // Weekly detail modal (full content including uploaded files)
+    function showWeeklyDetail(weekItem, weekIdx) {
+        const modalContent = document.getElementById('modalDynamicContent');
+        let uploadsDetailHtml = '<h4>📂 Uploaded Documents & Images</h4><div class="gallery-thumb">';
+        if (weekItem.uploads && weekItem.uploads.length) {
+            weekItem.uploads.forEach(u => {
+                if (u.type.startsWith('image/')) {
+                    uploadsDetailHtml += `<img src="${u.url}" style="max-width:150px; max-height:150px; border-radius:12px; margin:5px;" />`;
+                } else {
+                    uploadsDetailHtml += `<a href="${u.url}" target="_blank" class="file-link">📄 ${u.name}</a> `;
+                }
+            });
+        } else {
+            uploadsDetailHtml += '<p class="file-list">No user-submitted files yet. Use upload feature to add screenshots/PDFs.</p>';
+        }
+        uploadsDetailHtml += '</div>';
+        modalContent.innerHTML = `
+            <h3>Week ${weekItem.week}: ${weekItem.title}</h3>
+            <div style="background:#F4F1EC; display:inline-block; padding:0.2rem 1rem; border-radius:30px;">${weekItem.status}</div>
+            <h4>📘 Process Documentation</h4>
+            <p>${weekItem.process}</p>
+            <h4>🎯 Outcomes & Highlights</h4>
+            <p>${weekItem.week === 1 ? 'Laser-cut acrylic model + foldable structure' : 
+                weekItem.week === 2 ? 'PCB photo + schematics' :
+                weekItem.week === 3 ? 'CNC milling video + STL' : 'Detailed project log and media'}</p>
+            ${uploadsDetailHtml}
+            <h4>📊 Evaluation</h4>
+            <p>${weekItem.status === 'Completed' ? 'Excellent / Passed' : 'Ongoing feedback'}</p>
+        `;
+        openModal();
+    }
+
+    function showFinalDetail() {
+        const modalContent = document.getElementById('modalDynamicContent');
+        let finalUploadsHtml = '<h4>📎 User Uploaded Process Files & Screenshots</h4><div class="gallery-thumb">';
+        if (finalUploads.length) {
+            finalUploads.forEach(u => {
+                if (u.type.startsWith('image/')) {
+                    finalUploadsHtml += `<img src="${u.url}" style="max-width:150px; border-radius:12px; margin:5px;" />`;
+                } else {
+                    finalUploadsHtml += `<a href="${u.url}" target="_blank" class="file-link">📄 ${u.name}</a> `;
+                }
+            });
+        } else {
+            finalUploadsHtml += '<p class="file-list">No files uploaded yet. Use upload section to add documentation.</p>';
+        }
+        finalUploadsHtml += '</div>';
+        modalContent.innerHTML = `
+            <h3>Symbiotic Interface · Final Project</h3>
+            <h4>📌 Background</h4>
+            <p>Fab Academy 2026 final project merging digital fabrication, embedded systems, and interaction design.</p>
+            <h4>💡 Design Process</h4>
+            <p>User research → concept prototyping → structure fabrication → circuit integration → interactive firmware.</p>
+            <h4>🔧 Fabrication & Programming Steps</h4>
+            <p>Fusion360 design, CNC milling, custom PCB (ATtiny1614), sensor fusion, LED matrix control.</p>
+            <h4>⚠️ Challenges & Solutions</h4>
+            <p>Noise filtering on sensors, structural tolerance re-calibration.</p>
+            <h4>✨ Final Showcase Gallery</h4>
+            <div class="gallery-thumb" style="display:flex; flex-wrap:wrap;"></div>
+            ${finalUploadsHtml}
+        `;
+        openModal();
+    }
+
+    function showAboutDetail() {
+        const modalContent = document.getElementById('modalDynamicContent');
+        modalContent.innerHTML = `
+            <h3>V-JESH Team · About Us</h3>
+            <h4>✨ Member Profiles</h4>
+            <ul><li><strong>Susie</strong> – Project Lead / Digital Fabrication</li>
+            <li><strong>Hance</strong> – Electronics & Embedded</li>
+            <li><strong>Joker</strong> – Interaction Designer</li>
+            <li><strong>Echo</strong> – Mechanical Structure</li>
+            <li><strong>Vanessa</strong> – Visual Communication</li></ul>
+            <h4>👥 Team Roles</h4>
+            <p>Agile sprints, cross-review, collaborative development.</p>
+            <h4>🌱 Project Mission</h4>
+            <p>Democratize open fabrication, empower communities with technology.</p>
+            <h4>📬 Contact & Collaboration</h4>
+            <p>Email: team@vjesh-fab.com | GitHub: V-JESH-FabAcademy</p>
+            <h4>🏆 Motto</h4>
+            <p>“From idea to object, fearless creation.”</p>
+        `;
+        openModal();
+    }
+
+    let modal = document.getElementById('detailModal');
+    function openModal() {
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    }
+
+    // Progress & navbar highlight
+    function updateProgress() {
+        const sections = document.querySelectorAll('.section');
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight;
+        const winHeight = window.innerHeight;
+        const totalScroll = docHeight - winHeight;
+        const scrolled = (scrollTop / totalScroll) * 100;
+        document.getElementById('progressFill').style.width = Math.min(100, Math.max(0, scrolled)) + '%';
+        let currentId = '';
+        for (let sec of sections) {
+            const rect = sec.getBoundingClientRect();
+            if (rect.top <= 150 && rect.bottom >= 100) {
+                currentId = sec.getAttribute('id');
+                break;
+            }
+        }
+        document.querySelectorAll('.navbar a').forEach(link => {
+            link.classList.remove('active-nav');
+            if (currentId && link.getAttribute('data-nav') === currentId) {
+                link.classList.add('active-nav');
+            }
+        });
+    }
+
+    function setupNav() {
+        document.querySelectorAll('.navbar a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = link.getAttribute('data-nav');
+                if (targetId) document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+            });
+        });
+        document.getElementById('backHomeFromModal')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            closeModal();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
+    // bind final & about detail buttons
+    function bindGlobalDetails() {
+        document.querySelectorAll('[data-detail="final"]').forEach(btn => btn.addEventListener('click', () => showFinalDetail()));
+        document.querySelectorAll('[data-detail="about"]').forEach(btn => btn.addEventListener('click', () => showAboutDetail()));
+    }
+
+    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
+    document.getElementById('uploadFinalBtn')?.addEventListener('click', async () => {
+        const input = document.getElementById('finalFilesInput');
+        if (input.files.length) {
+            await addFinalUpload(Array.from(input.files));
+            input.value = '';
+            alert('Uploaded to Final Work!');
+        } else alert('Select files first.');
+    });
+
+    // initial load
+    loadStoredUploads();
+    renderWeeklyGrid();
+    bindGlobalDetails();
+    setupNav();
+    window.addEventListener('scroll', updateProgress);
+    window.addEventListener('resize', updateProgress);
+    updateProgress();
+</script>
+</body>
+</html>
