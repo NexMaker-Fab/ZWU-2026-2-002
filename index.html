@@ -76,6 +76,64 @@
             color: #D64047;
             border-bottom-color: #D64047;
         }
+        /* navbar submenu (vertical on hover) */
+        .nav-item { position: relative; }
+        .submenu {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            display: none;
+            flex-direction: column;
+            background: #FFFFFF;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            padding: 0.3rem 0;
+            min-width: 140px;
+            z-index: 2001;
+            border: 1px solid rgba(0,0,0,0.04);
+        }
+        .nav-item:hover .submenu, .nav-item:focus-within .submenu { display: flex; }
+        .submenu li { list-style: none; }
+        .submenu li a {
+            padding: 0.45rem 1rem;
+            display: block;
+            color: #2C2C2C;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+        }
+        .submenu li a:hover {
+            background: #F2EFEA;
+            color: #D64047;
+            border-left-color: #D64047;
+        }
+        /* mobile: make submenu toggleable (click) and full-width */
+        @media (max-width: 720px) {
+            .nav-item { display: inline-block; }
+            .nav-item > a { cursor: pointer; }
+            .submenu {
+                position: static;
+                top: auto;
+                left: auto;
+                display: none;
+                box-shadow: none;
+                background: transparent;
+                border: none;
+                min-width: auto;
+                padding: 0;
+            }
+            .nav-item.submenu-open .submenu {
+                display: flex;
+                flex-direction: column;
+                background: #FFFFFF;
+                border-radius: 12px;
+                box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+                padding: 0.3rem 0;
+                margin-top: 6px;
+                border: 1px solid rgba(0,0,0,0.04);
+            }
+            .submenu li a { padding: 0.6rem 1rem; }
+        }
         @media (max-width: 600px) {
             .navbar { gap: 1.2rem; padding: 0.7rem 1rem; }
             .navbar a { font-size: 0.8rem; }
@@ -318,7 +376,19 @@
 
 <nav class="navbar">
     <a href="#" data-nav="home">Home</a>
-    <a href="#" data-nav="weekly">Weekly work</a>
+    <div class="nav-item">
+        <a href="#" data-nav="weekly">Weekly work</a>
+        <ul class="submenu" aria-label="Weekly sub-menu">
+            <li><a href="#week3">week3</a></li>
+            <li><a href="#week4">week4</a></li>
+            <li><a href="#week5">week5</a></li>
+            <li><a href="#week6">week6</a></li>
+            <li><a href="#week7">week7</a></li>
+            <li><a href="#week8">week8</a></li>
+            <li><a href="#week9">week9</a></li>
+            <li><a href="#week10">week10</a></li>
+        </ul>
+    </div>
     <a href="#" data-nav="final">Final work</a>
     <a href="#" data-nav="about">About us</a>
 </nav>
@@ -518,6 +588,8 @@
         container.innerHTML = '';
         weeklyData.forEach((item, idx) => {
             const card = document.createElement('div');
+            // add an anchor id for direct linking (e.g. #week3)
+            card.id = `week${item.week}`;
             card.className = 'week-card';
             // generate upload previews for this week
             let uploadsHtml = '';
@@ -704,7 +776,18 @@
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const targetId = link.getAttribute('data-nav');
-                if (targetId) document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+                if (targetId) {
+                    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
+                    return;
+                }
+                // handle hash anchors like #week3 from submenu
+                const href = link.getAttribute('href');
+                if (href && href.startsWith('#')) {
+                    const id = href.slice(1);
+                    const el = document.getElementById(id);
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    else document.getElementById('weekly')?.scrollIntoView({ behavior: 'smooth' });
+                }
             });
         });
         document.getElementById('backHomeFromModal')?.addEventListener('click', (e) => {
@@ -713,6 +796,40 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     }
+
+    // Mobile submenu toggle: allow tap to open Weekly sub-menu, and close after selecting an item
+    (function setupMobileSubmenu() {
+        const navItem = document.querySelector('.nav-item');
+        if (!navItem) return;
+        const weeklyLink = navItem.querySelector('a[data-nav="weekly"]');
+        const submenu = navItem.querySelector('.submenu');
+        if (!weeklyLink || !submenu) return;
+
+        weeklyLink.addEventListener('click', (e) => {
+            if (window.innerWidth <= 720) {
+                e.preventDefault();
+                navItem.classList.toggle('submenu-open');
+                submenu.classList.toggle('open');
+            }
+        });
+
+        // when a submenu link is clicked, close the menu after scrolling
+        navItem.querySelectorAll('.submenu a').forEach(slink => {
+            slink.addEventListener('click', (ev) => {
+                // allow setupNav's handler to scroll; just close menu
+                navItem.classList.remove('submenu-open');
+                submenu.classList.remove('open');
+            });
+        });
+
+        // close on resize to desktop
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 720) {
+                navItem.classList.remove('submenu-open');
+                submenu.classList.remove('open');
+            }
+        });
+    })();
 
     // bind final & about detail buttons
     function bindGlobalDetails() {
