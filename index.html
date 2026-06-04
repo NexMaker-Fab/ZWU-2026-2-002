@@ -377,15 +377,12 @@
 <nav class="navbar">
     <a href="#" data-nav="home">Home</a>
     <div class="nav-item">
-        <a href="#" data-nav="weekly">Weekly work</a>
-            <ul class="submenu" aria-label="Weekly sub-menu">
-            <li><a href="#week4">week4</a></li>
-            <li><a href="#week5">week5</a></li>
-            <li><a href="#week6">week6</a></li>
-            <li><a href="#week7">week7</a></li>
-            <li><a href="#week8">week8</a></li>
-            <li><a href="#week9">week9</a></li>
-            <li><a href="#week10">week10</a></li>
+        <a href="#" data-nav="weekly">Process Assignment</a>
+            <ul class="submenu" aria-label="Process Assignment sub-menu">
+            <li><a href="#exercise1">Exercise 1</a></li>
+            <li><a href="#exercise2">Exercise 2</a></li>
+            <li><a href="#exercise3">Exercise 3</a></li>
+            <li><a href="#exercise4">Exercise 4</a></li>
         </ul>
     </div>
     <a href="#" data-nav="final">Final work</a>
@@ -417,9 +414,12 @@
     <!-- WEEKLY WORK SECTION with user uploads for images & files -->
     <section id="weekly" class="section">
         <div class="section-header">
-            <h2>Weekly Work</h2>
+            <h2>Process Assignment</h2>
         </div>
         <div class="weekly-grid" id="weeklyGrid"></div>
+        <p style="margin-top:0.8rem; color:#5E5A54; font-size:0.95rem; max-width:760px;">
+            这里点击上传文件可在当前浏览器里本地预览。若要让其他人打开网页也能看到，请把图片保存到项目目录中的 <strong>images/</strong> 文件夹，并使用 <code>&lt;img src="images/文件名.png"&gt;</code> 方式引用。
+        </p>
     </section>
 
     <!-- FINAL WORK SECTION with uploads for process images/files -->
@@ -441,9 +441,9 @@
             </div>
             <div id="finalGalleryPreview" class="gallery-thumb"></div>
             <div class="upload-area" id="finalUploadArea">
-                <span class="upload-label">📎 Upload process screenshots & documents (images/PDF)</span>
+                <span class="upload-label">📎 Upload process screenshots & documents (images/PDF/Word)</span>
                 <div class="file-input-group">
-                    <input type="file" id="finalFilesInput" multiple accept="image/*,application/pdf,.jpg,.png,.gif,.pdf">
+                    <input type="file" id="finalFilesInput" multiple accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.doc,.docx,.jpg,.png,.gif,.pdf">
                     <button class="btn-submit" id="uploadFinalBtn">Upload to Final Work</button>
                 </div>
                 <div id="finalFileList" class="file-list" style="margin-top: 0.5rem; display: inline-block;"></div>
@@ -485,13 +485,12 @@
 </div>
 
 <script>
-    // ---------- WEEKLY DATA (5 weeks) ----------
+    // ---------- PROCESS ASSIGNMENT DATA (4 exercises) ----------
     const weeklyData = [
-        { week: 4, title: "Embedded Programming", status: "In progress", overview: "Microcontroller programming", process: "Arduino, sensor integration.", uploads: [] },
-        { week: 5, title: "3D Scanning & Printing", status: "Completed", overview: "Additive manufacturing", process: "Joint models, 3D print optimization.", uploads: [] },
-        { week: 6, title: "Electronic Design & Applications", status: "In progress", overview: "Sensors & interfaces", process: "I2C sensor PCB design.", uploads: [] },
-        { week: 7, title: "Machine Design", status: "Pending", overview: "Motion systems", process: "Group project: drawing machine.", uploads: [] },
-        { week: 8, title: "Applications & Integration", status: "Pending", overview: "Final project pre-integration", process: "Combine all skills for prototype.", uploads: [] }
+        { id: "exercise1", title: "Exercise 1", status: "Completed", overview: "Introduction to process assignment and documentation.", process: "Complete initial research, define goals, and sketch the workflow.", uploads: [] },
+        { id: "exercise2", title: "Exercise 2", status: "Completed", overview: "Detailed process capture and material study.", process: "Collect photos, notes, and evidence of fabrication steps.", uploads: [] },
+        { id: "exercise3", title: "Exercise 3", status: "In progress", overview: "Prototype development and testing records.", process: "Build sample parts, test performance, and document results.", uploads: [] },
+        { id: "exercise4", title: "Exercise 4", status: "Pending", overview: "Final process summary and reflection.", process: "Summarize lessons learned, improvements, and next steps.", uploads: [ { name: "微信图片_20260604230413_81_1169.png", url: "images/微信图片_20260604230413_81_1169.png", type: "image/png" } ] }
     ];
 
     // Helper: store uploads in localStorage (persist user submissions across reloads)
@@ -535,9 +534,22 @@
         });
     }
 
+    function isSupportedUploadFile(file) {
+        const lowerName = file.name.toLowerCase();
+        const supportedWordTypes = [
+            'application/msword',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        ];
+        return file.type.startsWith('image/')
+            || file.type === 'application/pdf'
+            || supportedWordTypes.includes(file.type)
+            || lowerName.endsWith('.doc')
+            || lowerName.endsWith('.docx');
+    }
+
     async function addWeeklyUpload(weekIndex, files) {
         for (let file of files) {
-            if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+            if (isSupportedUploadFile(file)) {
                 const base64 = await fileToBase64(file);
                 weeklyData[weekIndex].uploads.push({ name: file.name, url: base64, type: file.type });
             }
@@ -548,7 +560,7 @@
 
     async function addFinalUpload(files) {
         for (let file of files) {
-            if (file.type.startsWith('image/') || file.type === 'application/pdf') {
+            if (isSupportedUploadFile(file)) {
                 const base64 = await fileToBase64(file);
                 finalUploads.push({ name: file.name, url: base64, type: file.type });
             }
@@ -584,10 +596,10 @@
         container.innerHTML = '';
         weeklyData.forEach((item, idx) => {
             const card = document.createElement('div');
-            // add an anchor id for direct linking (e.g. #week4)
-            card.id = `week${item.week}`;
+            // add an anchor id for direct linking (e.g. #exercise1)
+            card.id = item.id;
             card.className = 'week-card';
-            // generate upload previews for this week
+            // generate upload previews for this exercise
             let uploadsHtml = '';
             if (item.uploads && item.uploads.length > 0) {
                 uploadsHtml = `<div class="gallery-thumb" style="margin-top:8px;">`;
@@ -602,20 +614,21 @@
             }
             card.innerHTML = `
                 <div class="week-title">
-                    <span>Week ${item.week} · ${item.title}</span>
-                    <span class="week-badge">Week ${item.week}</span>
+                    <span>${item.title}</span>
+                    <span class="week-badge">${item.title}</span>
                 </div>
                 <div class="status">${item.status}</div>
                 <div class="preview-text"><strong>Assignment Overview</strong><br>${item.overview}</div>
                 <div class="preview-text"><strong>Assignment Process</strong><br>${item.process.substring(0, 100)}${item.process.length > 100 ? '…' : ''}</div>
                 ${uploadsHtml}
                 <div class="upload-area">
-                    <span class="upload-label">📎 Upload screenshots / files (images/PDF)</span>
+                    <span class="upload-label">📎 Upload screenshots / files (images/PDF/Word)</span>
                     <div class="file-input-group">
-                        <input type="file" id="weekFile_${idx}" multiple accept="image/*,application/pdf,.jpg,.png,.gif,.pdf">
-                        <button class="btn-submit" data-week-upload="${idx}">Upload to Week ${item.week}</button>
+                        <input type="file" id="weekFile_${idx}" multiple accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.doc,.docx,.jpg,.png,.gif,.pdf">
+                        <button class="btn-submit" data-week-upload="${idx}">Upload to ${item.title}</button>
                     </div>
                     <div id="weekFileList_${idx}" class="file-list" style="font-size:0.7rem;">${item.uploads.length ? `${item.uploads.length} file(s) attached` : 'No attachments yet'}</div>
+                    <div style="font-size:0.78rem; color:#6D6A60; margin-top:0.4rem;">本地上传仅浏览器预览。如需共享，请把图片放到 <code>images/</code> 并在 HTML 中引用。</div>
                 </div>
                 <div style="margin-top: 0.8rem;">
                     <button class="btn-detail" data-detail="weekly" data-week-idx="${idx}">View Full Details →</button>
@@ -623,7 +636,7 @@
             `;
             container.appendChild(card);
         });
-        // bind upload buttons for each week
+        // bind upload buttons for each exercise
         document.querySelectorAll('[data-week-upload]').forEach(btn => {
             btn.addEventListener('click', async (e) => {
                 const weekIdx = parseInt(btn.getAttribute('data-week-upload'));
@@ -631,7 +644,7 @@
                 if (fileInput && fileInput.files.length) {
                     await addWeeklyUpload(weekIdx, Array.from(fileInput.files));
                     fileInput.value = '';
-                    alert(`Uploaded to Week ${weekIdx+1}! Refresh preview.`);
+                    alert(`${weeklyData[weekIdx].title} uploaded. Refresh preview.`);
                 } else {
                     alert('Please select files first.');
                 }
@@ -663,7 +676,7 @@
         }
         uploadsDetailHtml += '</div>';
         modalContent.innerHTML = `
-            <h3>Week ${weekItem.week}: ${weekItem.title}</h3>
+            <h3>${weekItem.title}</h3>
             <div style="background:#F4F1EC; display:inline-block; padding:0.2rem 1rem; border-radius:30px;">${weekItem.status}</div>
             <h4>📘 Process Documentation</h4>
             <p>${weekItem.process}</p>
@@ -774,7 +787,7 @@
                     document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
                     return;
                 }
-                // handle hash anchors like #week4 from submenu
+                // handle hash anchors like #exercise1 from submenu
                 const href = link.getAttribute('href');
                 if (href && href.startsWith('#')) {
                     const id = href.slice(1);
