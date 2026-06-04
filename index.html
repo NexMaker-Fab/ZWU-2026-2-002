@@ -378,8 +378,7 @@
     <a href="#" data-nav="home">Home</a>
     <div class="nav-item">
         <a href="#" data-nav="weekly">Weekly work</a>
-        <ul class="submenu" aria-label="Weekly sub-menu">
-            <li><a href="#week3">week3</a></li>
+            <ul class="submenu" aria-label="Weekly sub-menu">
             <li><a href="#week4">week4</a></li>
             <li><a href="#week5">week5</a></li>
             <li><a href="#week6">week6</a></li>
@@ -486,11 +485,8 @@
 </div>
 
 <script>
-    // ---------- WEEKLY DATA (8 weeks) ----------
+    // ---------- WEEKLY DATA (5 weeks) ----------
     const weeklyData = [
-        { week: 1, title: "Digital Fabrication Principles & 2D Design", status: "In progress", overview: "CAD modeling & laser cutting basics", process: "Parametric sketches, laser cutter tests, design files.", uploads: [] },
-        { week: 2, title: "Electronics Production", status: "Completed", overview: "PCB design & milling", process: "Circuit design, SRM-20 milling, soldering.", uploads: [] },
-        { week: 3, title: "Computer-Controlled Machining", status: "Completed", overview: "CNC machining", process: "Mold design, ShopBot processing.", uploads: [] },
         { week: 4, title: "Embedded Programming", status: "In progress", overview: "Microcontroller programming", process: "Arduino, sensor integration.", uploads: [] },
         { week: 5, title: "3D Scanning & Printing", status: "Completed", overview: "Additive manufacturing", process: "Joint models, 3D print optimization.", uploads: [] },
         { week: 6, title: "Electronic Design & Applications", status: "In progress", overview: "Sensors & interfaces", process: "I2C sensor PCB design.", uploads: [] },
@@ -588,7 +584,7 @@
         container.innerHTML = '';
         weeklyData.forEach((item, idx) => {
             const card = document.createElement('div');
-            // add an anchor id for direct linking (e.g. #week3)
+            // add an anchor id for direct linking (e.g. #week4)
             card.id = `week${item.week}`;
             card.className = 'week-card';
             // generate upload previews for this week
@@ -672,9 +668,7 @@
             <h4>📘 Process Documentation</h4>
             <p>${weekItem.process}</p>
             <h4>🎯 Outcomes & Highlights</h4>
-            <p>${weekItem.week === 1 ? 'Laser-cut acrylic model + foldable structure' : 
-                weekItem.week === 2 ? 'PCB photo + schematics' :
-                weekItem.week === 3 ? 'CNC milling video + STL' : 'Detailed project log and media'}</p>
+            <p>Detailed project log and media for this week's assignment.</p>
             ${uploadsDetailHtml}
             <h4>📊 Evaluation</h4>
             <p>${weekItem.status === 'Completed' ? 'Excellent / Passed' : 'Ongoing feedback'}</p>
@@ -780,7 +774,7 @@
                     document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
                     return;
                 }
-                // handle hash anchors like #week3 from submenu
+                // handle hash anchors like #week4 from submenu
                 const href = link.getAttribute('href');
                 if (href && href.startsWith('#')) {
                     const id = href.slice(1);
