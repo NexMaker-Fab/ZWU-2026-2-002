@@ -489,7 +489,7 @@
     const weeklyData = [
         { id: "exercise1", title: "Exercise 1", status: "Completed", overview: "Introduction to process assignment and documentation.", process: "Complete initial research, define goals, and sketch the workflow.", uploads: [] },
         { id: "exercise2", title: "Exercise 2", status: "Completed", overview: "Detailed process capture and material study.", process: "Collect photos, notes, and evidence of fabrication steps.", uploads: [] },
-        { id: "exercise3", title: "Exercise 3", status: "In progress", overview: "Prototype development and testing records.", process: "Build sample parts, test performance, and document results.", uploads: [ { name: "Arduino测试报告(1).docx", url: "docs/Arduino测试报告(1).docx", type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" } ] },
+        { id: "exercise3", title: "Exercise 3", status: "In progress", overview: "Prototype development and testing records.", process: "Build sample parts, test performance, and document results.", uploads: [ { name: "Arduino report.docx", url: "docs/Arduino%20report.docx", type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" } ] },
         { id: "exercise4", title: "Exercise 4", status: "Pending", overview: "Final process summary and reflection.", process: "Summarize lessons learned, improvements, and next steps.", uploads: [ { name: "微信图片_20260604230413_81_1169.png", url: "images/微信图片_20260604230413_81_1169.png", type: "image/png" } ] }
     ];
 
@@ -615,7 +615,7 @@
             // add explicit download link for specific exercises (e.g. Exercise 3 doc)
             let extraLinkHtml = '';
             if (item.id === 'exercise3') {
-                extraLinkHtml = `<div style="margin-top:8px;"><a href="docs/Arduino测试报告(1).docx" target="_blank" class="btn-detail" style="background:#467fd0; color:white; text-decoration:none; padding:0.4rem 0.8rem; border-radius:8px; display:inline-block;">下载 Arduino 测试报告（Exercise 3）</a></div>`;
+                extraLinkHtml = `<div style="margin-top:8px;"><a href="docs/Arduino%20report.docx" target="_blank" class="btn-detail" style="background:#467fd0; color:white; text-decoration:none; padding:0.4rem 0.8rem; border-radius:8px; display:inline-block;">下载 Arduino report.docx（Exercise 3）</a></div>`;
             }
 
             card.innerHTML = `
