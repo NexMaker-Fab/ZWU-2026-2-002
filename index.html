@@ -1,881 +1,365 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>V-JESH's Fab Academy 2026 | Digital Fabrication</title>
-    <!-- Modern Minimalist: light beige + gray accents, black emphasis -->
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            background-color: #F9F7F3;  /* light beige base */
-            font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
-            color: #1F1F1F; /* black emphasis */
-            line-height: 1.4;
-            scroll-behavior: smooth;
-        }
-
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #E8E5DF;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #D64047;
-            border-radius: 6px;
-        }
-
-        /* progress bar */
-        .progress-bar-container {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: #E8E5DF;
-            z-index: 2000;
-        }
-        .progress-fill {
-            width: 0%;
-            height: 100%;
-            background-color: #D64047;
-            transition: width 0.08s linear;
-        }
-
-        /* navbar */
-        .navbar {
-            position: fixed;
-            top: 12px;
-            left: 0;
-            width: 100%;
-            background: rgba(249, 247, 243, 0.92);
-            backdrop-filter: blur(12px);
-            display: flex;
-            justify-content: center;
-            gap: 2.5rem;
-            padding: 0.9rem 2rem;
-            z-index: 1999;
-            border-bottom: 1px solid rgba(0,0,0,0.04);
-            font-weight: 500;
-        }
-        .navbar a {
-            text-decoration: none;
-            color: #2C2C2C;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-            padding: 0.2rem 0;
-            border-bottom: 2px solid transparent;
-        }
-        .navbar a:hover, .navbar a.active-nav {
-            color: #D64047;
-            border-bottom-color: #D64047;
-        }
-        /* navbar submenu (vertical on hover) */
-        .nav-item { position: relative; }
-        .submenu {
-            position: absolute;
-            top: calc(100% + 6px);
-            left: 0;
-            display: none;
-            flex-direction: column;
-            background: #FFFFFF;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            padding: 0.3rem 0;
-            min-width: 140px;
-            z-index: 2001;
-            border: 1px solid rgba(0,0,0,0.04);
-        }
-        .nav-item:hover .submenu, .nav-item:focus-within .submenu { display: flex; }
-        .submenu li { list-style: none; }
-        .submenu li a {
-            padding: 0.45rem 1rem;
-            display: block;
-            color: #2C2C2C;
-            text-decoration: none;
-            font-size: 0.9rem;
-            border-left: 3px solid transparent;
-        }
-        .submenu li a:hover {
-            background: #F2EFEA;
-            color: #D64047;
-            border-left-color: #D64047;
-        }
-        /* mobile: make submenu toggleable (click) and full-width */
-        @media (max-width: 720px) {
-            .nav-item { display: inline-block; }
-            .nav-item > a { cursor: pointer; }
-            .submenu {
-                position: static;
-                top: auto;
-                left: auto;
-                display: none;
-                box-shadow: none;
-                background: transparent;
-                border: none;
-                min-width: auto;
-                padding: 0;
-            }
-            .nav-item.submenu-open .submenu {
-                display: flex;
-                flex-direction: column;
-                background: #FFFFFF;
-                border-radius: 12px;
-                box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-                padding: 0.3rem 0;
-                margin-top: 6px;
-                border: 1px solid rgba(0,0,0,0.04);
-            }
-            .submenu li a { padding: 0.6rem 1rem; }
-        }
-        @media (max-width: 600px) {
-            .navbar { gap: 1.2rem; padding: 0.7rem 1rem; }
-            .navbar a { font-size: 0.8rem; }
-        }
-
-        main {
-            margin-top: 58px;
-        }
-
-        .section {
-            padding: 5rem 2rem;
-            max-width: 1280px;
-            margin: 0 auto;
-            border-bottom: 1px solid #EFEBE5;
-        }
-        .section:last-child {
-            border-bottom: none;
-        }
-        .section-header {
-            margin-bottom: 3rem;
-            text-align: left;
-        }
-        .section-header h2 {
-            font-size: 2.2rem;
-            font-weight: 600;
-            letter-spacing: -0.02em;
-            color: #1F1F1F;
-            position: relative;
-            display: inline-block;
-        }
-        .section-header h2:after {
-            content: '';
-            position: absolute;
-            bottom: -12px;
-            left: 0;
-            width: 48px;
-            height: 3px;
-            background: #D64047;
-        }
-
-        .weekly-grid, .final-preview-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 1.5rem;
-        }
-        .week-card, .final-card, .about-preview-card {
-            background: #FFFFFF;
-            border-radius: 24px;
-            padding: 1.8rem;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.02);
-            border: 1px solid #F0EDE8;
-            transition: transform 0.2s ease, box-shadow 0.2s;
-        }
-        .week-card:hover, .final-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.05);
-        }
-        .week-title {
-            display: flex;
-            justify-content: space-between;
-            align-items: baseline;
-            flex-wrap: wrap;
-            margin-bottom: 1rem;
-            font-weight: 600;
-            font-size: 1.35rem;
-        }
-        .week-badge {
-            background: #F1EFEA;
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-            font-size: 0.75rem;
-            font-weight: 500;
-        }
-        .status {
-            color: #D64047;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        .preview-text {
-            color: #4A4A4A;
-            margin: 0.8rem 0 1rem;
-            line-height: 1.5;
-            font-size: 0.95rem;
-        }
-        .btn-detail, .btn-submit {
-            display: inline-flex;
-            align-items: center;
-            background: transparent;
-            border: 1px solid #DCD6CD;
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #2C2C2C;
-            cursor: pointer;
-            transition: all 0.2s;
-            text-decoration: none;
-            background-color: #FCFAF7;
-            margin-right: 0.75rem;
-            margin-top: 0.5rem;
-        }
-        .btn-detail:hover, .btn-submit:hover {
-            background: #D64047;
-            border-color: #D64047;
-            color: white;
-        }
-        .upload-area {
-            margin-top: 1rem;
-            padding-top: 0.8rem;
-            border-top: 1px dashed #E2DCD3;
-        }
-        .upload-label {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: #5E5A54;
-            display: block;
-            margin-bottom: 0.5rem;
-        }
-        .file-input-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            align-items: center;
-            margin-bottom: 0.8rem;
-        }
-        .file-list {
-            font-size: 0.75rem;
-            background: #F4F1EC;
-            padding: 0.4rem 0.8rem;
-            border-radius: 20px;
-            display: inline-block;
-        }
-        .gallery-thumb {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin: 0.8rem 0;
-        }
-        .thumb-img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 12px;
-            border: 1px solid #E2DCD3;
-        }
-        .file-link {
-            font-size: 0.7rem;
-            background: #EFEBE5;
-            padding: 0.2rem 0.6rem;
-            border-radius: 16px;
-            text-decoration: none;
-            color: #1F1F1F;
-        }
-        .final-basic-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 1rem 0;
-        }
-        .info-tag {
-            background: #F2EFEA;
-            padding: 0.3rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
-        }
-        .team-members {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.2rem;
-            margin: 1.2rem 0;
-        }
-        .member {
-            background: #F9F7F3;
-            padding: 0.4rem 1rem;
-            border-radius: 100px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: 1px solid #EAE4DC;
-        }
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(4px);
-            z-index: 3000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.2s, opacity 0.2s;
-        }
-        .modal-overlay.active {
-            visibility: visible;
-            opacity: 1;
-        }
-        .detail-modal {
-            background: #FFFFFF;
-            width: 90%;
-            max-width: 880px;
-            max-height: 85vh;
-            border-radius: 32px;
-            overflow-y: auto;
-            padding: 2rem;
-            position: relative;
-        }
-        .detail-modal h3 {
-            font-size: 1.8rem;
-            margin-bottom: 1rem;
-            color: #D64047;
-        }
-        .close-modal {
-            position: absolute;
-            top: 1.2rem;
-            right: 1.5rem;
-            font-size: 1.8rem;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        footer {
-            text-align: center;
-            padding: 2rem;
-            font-size: 0.75rem;
-            color: #AAA49C;
-        }
-        @media (max-width: 720px) {
-            .section { padding: 3rem 1.5rem; }
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下肢康复训练智能提示器</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">V-JESH‘team</div>
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="home">Home</li>
+                <li class="nav-item" data-page="homework">weekly work</li>
+                <li class="nav-item" data-page="project">project</li>
+                <li class="nav-item" data-page="team">team members</li>
+            </ul>
+        </div>
+    </nav>
 
-<div class="progress-bar-container">
-    <div class="progress-fill" id="progressFill"></div>
-</div>
+    <main class="main-content">
+        <!-- 首页 -->
+        <section id="home" class="page active">
+            <div class="hero-panel">
+                <p class="hero-eyebrow">温和康复 · 轻松互动</p>
+                <h1 class="hero-title">下肢康复游戏化互动训练系统</h1>
+                <p class="hero-subtitle">Gamified Interactive Training System for Lower Limb Rehabilitation</p>
+                <div class="hero-tags">
+                    <span>游戏化康复</span>
+                    <span>动作矫正</span>
+                    <span>居家训练</span>
+                    <span>低门槛互动</span>
+                </div>
+            </div>
+            <div class="intro-card">
+                <div class="intro-icon">💡</div>
+                <div class="intro-content">
+                    <h2>项目概念</h2>
+                    <p>我们为下肢运动功能障碍人群打造一套温和友好的康复产品，将传统训练融入游戏化互动体验。</p>
+                    <p>系统通过动作引导、实时反馈与渐进任务设计，帮助用户在居家环境中建立稳定训练习惯，降低康复门槛。</p>
+                </div>
+            </div>
+            <div class="feature-grid">
+                <article class="feature-card feature-soft">
+                    <div class="feature-icon">🎮</div>
+                    <h3>游戏化康复</h3>
+                    <p>将目标动作转化为亲和任务，降低练习阻力，增加参与乐趣。</p>
+                </article>
+                <article class="feature-card feature-soft">
+                    <div class="feature-icon">🦶</div>
+                    <h3>动作矫正</h3>
+                    <p>基于传感器与反馈提示，帮助用户稳定完成核心康复动作。</p>
+                </article>
+                <article class="feature-card feature-soft">
+                    <div class="feature-icon">🏠</div>
+                    <h3>居家训练</h3>
+                    <p>无压力的居家执行方式，适合日常生活场景的康复节奏。</p>
+                </article>
+                <article class="feature-card feature-soft">
+                    <div class="feature-icon">🌿</div>
+                    <h3>低门槛互动</h3>
+                    <p>界面简洁、流程友好，适合不同能力层级用户快速上手。</p>
+                </article>
+            </div>
+        </section>
 
-<nav class="navbar">
-    <a href="#" data-nav="home">Home</a>
-    <div class="nav-item">
-        <a href="#" data-nav="weekly">Process Assignment</a>
-            <ul class="submenu" aria-label="Process Assignment sub-menu">
-            <li><a href="#exercise1">Exercise 1</a></li>
-            <li><a href="#exercise2">Exercise 2</a></li>
-            <li><a href="#exercise3">Exercise 3</a></li>
-            <li><a href="#exercise4">Exercise 4</a></li>
-        </ul>
+        <!-- 训练功能页 -->
+        <section id="homework" class="page">
+            <div class="homework-header">
+                <div class="week-badge" id="currentWeekBadge">训练模块</div>
+                <h2 class="week-title" id="weekTitle">下肢康复训练智能提示</h2>
+                <div class="title-divider"></div>
+            </div>
+
+            <div class="final-version-content">
+                <p>智能提示器支持下肢屈伸、抬腿、站立平衡等常见康复动作，结合传感器和语音反馈提醒正确姿态。</p>
+            </div>
+
+            <div class="final-version-content">
+                <p>训练模块可自定义康复方案，记录每次训练数据，帮助康复师和患者持续调整方案。</p>
+            </div>
+        </section>
+
+        <!-- 产品展示页 -->
+        <section id="project" class="page">
+            <div class="project-header">
+                <h1 class="page-title">产品展示</h1>
+                <div class="title-divider"></div>
+            </div>
+            <div class="project-grid">
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <h3>下肢康复训练智能提示器</h3>
+                    <p>集成传感器、动作识别与语音提示，帮助患者在家完成安全、高效的下肢康复训练。</p>
+                </div>
+                <div class="project-card">
+                    <div class="project-image"></div>
+                    <h3>核心功能</h3>
+                    <p>实时动作校正、可视化训练反馈、个性化康复方案和阶段性恢复评估。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 团队介绍页 -->
+        <section id="team" class="page">
+            <div class="team-header">
+                <h1 class="page-title">团队介绍</h1>
+                <div class="title-divider"></div>
+            </div>
+            <div class="team-grid">
+                <div class="team-member">
+                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
+                    <h3>Susie</h3>
+                    <p class="member-role">后端开发</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
+                    <h3>Echo</h3>
+                    <p class="member-role">前端开发</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
+                    <h3>Vanessa</h3>
+                    <p class="member-role">项目管理与整合</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
+                    <h3>Hance</h3>
+                    <p class="member-role">硬件工程师</p>
+                </div>
+                <div class="team-member">
+                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
+                    <h3>Joker</h3>
+                    <p class="member-role"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 图片放大模态框 -->
+    <div class="modal image-modal" id="imageModal">
+        <div class="image-modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <img src="" alt="放大预览" id="modalImage">
+        </div>
     </div>
-    <a href="#" data-nav="final">Final work</a>
-    <a href="#" data-nav="about">About us</a>
-</nav>
 
-<main>
-    <!-- HOME SECTION -->
-    <section id="home" class="section">
-        <div class="section-header">
-            <h2>V-JESH's Fab Academy 2026</h2>
-        </div>
-        <div class="home-content" style="display: flex; flex-direction: column; gap: 2rem;">
-            <div class="hero-area" style="background: #F2EFEA; border-radius: 32px; padding: 3rem 2rem; text-align: center;">
-                <p style="font-size: 1.6rem; font-weight: 500;">welcome to our pages</p>
-                <p style="margin-top: 0.8rem; color: #5E5A54;">Explore digital fabrication, innovation & collaboration</p>
-                <div style="margin-top: 2rem;">
-                    <a href="#" data-nav="weekly" class="btn-detail" style="background: #D64047; color: white; border: none;">view our work →</a>
-                </div>
-            </div>
-            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
-                <div style="flex:1;"><strong>📡 Course Intro</strong><br>Global Digital Fabrication Program</div>
-                <div style="flex:1;"><strong>🛠️ Core Practice</strong><br>Weekly projects + final integration</div>
-                <div style="flex:1;"><strong>🌟 Team Collaboration</strong><br>Cross-disciplinary innovation</div>
-            </div>
-        </div>
-    </section>
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const navItems = document.querySelectorAll('.nav-item');
+    const pages = document.querySelectorAll('.page');
+    const weekBtns = document.querySelectorAll('.week-btn');
+    const progressBar = document.querySelector('.progress-bar');
+    const completedWeeks = document.getElementById('completedWeeks');
+    const currentWeekBadge = document.getElementById('currentWeekBadge');
+    const weekTitle = document.getElementById('weekTitle');
+    const checklist = document.querySelectorAll('.checklist-item');
+    const imageModal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalClose = document.getElementById('modalClose');
 
-    <!-- WEEKLY WORK SECTION with user uploads for images & files -->
-    <section id="weekly" class="section">
-        <div class="section-header">
-            <h2>Process Assignment</h2>
-        </div>
-        <div class="weekly-grid" id="weeklyGrid"></div>
-        <p style="margin-top:0.8rem; color:#5E5A54; font-size:0.95rem; max-width:760px;">
-            这里点击上传文件可在当前浏览器里本地预览。若要让其他人打开网页也能看到，请把图片保存到项目目录中的 <strong>images/</strong> 文件夹，并使用 <code>&lt;img src="images/文件名.png"&gt;</code> 方式引用。
-        </p>
-    </section>
+    // 视图切换元素
+    const viewBtns = document.querySelectorAll('.view-btn');
+    const viewToggle = document.querySelector('.view-toggle');
+    const finalView = document.getElementById('finalView');
+    const processView = document.getElementById('processView');
 
-    <!-- FINAL WORK SECTION with uploads for process images/files -->
-    <section id="final" class="section">
-        <div class="section-header">
-            <h2>Final Work</h2>
-        </div>
-        <div class="final-card" id="finalCardArea">
-            <div class="final-basic-info">
-                <span class="info-tag">Project Overview</span>
-                <span class="info-tag">Concept</span>
-                <span class="info-tag">Fabrication</span>
-                <span class="info-tag">Programming</span>
-                <span class="info-tag">Project Gallery</span>
-            </div>
-            <h3 style="margin-top: 0.2rem;">Symbiotic Interface · Interactive Installation</h3>
-            <div class="preview-text">
-                <strong>User research, product design, core features:</strong> Environment-aware interactive light sculpture combining sensors and dynamic feedback.
-            </div>
-            <div id="finalGalleryPreview" class="gallery-thumb"></div>
-            <div class="upload-area" id="finalUploadArea">
-                <span class="upload-label">📎 Upload process screenshots & documents (images/PDF/Word)</span>
-                <div class="file-input-group">
-                    <input type="file" id="finalFilesInput" multiple accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.doc,.docx,.jpg,.png,.gif,.pdf">
-                    <button class="btn-submit" id="uploadFinalBtn">Upload to Final Work</button>
-                </div>
-                <div id="finalFileList" class="file-list" style="margin-top: 0.5rem; display: inline-block;"></div>
-            </div>
-            <div style="margin-top: 1.5rem;">
-                <button class="btn-detail" data-detail="final">View Full Details →</button>
-            </div>
-        </div>
-    </section>
+    // 首页进度滑条
+    const progressSlider = document.getElementById('progressSlider');
+    const sliderValue = document.querySelector('.slider-value');
 
-    <!-- ABOUT US -->
-    <section id="about" class="section">
-        <div class="section-header">
-            <h2>V-JESH's Team</h2>
-        </div>
-        <div class="about-preview-card">
-            <div class="team-members">
-                <span class="member">Susie</span><span class="member">Hance</span><span class="member">Joker</span>
-                <span class="member">Echo</span><span class="member">Vanessa</span>
-            </div>
-            <div class="preview-text">
-                <strong>Team portrait & core statement:</strong><br>
-                We are makers in digital fabrication, interaction design & engineering. Fab Academy 2026 embodies transdisciplinary creation.<br>
-                ✨ Motto: Make the future, innovate now.
-            </div>
-            <button class="btn-detail" data-detail="about">View Team Details →</button>
-        </div>
-    </section>
-    <footer>© 2026 V-JESH's Fab Academy — Minimalist | Progress bar | User uploads for documentation</footer>
-</main>
+    // 沙盘系统元素
+    const sandboxContent = document.getElementById('sandbox-content');
 
-<!-- MODAL for detail pages -->
-<div id="detailModal" class="modal-overlay">
-    <div class="detail-modal">
-        <button class="close-modal" id="closeModalBtn">&times;</button>
-        <div id="modalDynamicContent"></div>
-        <a href="#" class="btn-detail" id="backHomeFromModal" style="margin-top:1.5rem; display:inline-block;">← Back to Home</a>
-    </div>
-</div>
-
-<script>
-    // ---------- PROCESS ASSIGNMENT DATA (4 exercises) ----------
-    const weeklyData = [
-        { id: "exercise1", title: "Exercise 1", status: "Completed", overview: "Introduction to process assignment and documentation.", process: "Complete initial research, define goals, and sketch the workflow.", uploads: [ { name: "Previous case analyses.pdf", url: "docs/Previous%20case%20analyses.pdf", type: "application/pdf" } ] },
-        { id: "exercise2", title: "Exercise 2", status: "Completed", overview: "Detailed process capture and material study.", process: "Collect photos, notes, and evidence of fabrication steps.", uploads: [] },
-        { id: "exercise3", title: "Exercise 3", status: "In progress", overview: "Prototype development and testing records.", process: "Build sample parts, test performance, and document results.", uploads: [ { name: "Arduino report.pdf", url: "docs/Arduino%20report.pdf", type: "application/pdf" } ] },
-        { id: "exercise4", title: "Exercise 4", status: "Pending", overview: "Final process summary and reflection.", process: "Summarize lessons learned, improvements, and next steps.", uploads: [ { name: "微信图片_20260604230413_81_1169.png", url: "images/微信图片_20260604230413_81_1169.png", type: "image/png" }, { name: "Autodesk Fusion car.pdf", url: "docs/Autodesk%20Fusion%20car.pdf", type: "application/pdf" } ] }
-    ];
-
-    // Helper: store uploads in localStorage (persist user submissions across reloads)
-    function loadStoredUploads() {
-        const storedWeekly = localStorage.getItem('fab_weekly_uploads');
-        if (storedWeekly) {
-            const parsed = JSON.parse(storedWeekly);
-            for (let i = 0; i < weeklyData.length; i++) {
-                if (parsed[i]) weeklyData[i].uploads = parsed[i];
+    let currentWeek = 2;
+    
+    // ========== 视图切换功能 ==========
+    viewBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            const view = btn.dataset.view;
+            viewBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            
+            if (view === 'final') {
+                finalView.classList.add('active');
+                processView.classList.remove('active');
+            } else {
+                finalView.classList.remove('active');
+                processView.classList.add('active');
             }
-        }
-        // final work uploads
-        const storedFinal = localStorage.getItem('fab_final_uploads');
-        if (storedFinal) {
-            finalUploads = JSON.parse(storedFinal);
-        } else {
-            finalUploads = [];
-        }
-        renderFinalUploads();
-    }
-
-    function saveWeeklyUploads() {
-        const toStore = weeklyData.map(w => w.uploads);
-        localStorage.setItem('fab_weekly_uploads', JSON.stringify(toStore));
-    }
-
-    let finalUploads = []; // array of { name, url, type }
-
-    function saveFinalUploads() {
-        localStorage.setItem('fab_final_uploads', JSON.stringify(finalUploads));
-        renderFinalUploads();
-    }
-
-    // convert file to base64 for demo persistence (real app would send to server)
-    function fileToBase64(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = error => reject(error);
+        });
+    });
+    
+    // ========== 作业清单功能（修复图标不统一问题） ==========
+    function updateChecklistIcons() {
+        checklist.forEach(item => {
+            const isCompleted = item.classList.contains('completed');
+            const iconSpan = item.querySelector('.check-icon');
+            if (iconSpan) {
+                // 使用 CSS 伪类显示不同图标，不再需要动态修改内容
+                if (isCompleted) {
+                    iconSpan.style.background = '#A8D2FF';
+                } else {
+                    iconSpan.style.background = 'rgba(168, 210, 255, 0.3)';
+                }
+            }
         });
     }
-
-    function isSupportedUploadFile(file) {
-        const lowerName = file.name.toLowerCase();
-        const supportedWordTypes = [
-            'application/msword',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
-        ];
-        return file.type.startsWith('image/')
-            || file.type === 'application/pdf'
-            || supportedWordTypes.includes(file.type)
-            || lowerName.endsWith('.doc')
-            || lowerName.endsWith('.docx');
+    
+    function updateProgress() {
+        const completed = document.querySelectorAll('.checklist-item.completed').length;
+        const total = checklist.length;
+        if (total === 0) return;
+        if (completedWeeks) completedWeeks.textContent = completed;
+        if (progressBar) progressBar.style.width = `${(completed / total) * 100}%`;
+        updateChecklistIcons();
     }
-
-    async function addWeeklyUpload(weekIndex, files) {
-        for (let file of files) {
-            if (isSupportedUploadFile(file)) {
-                const base64 = await fileToBase64(file);
-                weeklyData[weekIndex].uploads.push({ name: file.name, url: base64, type: file.type });
-            }
-        }
-        saveWeeklyUploads();
-        renderWeeklyGrid();
-    }
-
-    async function addFinalUpload(files) {
-        for (let file of files) {
-            if (isSupportedUploadFile(file)) {
-                const base64 = await fileToBase64(file);
-                finalUploads.push({ name: file.name, url: base64, type: file.type });
-            }
-        }
-        saveFinalUploads();
-    }
-
-    function renderFinalUploads() {
-        const container = document.getElementById('finalFileList');
-        const galleryDiv = document.getElementById('finalGalleryPreview');
-        if (!container) return;
-        if (finalUploads.length === 0) {
-            container.innerHTML = 'No files uploaded yet.';
-            galleryDiv.innerHTML = '';
-        } else {
-            container.innerHTML = finalUploads.map((f, idx) => `<span style="margin-right:8px;">📄 ${f.name}</span>`).join('');
-            // show gallery thumbnails for images
-            let galleryHtml = '';
-            finalUploads.forEach((f, idx) => {
-                if (f.type.startsWith('image/')) {
-                    galleryHtml += `<img src="${f.url}" class="thumb-img" alt="upload preview" />`;
-                } else {
-                    galleryHtml += `<a href="${f.url}" target="_blank" class="file-link">${f.name}</a> `;
-                }
-            });
-            galleryDiv.innerHTML = galleryHtml || '<span class="file-list">No image previews, but files ready</span>';
-        }
-    }
-
-    function renderWeeklyGrid() {
-        const container = document.getElementById('weeklyGrid');
-        if (!container) return;
-        container.innerHTML = '';
-        weeklyData.forEach((item, idx) => {
-            const card = document.createElement('div');
-            // add an anchor id for direct linking (e.g. #exercise1)
-            card.id = item.id;
-            card.className = 'week-card';
-            // generate upload previews for this exercise
-            let uploadsHtml = '';
-            if (item.uploads && item.uploads.length > 0) {
-                uploadsHtml = `<div class="gallery-thumb" style="margin-top:8px;">`;
-                item.uploads.forEach(upload => {
-                    if (upload.type.startsWith('image/')) {
-                        uploadsHtml += `<img src="${upload.url}" class="thumb-img" alt="upload" />`;
-                    } else {
-                        uploadsHtml += `<a href="${upload.url}" target="_blank" class="file-link">📄 ${upload.name}</a> `;
-                    }
-                });
-                uploadsHtml += `</div>`;
-            }
-            // add explicit download link for specific exercises (e.g. Exercise 3 doc)
-            let extraLinkHtml = '';
-            if (item.id === 'exercise3') {
-                extraLinkHtml = `<div style="margin-top:8px;"><a href="docs/Arduino%20report.pdf" target="_blank" class="btn-detail" style="background:#467fd0; color:white; text-decoration:none; padding:0.4rem 0.8rem; border-radius:8px; display:inline-block;">查看 Arduino report.pdf（Exercise 3）</a></div>`;
-            }
-            if (item.id === 'exercise4') {
-                extraLinkHtml = `<div style="margin-top:8px;"><a href="docs/Autodesk%20Fusion%20car.pdf" target="_blank" class="btn-detail" style="background:#467fd0; color:white; text-decoration:none; padding:0.4rem 0.8rem; border-radius:8px; display:inline-block;">查看 Autodesk Fusion car.pdf（Exercise 4）</a></div>`;
-            }
-            if (item.id === 'exercise1') {
-                extraLinkHtml = `<div style="margin-top:8px;"><a href="docs/Previous%20case%20analyses.pdf" target="_blank" class="btn-detail" style="background:#467fd0; color:white; text-decoration:none; padding:0.4rem 0.8rem; border-radius:8px; display:inline-block;">查看 Previous case analyses.pdf（Exercise 1）</a></div>`;
-            }
-
-            card.innerHTML = `
-                <div class="week-title">
-                    <span>${item.title}</span>
-                    <span class="week-badge">${item.title}</span>
-                </div>
-                <div class="status">${item.status}</div>
-                <div class="preview-text"><strong>Assignment Overview</strong><br>${item.overview}</div>
-                <div class="preview-text"><strong>Assignment Process</strong><br>${item.process.substring(0, 100)}${item.process.length > 100 ? '…' : ''}</div>
-                ${uploadsHtml}
-                ${extraLinkHtml}
-                <div class="upload-area">
-                    <span class="upload-label">📎 Upload screenshots / files (images/PDF/Word)</span>
-                    <div class="file-input-group">
-                        <input type="file" id="weekFile_${idx}" multiple accept="image/*,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document,.doc,.docx,.jpg,.png,.gif,.pdf">
-                        <button class="btn-submit" data-week-upload="${idx}">Upload to ${item.title}</button>
-                    </div>
-                    <div id="weekFileList_${idx}" class="file-list" style="font-size:0.7rem;">${item.uploads.length ? `${item.uploads.length} file(s) attached` : 'No attachments yet'}</div>
-                    <div style="font-size:0.78rem; color:#6D6A60; margin-top:0.4rem;">本地上传仅浏览器预览。如需共享，请把图片放到 <code>images/</code> 并在 HTML 中引用。</div>
-                </div>
-                <div style="margin-top: 0.8rem;">
-                    <button class="btn-detail" data-detail="weekly" data-week-idx="${idx}">View Full Details →</button>
-                </div>
-            `;
-            container.appendChild(card);
+    
+    checklist.forEach(item => {
+        item.addEventListener('click', (e) => {
+            e.stopPropagation();
+            item.classList.toggle('completed');
+            updateProgress();
         });
-        // bind upload buttons for each exercise
-        document.querySelectorAll('[data-week-upload]').forEach(btn => {
-            btn.addEventListener('click', async (e) => {
-                const weekIdx = parseInt(btn.getAttribute('data-week-upload'));
-                const fileInput = document.getElementById(`weekFile_${weekIdx}`);
-                if (fileInput && fileInput.files.length) {
-                    await addWeeklyUpload(weekIdx, Array.from(fileInput.files));
-                    fileInput.value = '';
-                    alert(`${weeklyData[weekIdx].title} uploaded. Refresh preview.`);
-                } else {
-                    alert('Please select files first.');
-                }
-            });
-        });
-        // bind detail buttons for weekly (dynamic)
-        document.querySelectorAll('[data-detail="weekly"]').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const weekIdx = btn.getAttribute('data-week-idx');
-                if (weekIdx !== null) showWeeklyDetail(weeklyData[parseInt(weekIdx)], parseInt(weekIdx));
-            });
-        });
-    }
-
-    // Weekly detail modal (full content including uploaded files)
-    function showWeeklyDetail(weekItem, weekIdx) {
-        const modalContent = document.getElementById('modalDynamicContent');
-        let uploadsDetailHtml = '<h4>📂 Uploaded Documents & Images</h4><div class="gallery-thumb">';
-        if (weekItem.uploads && weekItem.uploads.length) {
-            weekItem.uploads.forEach(u => {
-                if (u.type.startsWith('image/')) {
-                    uploadsDetailHtml += `<img src="${u.url}" style="max-width:150px; max-height:150px; border-radius:12px; margin:5px;" />`;
-                } else {
-                    uploadsDetailHtml += `<a href="${u.url}" target="_blank" class="file-link">📄 ${u.name}</a> `;
-                }
-            });
-        } else {
-            uploadsDetailHtml += '<p class="file-list">No user-submitted files yet. Use upload feature to add screenshots/PDFs.</p>';
-        }
-        uploadsDetailHtml += '</div>';
-        modalContent.innerHTML = `
-            <h3>${weekItem.title}</h3>
-            <div style="background:#F4F1EC; display:inline-block; padding:0.2rem 1rem; border-radius:30px;">${weekItem.status}</div>
-            <h4>📘 Process Documentation</h4>
-            <p>${weekItem.process}</p>
-            <h4>🎯 Outcomes & Highlights</h4>
-            <p>Detailed project log and media for this week's assignment.</p>
-            ${uploadsDetailHtml}
-            <h4>📊 Evaluation</h4>
-            <p>${weekItem.status === 'Completed' ? 'Excellent / Passed' : 'Ongoing feedback'}</p>
-        `;
-        openModal();
-    }
-
-    function showFinalDetail() {
-        const modalContent = document.getElementById('modalDynamicContent');
-        let finalUploadsHtml = '<h4>📎 User Uploaded Process Files & Screenshots</h4><div class="gallery-thumb">';
-        if (finalUploads.length) {
-            finalUploads.forEach(u => {
-                if (u.type.startsWith('image/')) {
-                    finalUploadsHtml += `<img src="${u.url}" style="max-width:150px; border-radius:12px; margin:5px;" />`;
-                } else {
-                    finalUploadsHtml += `<a href="${u.url}" target="_blank" class="file-link">📄 ${u.name}</a> `;
-                }
-            });
-        } else {
-            finalUploadsHtml += '<p class="file-list">No files uploaded yet. Use upload section to add documentation.</p>';
-        }
-        finalUploadsHtml += '</div>';
-        modalContent.innerHTML = `
-            <h3>Symbiotic Interface · Final Project</h3>
-            <h4>📌 Background</h4>
-            <p>Fab Academy 2026 final project merging digital fabrication, embedded systems, and interaction design.</p>
-            <h4>💡 Design Process</h4>
-            <p>User research → concept prototyping → structure fabrication → circuit integration → interactive firmware.</p>
-            <h4>🔧 Fabrication & Programming Steps</h4>
-            <p>Fusion360 design, CNC milling, custom PCB (ATtiny1614), sensor fusion, LED matrix control.</p>
-            <h4>⚠️ Challenges & Solutions</h4>
-            <p>Noise filtering on sensors, structural tolerance re-calibration.</p>
-            <h4>✨ Final Showcase Gallery</h4>
-            <div class="gallery-thumb" style="display:flex; flex-wrap:wrap;"></div>
-            ${finalUploadsHtml}
-        `;
-        openModal();
-    }
-
-    function showAboutDetail() {
-        const modalContent = document.getElementById('modalDynamicContent');
-        modalContent.innerHTML = `
-            <h3>V-JESH Team · About Us</h3>
-            <h4>✨ Member Profiles</h4>
-            <ul><li><strong>Susie</strong> – Project Lead / Digital Fabrication</li>
-            <li><strong>Hance</strong> – Electronics & Embedded</li>
-            <li><strong>Joker</strong> – Interaction Designer</li>
-            <li><strong>Echo</strong> – Mechanical Structure</li>
-            <li><strong>Vanessa</strong> – Visual Communication</li></ul>
-            <h4>👥 Team Roles</h4>
-            <p>Agile sprints, cross-review, collaborative development.</p>
-            <h4>🌱 Project Mission</h4>
-            <p>Democratize open fabrication, empower communities with technology.</p>
-            <h4>📬 Contact & Collaboration</h4>
-            <p>Email: team@vjesh-fab.com | GitHub: V-JESH-FabAcademy</p>
-            <h4>🏆 Motto</h4>
-            <p>“From idea to object, fearless creation.”</p>
-        `;
-        openModal();
-    }
-
-    let modal = document.getElementById('detailModal');
-    function openModal() {
-        modal.classList.add('active');
+    });
+    
+    // 初始化图标
+    updateChecklistIcons();
+    
+    // ========== 图片放大功能 ==========
+    window.openImageModal = function(src) {
+        modalImage.src = src;
+        imageModal.classList.add('active');
         document.body.style.overflow = 'hidden';
-    }
-    function closeModal() {
-        modal.classList.remove('active');
+    };
+    
+    function closeImageModal() {
+        imageModal.classList.remove('active');
         document.body.style.overflow = '';
     }
-
-    // Progress & navbar highlight
-    function updateProgress() {
-        const sections = document.querySelectorAll('.section');
-        const scrollTop = window.scrollY;
-        const docHeight = document.documentElement.scrollHeight;
-        const winHeight = window.innerHeight;
-        const totalScroll = docHeight - winHeight;
-        const scrolled = (scrollTop / totalScroll) * 100;
-        document.getElementById('progressFill').style.width = Math.min(100, Math.max(0, scrolled)) + '%';
-        let currentId = '';
-        for (let sec of sections) {
-            const rect = sec.getBoundingClientRect();
-            if (rect.top <= 150 && rect.bottom >= 100) {
-                currentId = sec.getAttribute('id');
-                break;
-            }
+    
+    if (modalClose) modalClose.addEventListener('click', closeImageModal);
+    if (imageModal) imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeImageModal(); });
+    
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && imageModal.classList.contains('active')) {
+            closeImageModal();
         }
-        document.querySelectorAll('.navbar a').forEach(link => {
-            link.classList.remove('active-nav');
-            if (currentId && link.getAttribute('data-nav') === currentId) {
-                link.classList.add('active-nav');
-            }
-        });
-    }
-
-    function setupNav() {
-        document.querySelectorAll('.navbar a').forEach(link => {
-            link.addEventListener('click', (e) => {
-                e.preventDefault();
-                const targetId = link.getAttribute('data-nav');
-                if (targetId) {
-                    document.getElementById(targetId)?.scrollIntoView({ behavior: 'smooth' });
-                    return;
-                }
-                // handle hash anchors like #exercise1 from submenu
-                const href = link.getAttribute('href');
-                if (href && href.startsWith('#')) {
-                    const id = href.slice(1);
-                    const el = document.getElementById(id);
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
-                    else document.getElementById('weekly')?.scrollIntoView({ behavior: 'smooth' });
-                }
-            });
-        });
-        document.getElementById('backHomeFromModal')?.addEventListener('click', (e) => {
-            e.preventDefault();
-            closeModal();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-    }
-
-    // Mobile submenu toggle: allow tap to open Weekly sub-menu, and close after selecting an item
-    (function setupMobileSubmenu() {
-        const navItem = document.querySelector('.nav-item');
-        if (!navItem) return;
-        const weeklyLink = navItem.querySelector('a[data-nav="weekly"]');
-        const submenu = navItem.querySelector('.submenu');
-        if (!weeklyLink || !submenu) return;
-
-        weeklyLink.addEventListener('click', (e) => {
-            if (window.innerWidth <= 720) {
-                e.preventDefault();
-                navItem.classList.toggle('submenu-open');
-                submenu.classList.toggle('open');
-            }
-        });
-
-        // when a submenu link is clicked, close the menu after scrolling
-        navItem.querySelectorAll('.submenu a').forEach(slink => {
-            slink.addEventListener('click', (ev) => {
-                // allow setupNav's handler to scroll; just close menu
-                navItem.classList.remove('submenu-open');
-                submenu.classList.remove('open');
-            });
-        });
-
-        // close on resize to desktop
-        window.addEventListener('resize', () => {
-            if (window.innerWidth > 720) {
-                navItem.classList.remove('submenu-open');
-                submenu.classList.remove('open');
-            }
-        });
-    })();
-
-    // bind final & about detail buttons
-    function bindGlobalDetails() {
-        document.querySelectorAll('[data-detail="final"]').forEach(btn => btn.addEventListener('click', () => showFinalDetail()));
-        document.querySelectorAll('[data-detail="about"]').forEach(btn => btn.addEventListener('click', () => showAboutDetail()));
-    }
-
-    document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-    modal.addEventListener('click', (e) => { if(e.target === modal) closeModal(); });
-    document.getElementById('uploadFinalBtn')?.addEventListener('click', async () => {
-        const input = document.getElementById('finalFilesInput');
-        if (input.files.length) {
-            await addFinalUpload(Array.from(input.files));
-            input.value = '';
-            alert('Uploaded to Final Work!');
-        } else alert('Select files first.');
     });
 
-    // initial load
-    loadStoredUploads();
-    renderWeeklyGrid();
-    bindGlobalDetails();
-    setupNav();
-    window.addEventListener('scroll', updateProgress);
-    window.addEventListener('resize', updateProgress);
+    if (progressSlider && sliderValue) {
+        sliderValue.textContent = `${progressSlider.value}%`;
+        progressSlider.addEventListener('input', () => {
+            sliderValue.textContent = `${progressSlider.value}%`;
+        });
+    }
+    
+    // ========== 导航功能 ==========
+    navItems.forEach(item => {
+        item.addEventListener('click', () => {
+            const page = item.dataset.page;
+            if (page === 'homework') {
+                window.location.href = 'docs/week1/week1.html';
+                return;
+            }
+            navItems.forEach(i => i.classList.remove('active'));
+            item.classList.add('active');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById(page).classList.add('active');
+        });
+    });
+    
+    weekBtns.forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            const week = parseInt(btn.dataset.week, 10);
+            if (week === 1) {
+                window.location.href = 'docs/week1/week1.html';
+                return;
+            }
+            if (week === 2) {
+                window.location.href = 'docs/week2/week2.html';
+                return;
+            }
+            if (week === 3) {
+                window.location.href = 'docs/week3/week3.html';
+                return;
+            }
+            weekBtns.forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            currentWeek = week;
+            if (currentWeekBadge) currentWeekBadge.textContent = `Week ${currentWeek}`;
+            const titles = [
+                '动作提示模块',
+                '反馈分析模块',
+                '康复计划模块',
+                'Week 4 训练进度',
+                'Week 5 训练进度',
+                'Week 6 训练进度',
+                'Week 7 训练进度',
+                'Week 8 训练进度',
+                'Week 9 训练进度',
+                'Week 10 训练进度',
+                'Week 11 训练进度',
+                'Week 12 训练进度',
+                'Week 13 训练进度',
+                'Week 14 训练进度',
+                'Week 15 训练进度',
+                'Week 16 训练进度',
+                'Week 17 训练进度',
+                'Week 18 训练进度'
+            ];
+            if (weekTitle) weekTitle.textContent = titles[currentWeek - 1] || `Week ${currentWeek} 训练进度`;
+            toggleSandboxContent(currentWeek);
+            navItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('[data-page="homework"]').classList.add('active');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById('homework').classList.add('active');
+        });
+    });
+    
+    function toggleSandboxContent(week) {
+        if (week === 2) {
+            if (sandboxContent) sandboxContent.style.display = 'block';
+            if (viewToggle) viewToggle.style.display = 'none';
+            if (finalView) finalView.classList.remove('active');
+            if (processView) processView.classList.remove('active');
+        } else {
+            if (sandboxContent) sandboxContent.style.display = 'none';
+            if (viewToggle) viewToggle.style.display = 'flex';
+            if (finalView) finalView.classList.add('active');
+        }
+    }
+
+    if (document.querySelector('.progress-card')) {
+        document.querySelector('.progress-card').addEventListener('click', () => {
+            window.location.href = 'docs/week1/week1.html';
+        });
+    }
+    
+    document.querySelectorAll('.feature-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const targetPage = card.dataset.navigateTo;
+            if (targetPage) {
+                if (targetPage === 'homework') {
+                    window.location.href = 'docs/week1/week1.html';
+                    return;
+                }
+                navItems.forEach(i => i.classList.remove('active'));
+                document.querySelector(`[data-page="${targetPage}"]`).classList.add('active');
+                pages.forEach(p => p.classList.remove('active'));
+                document.getElementById(targetPage).classList.add('active');
+            }
+        });
+    });
+
+    toggleSandboxContent(currentWeek);
+    
     updateProgress();
-</script>
+});
+    </script>
 </body>
 </html>
