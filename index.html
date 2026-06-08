@@ -3,18 +3,517 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>下肢康复训练智能提示器</title>
-    <link rel="stylesheet" href="style.css">
+    <title>下肢康复训练 - V-JESH 康复训练提示器</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #0a0e27 0%, #0f1535 100%);
+            min-height: 100vh;
+        }
+
+        /* 导航栏 - 科技感深色 */
+        .navbar {
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(0, 255, 255, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 64px;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            letter-spacing: 1px;
+        }
+
+        .logo-sub {
+            font-size: 0.7rem;
+            color: #4a5b9e;
+            margin-left: 8px;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 32px;
+        }
+
+        .nav-item {
+            cursor: pointer;
+            padding: 8px 0;
+            position: relative;
+            font-weight: 500;
+            color: #a0b0d0;
+            transition: color 0.2s;
+        }
+
+        .nav-item:hover {
+            color: #00d4ff;
+        }
+
+        .nav-item.active {
+            color: #00d4ff;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #00d4ff, #0066ff);
+            border-radius: 2px;
+        }
+
+        .has-dropdown {
+            position: relative;
+        }
+
+        .dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: #0f1535;
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            padding: 16px;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 200;
+            min-width: 300px;
+        }
+
+        .has-dropdown:hover .dropdown {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .dropdown-weeks {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+        }
+
+        .week-btn {
+            padding: 8px 12px;
+            border: none;
+            background: rgba(0, 212, 255, 0.1);
+            color: #a0b0d0;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.2s;
+        }
+
+        .week-btn:hover {
+            background: #00d4ff;
+            color: #0a0e27;
+        }
+
+        .week-btn.active {
+            background: #00d4ff;
+            color: #0a0e27;
+        }
+
+        /* 主内容 */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 12px;
+        }
+
+        .title-divider {
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(90deg, #00d4ff, #0066ff);
+            border-radius: 2px;
+            margin: 16px 0 24px 0;
+        }
+
+        /* 首页卡片 */
+        .cards-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+            margin-top: 32px;
+        }
+
+        .feature-card {
+            background: rgba(15, 21, 53, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 12px 28px rgba(0, 212, 255, 0.15);
+        }
+
+        .card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 16px;
+        }
+
+        .feature-card h3 {
+            margin-bottom: 8px;
+            color: #00d4ff;
+        }
+
+        .feature-card p {
+            color: #8a9acc;
+            font-size: 0.9rem;
+        }
+
+        /* 进度条 */
+        .progress-section {
+            margin: 24px 0 32px;
+        }
+
+        .progress-card {
+            background: rgba(15, 21, 53, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px 24px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .progress-card:hover {
+            border-color: #00d4ff;
+            transform: translateY(-2px);
+        }
+
+        .progress-label {
+            font-weight: 600;
+            color: #00d4ff;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .progress-bar-container {
+            background: #1a1f45;
+            border-radius: 20px;
+            height: 8px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #00d4ff, #0066ff);
+            width: 0%;
+            height: 100%;
+            border-radius: 20px;
+            transition: width 0.3s;
+        }
+
+        .progress-text {
+            color: #8a9acc;
+            font-size: 0.85rem;
+        }
+
+        /* 团队网格 */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 32px;
+            margin-top: 24px;
+        }
+
+        .team-member {
+            background: rgba(15, 21, 53, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 24px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .team-member:hover {
+            transform: translateY(-5px);
+            border-color: #00d4ff;
+            box-shadow: 0 12px 28px rgba(0, 212, 255, 0.15);
+        }
+
+        .member-avatar {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            border-radius: 50%;
+            margin: 0 auto 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .member-avatar span {
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .team-member h3 {
+            margin: 12px 0 4px;
+            color: #00d4ff;
+        }
+
+        .member-role {
+            color: #8a9acc;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        /* 项目网格 - 详细展示 */
+        .project-detail {
+            background: rgba(15, 21, 53, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 32px;
+        }
+
+        .project-title {
+            font-size: 1.8rem;
+            color: #00d4ff;
+            margin-bottom: 16px;
+        }
+
+        .project-section {
+            margin-bottom: 28px;
+        }
+
+        .project-section h3 {
+            color: #00d4ff;
+            font-size: 1.2rem;
+            margin-bottom: 12px;
+            padding-left: 12px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .project-section p, .project-section li {
+            color: #c0d0f0;
+            line-height: 1.6;
+        }
+
+        .project-section ul {
+            list-style: none;
+            padding-left: 20px;
+        }
+
+        .project-section li {
+            margin: 8px 0;
+            position: relative;
+        }
+
+        .project-section li::before {
+            content: "▸";
+            color: #00d4ff;
+            position: absolute;
+            left: -16px;
+        }
+
+        .tech-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .tech-item {
+            background: rgba(0, 212, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+        }
+
+        .tech-item strong {
+            color: #00d4ff;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .tech-item span {
+            color: #8a9acc;
+            font-size: 0.85rem;
+        }
+
+        .advantage-badge {
+            display: inline-block;
+            background: rgba(0, 212, 255, 0.15);
+            border: 1px solid #00d4ff;
+            border-radius: 20px;
+            padding: 6px 14px;
+            margin: 4px 8px 4px 0;
+            font-size: 0.85rem;
+            color: #00d4ff;
+        }
+
+        /* 模态框 */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            z-index: 1000;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .image-modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            font-size: 2rem;
+            color: white;
+            cursor: pointer;
+        }
+
+        #modalImage {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 12px;
+        }
+
+        /* 作业页占位 */
+        .final-version-content {
+            background: rgba(15, 21, 53, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: 20px;
+            padding: 32px;
+            margin-bottom: 20px;
+            text-align: center;
+            color: #8a9acc;
+        }
+
+        .week-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d4ff, #0066ff);
+            color: #0a0e27;
+            font-weight: 600;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            margin-bottom: 16px;
+        }
+
+        .week-title {
+            font-size: 1.5rem;
+            color: #00d4ff;
+            margin-bottom: 8px;
+        }
+
+        @media (max-width: 768px) {
+            .nav-menu {
+                gap: 16px;
+            }
+            .main-content {
+                padding: 24px 16px;
+            }
+            .page-title {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">V-JESH‘team</div>
+            <div class="logo">下肢康复训练 <span class="logo-sub">V-JESH</span></div>
             <ul class="nav-menu">
                 <li class="nav-item active" data-page="home">Home</li>
-                <li class="nav-item" data-page="homework">weekly work</li>
-                <li class="nav-item" data-page="project">project</li>
-                <li class="nav-item" data-page="team">team members</li>
+                <li class="nav-item has-dropdown" data-page="homework">
+                    <span>作业</span>
+                    <div class="dropdown">
+                        <div class="dropdown-weeks">
+                            <button class="week-btn" data-week="1">Week 1</button>
+                            <button class="week-btn" data-week="2">Week 2</button>
+                            <button class="week-btn" data-week="3">Week 3</button>
+                            <button class="week-btn" data-week="4">Week 4</button>
+                            <button class="week-btn" data-week="5">Week 5</button>
+                            <button class="week-btn" data-week="6">Week 6</button>
+                            <button class="week-btn" data-week="7">Week 7</button>
+                            <button class="week-btn" data-week="8">Week 8</button>
+                            <button class="week-btn" data-week="9">Week 9</button>
+                            <button class="week-btn" data-week="10">Week 10</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item" data-page="project">项目</li>
+                <li class="nav-item" data-page="team">团队介绍</li>
             </ul>
         </div>
     </nav>
@@ -22,82 +521,100 @@
     <main class="main-content">
         <!-- 首页 -->
         <section id="home" class="page active">
-            <div class="hero-panel">
-                <p class="hero-eyebrow">温和康复 · 轻松互动</p>
-                <h1 class="hero-title">下肢康复游戏化互动训练系统</h1>
-                <p class="hero-subtitle">Gamified Interactive Training System for Lower Limb Rehabilitation</p>
-                <div class="hero-tags">
-                    <span>游戏化康复</span>
-                    <span>动作矫正</span>
-                    <span>居家训练</span>
-                    <span>低门槛互动</span>
+            <div class="home-header">
+                <h1 class="page-title">V-JESH 康复训练提示器</h1>
+                <div class="title-divider"></div>
+            </div>
+            <div class="progress-section">
+                <div class="progress-card">
+                    <span class="progress-label">项目进度</span>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar"></div>
+                    </div>
+                    <span class="progress-text">已完成 <span id="completedWeeks">65</span>% 开发进度</span>
                 </div>
             </div>
-            <div class="intro-card">
-                <div class="intro-icon">💡</div>
-                <div class="intro-content">
-                    <h2>项目概念</h2>
-                    <p>我们为下肢运动功能障碍人群打造一套温和友好的康复产品，将传统训练融入游戏化互动体验。</p>
-                    <p>系统通过动作引导、实时反馈与渐进任务设计，帮助用户在居家环境中建立稳定训练习惯，降低康复门槛。</p>
+            <div class="cards-section">
+                <div class="feature-card" data-navigate-to="homework">
+                    <div class="card-icon">📝</div>
+                    <h3>最新作业</h3>
+                    <p>查看本周发布的作业任务和截止日期</p>
                 </div>
-            </div>
-            <div class="feature-grid">
-                <article class="feature-card feature-soft">
-                    <div class="feature-icon">🎮</div>
-                    <h3>游戏化康复</h3>
-                    <p>将目标动作转化为亲和任务，降低练习阻力，增加参与乐趣。</p>
-                </article>
-                <article class="feature-card feature-soft">
-                    <div class="feature-icon">🦶</div>
-                    <h3>动作矫正</h3>
-                    <p>基于传感器与反馈提示，帮助用户稳定完成核心康复动作。</p>
-                </article>
-                <article class="feature-card feature-soft">
-                    <div class="feature-icon">🏠</div>
-                    <h3>居家训练</h3>
-                    <p>无压力的居家执行方式，适合日常生活场景的康复节奏。</p>
-                </article>
-                <article class="feature-card feature-soft">
-                    <div class="feature-icon">🌿</div>
-                    <h3>低门槛互动</h3>
-                    <p>界面简洁、流程友好，适合不同能力层级用户快速上手。</p>
-                </article>
+                <div class="feature-card" data-navigate-to="project">
+                    <div class="card-icon">💡</div>
+                    <h3>项目详情</h3>
+                    <p>了解 V-JESH 的创新设计与技术优势</p>
+                </div>
+                <div class="feature-card" data-navigate-to="team">
+                    <div class="card-icon">🚀</div>
+                    <h3>团队动态</h3>
+                    <p>了解团队成员的最新更新和分享</p>
+                </div>
             </div>
         </section>
 
-        <!-- 训练功能页 -->
+        <!-- 作业页 -->
         <section id="homework" class="page">
             <div class="homework-header">
-                <div class="week-badge" id="currentWeekBadge">训练模块</div>
-                <h2 class="week-title" id="weekTitle">下肢康复训练智能提示</h2>
+                <div class="week-badge" id="currentWeekBadge">Week 2</div>
+                <h2 class="week-title" id="weekTitle">V-JESH 原型设计</h2>
                 <div class="title-divider"></div>
             </div>
-
             <div class="final-version-content">
-                <p>智能提示器支持下肢屈伸、抬腿、站立平衡等常见康复动作，结合传感器和语音反馈提醒正确姿态。</p>
-            </div>
-
-            <div class="final-version-content">
-                <p>训练模块可自定义康复方案，记录每次训练数据，帮助康复师和患者持续调整方案。</p>
+                <p>Week 1-10 作业内容请点击上方周次按钮查看详情。</p>
             </div>
         </section>
 
-        <!-- 产品展示页 -->
+        <!-- 项目页 - V-JESH 详细展示 -->
         <section id="project" class="page">
             <div class="project-header">
-                <h1 class="page-title">产品展示</h1>
+                <h1 class="page-title">V-JESH 康复训练提示器</h1>
                 <div class="title-divider"></div>
             </div>
-            <div class="project-grid">
-                <div class="project-card">
-                    <div class="project-image"></div>
-                    <h3>下肢康复训练智能提示器</h3>
-                    <p>集成传感器、动作识别与语音提示，帮助患者在家完成安全、高效的下肢康复训练。</p>
+            
+            <div class="project-detail">
+                <div class="project-title">下肢康复训练 · 智能提示系统</div>
+                
+                <div class="project-section">
+                    <h3>🎯 解决的问题</h3>
+                    <ul>
+                        <li>康复训练专业性不足——缺乏专业指导</li>
+                        <li>专业康复设备昂贵且占用空间——家庭难以承担</li>
+                        <li>康复训练枯燥且难以坚持——用户依从性差</li>
+                    </ul>
                 </div>
-                <div class="project-card">
-                    <div class="project-image"></div>
-                    <h3>核心功能</h3>
-                    <p>实时动作校正、可视化训练反馈、个性化康复方案和阶段性恢复评估。</p>
+
+                <div class="project-section">
+                    <h3>⚡ 创新点对比</h3>
+                    <div style="margin-bottom: 12px;">
+                        <span class="advantage-badge">❌ 下肢机器人（昂贵/体积大）</span>
+                        <span class="advantage-badge">❌ 减重步态训练仪（依赖专业操作）</span>
+                        <span class="advantage-badge">❌ 握力器/康复球（功能单一）</span>
+                        <span class="advantage-badge">❌ 智能康复手套（互动性弱）</span>
+                        <span class="advantage-badge">❌ 便携式踏步机（无反馈系统）</span>
+                    </div>
+                    <div style="margin-top: 16px;">
+                        <span class="advantage-badge" style="background: rgba(0,212,255,0.25);">✅ 成本控制，价格低</span>
+                        <span class="advantage-badge" style="background: rgba(0,212,255,0.25);">✅ 开源可定制</span>
+                        <span class="advantage-badge" style="background: rgba(0,212,255,0.25);">✅ 智能提示反馈</span>
+                        <span class="advantage-badge" style="background: rgba(0,212,255,0.25);">✅ 互动游戏化训练</span>
+                    </div>
+                </div>
+
+                <div class="project-section">
+                    <h3>🏪 市场渠道</h3>
+                    <p><strong>线上+线下结合：</strong> 线上社群运营 + 线下Fablab创客空间合作，直达康复需求用户群体。</p>
+                </div>
+
+                <div class="project-section">
+                    <h3>🔧 关键技术</h3>
+                    <div class="tech-grid">
+                        <div class="tech-item"><strong>食品级硅胶</strong><span>接触皮肤部位，柔软防滑</span></div>
+                        <div class="tech-item"><strong>ABS工程塑料</strong><span>外壳，耐磨抗摔</span></div>
+                        <div class="tech-item"><strong>锂电池</strong><span>续航供电</span></div>
+                        <div class="tech-item"><strong>OLED触控屏</strong><span>操作界面</span></div>
+                    </div>
+                    <p style="margin-top: 16px;"><strong>研究方法：</strong> 3D打印 + 激光切割 复合工艺，实现快速原型迭代与低成本生产。</p>
                 </div>
             </div>
         </section>
@@ -110,29 +627,29 @@
             </div>
             <div class="team-grid">
                 <div class="team-member">
-                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
-                    <h3>Susie</h3>
+                    <div class="member-avatar"><span>👩‍💻</span></div>
+                    <h3>Echo</h3>
                     <p class="member-role">后端开发</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
-                    <h3>Echo</h3>
+                    <div class="member-avatar"><span>👨‍🎨</span></div>
+                    <h3>Susie</h3>
                     <p class="member-role">前端开发</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
-                    <h3>Vanessa</h3>
-                    <p class="member-role">项目管理与整合</p>
+                    <div class="member-avatar"><span>🎨</span></div>
+                    <h3>Hance</h3>
+                    <p class="member-role">3D建模师</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
-                    <h3>Hance</h3>
+                    <div class="member-avatar"><span>🔧</span></div>
+                    <h3>Joker</h3>
                     <p class="member-role">硬件工程师</p>
                 </div>
                 <div class="team-member">
-                    <div class="member-avatar"><div class="avatar-glow"></div><span>👤</span></div>
-                    <h3>Joker</h3>
-                    <p class="member-role"></p>
+                    <div class="member-avatar"><span>📚</span></div>
+                    <h3>Vanessa</h3>
+                    <p class="member-role">资源整理和总结</p>
                 </div>
             </div>
         </section>
@@ -155,199 +672,69 @@ document.addEventListener('DOMContentLoaded', () => {
     const completedWeeks = document.getElementById('completedWeeks');
     const currentWeekBadge = document.getElementById('currentWeekBadge');
     const weekTitle = document.getElementById('weekTitle');
-    const checklist = document.querySelectorAll('.checklist-item');
     const imageModal = document.getElementById('imageModal');
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.getElementById('modalClose');
 
-    // 视图切换元素
-    const viewBtns = document.querySelectorAll('.view-btn');
-    const viewToggle = document.querySelector('.view-toggle');
-    const finalView = document.getElementById('finalView');
-    const processView = document.getElementById('processView');
-
-    // 首页进度滑条
-    const progressSlider = document.getElementById('progressSlider');
-    const sliderValue = document.querySelector('.slider-value');
-
-    // 沙盘系统元素
-    const sandboxContent = document.getElementById('sandbox-content');
-
     let currentWeek = 2;
-    
-    // ========== 视图切换功能 ==========
-    viewBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const view = btn.dataset.view;
-            viewBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            if (view === 'final') {
-                finalView.classList.add('active');
-                processView.classList.remove('active');
-            } else {
-                finalView.classList.remove('active');
-                processView.classList.add('active');
-            }
-        });
-    });
-    
-    // ========== 作业清单功能（修复图标不统一问题） ==========
-    function updateChecklistIcons() {
-        checklist.forEach(item => {
-            const isCompleted = item.classList.contains('completed');
-            const iconSpan = item.querySelector('.check-icon');
-            if (iconSpan) {
-                // 使用 CSS 伪类显示不同图标，不再需要动态修改内容
-                if (isCompleted) {
-                    iconSpan.style.background = '#A8D2FF';
-                } else {
-                    iconSpan.style.background = 'rgba(168, 210, 255, 0.3)';
-                }
-            }
-        });
-    }
-    
-    function updateProgress() {
-        const completed = document.querySelectorAll('.checklist-item.completed').length;
-        const total = checklist.length;
-        if (total === 0) return;
-        if (completedWeeks) completedWeeks.textContent = completed;
-        if (progressBar) progressBar.style.width = `${(completed / total) * 100}%`;
-        updateChecklistIcons();
-    }
-    
-    checklist.forEach(item => {
-        item.addEventListener('click', (e) => {
-            e.stopPropagation();
-            item.classList.toggle('completed');
-            updateProgress();
-        });
-    });
-    
-    // 初始化图标
-    updateChecklistIcons();
-    
-    // ========== 图片放大功能 ==========
+    const weekTitles = [
+        'V-JESH 需求调研', 'V-JESH 原型设计', '3D建模初版',
+        '电路设计与测试', '软件框架搭建', '交互界面开发', '传感器集成',
+        '用户测试反馈', '产品迭代优化', '最终展示'
+    ];
+
+    // 进度条初始化（65%）
+    if (progressBar) progressBar.style.width = '65%';
+
+    // 图片放大功能
     window.openImageModal = function(src) {
         modalImage.src = src;
         imageModal.classList.add('active');
         document.body.style.overflow = 'hidden';
     };
-    
     function closeImageModal() {
         imageModal.classList.remove('active');
         document.body.style.overflow = '';
     }
-    
     if (modalClose) modalClose.addEventListener('click', closeImageModal);
     if (imageModal) imageModal.addEventListener('click', (e) => { if (e.target === imageModal) closeImageModal(); });
-    
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && imageModal.classList.contains('active')) {
-            closeImageModal();
-        }
-    });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && imageModal.classList.contains('active')) closeImageModal(); });
 
-    if (progressSlider && sliderValue) {
-        sliderValue.textContent = `${progressSlider.value}%`;
-        progressSlider.addEventListener('input', () => {
-            sliderValue.textContent = `${progressSlider.value}%`;
-        });
-    }
-    
-    // ========== 导航功能 ==========
+    // 导航切换
     navItems.forEach(item => {
         item.addEventListener('click', () => {
             const page = item.dataset.page;
-            if (page === 'homework') {
-                window.location.href = 'docs/week1/week1.html';
-                return;
-            }
             navItems.forEach(i => i.classList.remove('active'));
             item.classList.add('active');
             pages.forEach(p => p.classList.remove('active'));
             document.getElementById(page).classList.add('active');
         });
     });
-    
+
+    // 周次按钮点击
     weekBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
             const week = parseInt(btn.dataset.week, 10);
-            if (week === 1) {
-                window.location.href = 'docs/week1/week1.html';
-                return;
-            }
-            if (week === 2) {
-                window.location.href = 'docs/week2/week2.html';
-                return;
-            }
-            if (week === 3) {
-                window.location.href = 'docs/week3/week3.html';
-                return;
-            }
             weekBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
             currentWeek = week;
             if (currentWeekBadge) currentWeekBadge.textContent = `Week ${currentWeek}`;
-            const titles = [
-                '动作提示模块',
-                '反馈分析模块',
-                '康复计划模块',
-                'Week 4 训练进度',
-                'Week 5 训练进度',
-                'Week 6 训练进度',
-                'Week 7 训练进度',
-                'Week 8 训练进度',
-                'Week 9 训练进度',
-                'Week 10 训练进度',
-                'Week 11 训练进度',
-                'Week 12 训练进度',
-                'Week 13 训练进度',
-                'Week 14 训练进度',
-                'Week 15 训练进度',
-                'Week 16 训练进度',
-                'Week 17 训练进度',
-                'Week 18 训练进度'
-            ];
-            if (weekTitle) weekTitle.textContent = titles[currentWeek - 1] || `Week ${currentWeek} 训练进度`;
-            toggleSandboxContent(currentWeek);
+            if (weekTitle) weekTitle.textContent = weekTitles[currentWeek - 1] || `第${currentWeek}周内容`;
+            
             navItems.forEach(i => i.classList.remove('active'));
             document.querySelector('[data-page="homework"]').classList.add('active');
             pages.forEach(p => p.classList.remove('active'));
             document.getElementById('homework').classList.add('active');
         });
     });
-    
-    function toggleSandboxContent(week) {
-        if (week === 2) {
-            if (sandboxContent) sandboxContent.style.display = 'block';
-            if (viewToggle) viewToggle.style.display = 'none';
-            if (finalView) finalView.classList.remove('active');
-            if (processView) processView.classList.remove('active');
-        } else {
-            if (sandboxContent) sandboxContent.style.display = 'none';
-            if (viewToggle) viewToggle.style.display = 'flex';
-            if (finalView) finalView.classList.add('active');
-        }
-    }
 
-    if (document.querySelector('.progress-card')) {
-        document.querySelector('.progress-card').addEventListener('click', () => {
-            window.location.href = 'docs/week1/week1.html';
-        });
-    }
-    
+    // 首页卡片导航
     document.querySelectorAll('.feature-card').forEach(card => {
         card.addEventListener('click', () => {
             const targetPage = card.dataset.navigateTo;
             if (targetPage) {
-                if (targetPage === 'homework') {
-                    window.location.href = 'docs/week1/week1.html';
-                    return;
-                }
                 navItems.forEach(i => i.classList.remove('active'));
                 document.querySelector(`[data-page="${targetPage}"]`).classList.add('active');
                 pages.forEach(p => p.classList.remove('active'));
@@ -356,9 +743,16 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    toggleSandboxContent(currentWeek);
-    
-    updateProgress();
+    // 点击进度卡片跳转到项目页
+    const progressCard = document.querySelector('.progress-card');
+    if (progressCard) {
+        progressCard.addEventListener('click', () => {
+            navItems.forEach(i => i.classList.remove('active'));
+            document.querySelector('[data-page="project"]').classList.add('active');
+            pages.forEach(p => p.classList.remove('active'));
+            document.getElementById('project').classList.add('active');
+        });
+    }
 });
     </script>
 </body>
