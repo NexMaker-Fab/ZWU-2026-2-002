@@ -68,38 +68,39 @@
                 </div>
             </div>
             <div class="content-block">
-                <h2 class="section-title">图片一览</h2>
+                <h2 class="section-title">过程性图片</h2>
+                <p class="section-text">以下图片展示本周动作提示模块的设备连接、传感器布局与训练界面，点击可查看放大效果。</p>
                 <div class="image-gallery">
                     <div class="detail-card">
-                        <img class="content-image" src="assets/arduino.png" alt="Arduino 传感器连接">
+                        <img class="content-image clickable-image" src="assets/arduino.png" alt="Arduino 传感器连接">
                         <p class="image-caption">Arduino 传感器连接</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/arduino2.png" alt="Arduino 传感器模块">
+                        <img class="content-image clickable-image" src="assets/arduino2.png" alt="Arduino 传感器模块">
                         <p class="image-caption">Arduino 传感器模块</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/sensor-connection.png" alt="传感器连接布局">
+                        <img class="content-image clickable-image" src="assets/sensor-connection.png" alt="传感器连接布局">
                         <p class="image-caption">传感器连接布局</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/code1.png" alt="系统页面与代码示例">
+                        <img class="content-image clickable-image" src="assets/code1.png" alt="系统页面与代码示例">
                         <p class="image-caption">系统页面与代码示例</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/2.png" alt="训练过程示意">
+                        <img class="content-image clickable-image" src="assets/2.png" alt="训练过程示意">
                         <p class="image-caption">训练过程示意</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/6.png" alt="训练界面展示">
+                        <img class="content-image clickable-image" src="assets/6.png" alt="训练界面展示">
                         <p class="image-caption">训练界面展示</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/7.png" alt="康复反馈图示">
+                        <img class="content-image clickable-image" src="assets/7.png" alt="康复反馈图示">
                         <p class="image-caption">康复反馈图示</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image" src="assets/8.png" alt="互动训练界面">
+                        <img class="content-image clickable-image" src="assets/8.png" alt="互动训练界面">
                         <p class="image-caption">互动训练界面</p>
                     </div>
                 </div>
@@ -134,5 +135,42 @@
             </div>
         </section>
     </main>
+    <div class="modal image-modal" id="imageModal">
+        <div class="image-modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <img src="" alt="放大预览" id="modalImage">
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalClose = document.getElementById('modalClose');
+
+    document.querySelectorAll('.clickable-image').forEach(img => {
+        img.addEventListener('click', () => {
+            modalImage.src = img.src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modal) modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+});
+    </script>
 </body>
 </html>

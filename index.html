@@ -560,8 +560,8 @@
                 <h2 class="week-title" id="weekTitle">V-JESH 原型设计</h2>
                 <div class="title-divider"></div>
             </div>
-            <div class="final-version-content">
-                <p>Week 1-10 作业内容请点击上方周次按钮查看详情。</p>
+            <div id="weekContent" class="final-version-content">
+                <p>请选择上方的周次按钮以在此处加载对应周的详细内容（无需离开页面）。</p>
             </div>
         </section>
 
@@ -723,12 +723,78 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentWeekBadge) currentWeekBadge.textContent = `Week ${currentWeek}`;
             if (weekTitle) weekTitle.textContent = weekTitles[currentWeek - 1] || `第${currentWeek}周内容`;
             
+            // 激活作业页并在内容框内动态加载对应周的 HTML
             navItems.forEach(i => i.classList.remove('active'));
             document.querySelector('[data-page="homework"]').classList.add('active');
             pages.forEach(p => p.classList.remove('active'));
             document.getElementById('homework').classList.add('active');
+            loadWeekPage(currentWeek);
         });
     });
+
+    // 从 docs/weekN/weekN.html 加载指定周的 section 内容并注入到首页内容框
+    async function loadWeekPage(week) {
+        const container = document.getElementById('weekContent');
+        if (!container) return;
+        const url = `docs/week${week}/week${week}.html`;
+        container.innerHTML = '<p>正在加载第 ' + week + ' 周内容…</p>';
+        try {
+            const res = await fetch(url);
+            if (!res.ok) {
+                container.innerHTML = `<p>无法加载第 ${week} 周内容（HTTP ${res.status}）</p>`;
+                return;
+            }
+            const text = await res.text();
+            // 提取 class="week-template" 的 section
+            const secMatch = text.match(/<section[^>]*class=["']week-template["'][\s\S]*?<\/section>/i);
+            if (secMatch) {
+                container.innerHTML = secMatch[0];
+                // 修正注入内容中相对图片路径（例如 `assets/xyz.png` -> `docs/week{n}/assets/xyz.png`）
+                container.querySelectorAll('img').forEach(img => {
+                    const raw = img.getAttribute('src') || '';
+                    if (!raw) return;
+                    // 跳过绝对/外部或 data URL
+                    if (/^(https?:|data:|\/)/i.test(raw)) return;
+                    // 若已经包含 docs/week，则跳过
+                    if (/^docs\/week\d+\//i.test(raw)) return;
+                    const fixed = raw.replace(/^\.\//, '');
+                    img.src = `docs/week${week}/${fixed}`;
+                });
+                // 绑定放大图片的点击事件（在修正路径后绑定）
+                container.querySelectorAll('.clickable-image').forEach(img => {
+                    img.addEventListener('click', () => {
+                        const modal = document.getElementById('imageModal') || createModal();
+                        const modalImage = document.getElementById('modalImage');
+                        modalImage.src = img.src;
+                        modal.classList.add('active');
+                        document.body.style.overflow = 'hidden';
+                    });
+                });
+            } else {
+                // 兜底：尝试提取 main 内容
+                const mainMatch = text.match(/<main[^>]*class=["']main-content["'][\s\S]*?<\/main>/i);
+                container.innerHTML = mainMatch ? mainMatch[0] : '<p>未找到可用内容。</p>';
+            }
+        } catch (err) {
+            container.innerHTML = `<p>加载出错：${err.message}</p>`;
+        }
+    }
+
+    // 如果页面中没有模态框，创建一个（用于注入内容后的图片放大）
+    function createModal() {
+        let modal = document.getElementById('imageModal');
+        if (modal) return modal;
+        modal = document.createElement('div');
+        modal.className = 'modal image-modal active';
+        modal.id = 'imageModal';
+        modal.innerHTML = `\n            <div class="image-modal-content">\n                <span class="modal-close" id="modalClose">&times;</span>\n                <img src="" alt="放大预览" id="modalImage">\n            </div>`;
+        document.body.appendChild(modal);
+        const modalClose = modal.querySelector('#modalClose');
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+        if (modalClose) modalClose.addEventListener('click', () => modal.classList.remove('active'));
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && modal.classList.contains('active')) modal.classList.remove('active'); });
+        return modal;
+    }
 
     // 首页卡片导航
     document.querySelectorAll('.feature-card').forEach(card => {
