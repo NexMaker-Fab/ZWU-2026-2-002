@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+           <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
@@ -31,19 +31,102 @@
         <section class="week-template">
             <div class="hero-section">
                 <div class="hero-label">Week 1</div>
-                <h1 class="hero-title">下肢康复游戏化互动训练系统</h1>
-                <p class="hero-subtitle">Gamified Interactive Training System for Lower Limb Rehabilitation</p>
+                <h1 class="hero-title">为运动障碍患者提供的训练康复设备（小灯泡测验项目） —— 过程报告</h1>
+                <p class="hero-subtitle">Process Report for Training Rehabilitation Equipment for Patients with Motor Impairments (Light Bulb Test Project)</p>
             </div>
             <div class="content-block concept-section">
-                <h2 class="section-title">💡 项目概念</h2>
-                <p class="section-text"><strong>面向下肢运动功能障碍人群的游戏化康复系统</strong>，通过轻松互动的视觉与动作引导，将康复训练融入日常运动任务，降低参与门槛，提高依从性与训练乐趣。</p>
-                <p class="section-text">系统以清晰、友好的文字提示与渐进式目标构建训练过程，帮助用户在安全范围内完成康复动作，减少医疗感的同时保持专业可信。</p>
+                <h2 class="section-title">一、项目概述</h2>
+                <p class="section-text"><strong>本项目基于 Arduino 开发板，制作一套下肢动作标准度测验装置：</strong></p>
+                <ul style="list-style: none; padding-left: 20px; margin: 16px 0;">
+                    <li style="margin: 8px 0;"><strong>超声波传感器：</strong>检测抬腿高度；</li>
+                    <li style="margin: 8px 0;"><strong>贝科姆旋转电位器模块：</strong>模拟采集足底压力；</li>
+                    <li style="margin: 8px 0;"><strong>红绿 LED：</strong>直观反馈动作是否达标；</li>
+                    <li style="margin: 8px 0;"><strong>逻辑：</strong>抬腿高度在 10–30 cm 且足底压力达到阈值时绿灯亮，其余情况红灯亮。</li>
+                </ul>
+            </div>
+            <div class="content-block">
+                <h2 class="section-title">二、器材准备</h2>
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/1.png" alt="器材准备" style="width: 80%; height: auto;">
+                        <p class="image-caption">器材准备</p>
+                    </div>
+                </div>
+                <div class="details-text" style="margin-top: 24px;">
+                    <ul style="list-style: none; padding-left: 20px; margin: 0;">
+                        <li style="margin: 8px 0;">Arduino UNO 开发板 ×1</li>
+                        <li style="margin: 8px 0;">HC-SR04 超声波传感器 ×1</li>
+                        <li style="margin: 8px 0;">贝科姆旋转电位器模块（VCC/GND/OUT）×1</li>
+                        <li style="margin: 8px 0;">绿色 LED ×1、红色 LED ×1</li>
+                        <li style="margin: 8px 0;">220Ω 限流电阻 ×2</li>
+                        <li style="margin: 8px 0;">面包板、杜邦线若干</li>
+                        <li style="margin: 8px 0;">USB 数据线（用于上传程序及供电）</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="content-block">
+                <h2 class="section-title">三、硬件电路搭建（分步接线）</h2>
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/2.png" alt="硬件电路搭建" style="width: 80%; height: auto;">
+                        <p class="image-caption">硬件电路搭建示意图</p>
+                    </div>
+                </div>
+                <div class="details-text" style="margin-top: 24px;">
+                    <h3 style="color: #00d4ff; margin-bottom: 16px;">步骤 1：搭建公共电源与地</h3>
+                    <ol style="padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;">将 Arduino 的 5V 接到面包板正极轨；</li>
+                        <li style="margin: 8px 0;">将 Arduino 的 GND 接到面包板负极轨。</li>
+                    </ol>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">步骤 2：连接超声波传感器（测抬腿高度）</h3>
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;"><strong>VCC</strong> → 面包板 5V</li>
+                        <li style="margin: 8px 0;"><strong>GND</strong> → 面包板 GND</li>
+                        <li style="margin: 8px 0;"><strong>Trig</strong> → Arduino D9</li>
+                        <li style="margin: 8px 0;"><strong>Echo</strong> → Arduino D10</li>
+                    </ul>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">步骤 3：连接贝科姆旋转电位器模块（足底压力）</h3>
+                    <p style="margin: 8px 0;"><strong>模块引脚：</strong>VCC / GND / OUT</p>
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;"><strong>VCC</strong> → 面包板 5V</li>
+                        <li style="margin: 8px 0;"><strong>GND</strong> → 面包板 GND</li>
+                        <li style="margin: 8px 0;"><strong>OUT</strong> → Arduino A0（模拟输入）</li>
+                    </ul>
+                    <p style="margin: 12px 0; padding: 12px; background: rgba(0, 212, 255, 0.1); border-left: 3px solid #00d4ff; border-radius: 4px;"><strong>说明：</strong>该模块内部已做好分压与滤波，直接输出 0–5V 模拟量，可由 analogRead() 直接读取。</p>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">步骤 4：连接红绿 LED（动作反馈）</h3>
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 12px 0;">
+                            <strong>绿色 LED：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 4px 0;">长脚（阳极）→ 220Ω 电阻 → Arduino D2</li>
+                                <li style="margin: 4px 0;">短脚（阴极）→ 面包板 GND</li>
+                            </ul>
+                        </li>
+                        <li style="margin: 12px 0;">
+                            <strong>红色 LED：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 4px 0;">长脚（阳极）→ 220Ω 电阻 → Arduino D3</li>
+                                <li style="margin: 4px 0;">短脚（阴极）→ 面包板 GND</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">步骤 5：整体检查</h3>
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;">所有 GND 共地，无悬空；</li>
+                        <li style="margin: 8px 0;">传感器与电位器供电均为 5V；</li>
+                        <li style="margin: 8px 0;">LED 串联 220Ω 电阻，防止烧毁。</li>
+                    </ul>
+                </div>
             </div>
             <div class="details-box">
                 <div class="details-grid">
                     <div class="details-text">
                         <h3>作业说明</h3>
-                        <p>本周训练主题为“动作提示模块”，通过传感器数据为用户提供姿势校正与动作反馈。</p>
+                        <p>本周训练主题为"动作提示模块"，通过传感器数据为用户提供姿势校正与动作反馈。</p>
                         <ul>
                             <li>直腿抬高：保持背部平直，控制抬腿高度，避免髋部前倾。</li>
                             <li>坐姿膝关节屈伸：缓慢屈伸膝盖，记录角度与重复次数。</li>
@@ -53,15 +136,15 @@
                     </div>
                     <div class="details-media">
                         <div class="detail-card">
-                            <img class="content-image" src="assets/arduino.png" alt="Arduino 传感器连接">
+                            <img class="content-image" src="assets/arduino.png" alt="Arduino 传感器连接" style="width: 80%; height: auto;">
                             <p class="image-caption">传感器连接示意图</p>
                         </div>
                         <div class="detail-card">
-                            <img class="content-image" src="assets/sensor-connection.png" alt="传感器连接布局">
+                            <img class="content-image" src="assets/sensor-connection.png" alt="传感器连接布局" style="width: 80%; height: auto;">
                             <p class="image-caption">传感器布局展示</p>
                         </div>
                         <div class="detail-card">
-                            <img class="content-image" src="assets/2.png" alt="训练过程示意">
+                            <img class="content-image" src="assets/2.png" alt="训练过程示意" style="width: 80%; height: auto;">
                             <p class="image-caption">训练过程示意</p>
                         </div>
                     </div>
@@ -72,37 +155,108 @@
                 <p class="section-text">以下图片展示本周动作提示模块的设备连接、传感器布局与训练界面，点击可查看放大效果。</p>
                 <div class="image-gallery">
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/arduino.png" alt="Arduino 传感器连接">
+                        <img class="content-image clickable-image" src="assets/arduino.png" alt="Arduino 传感器连接" style="width: 80%; height: auto;">
                         <p class="image-caption">Arduino 传感器连接</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/arduino2.png" alt="Arduino 传感器模块">
+                        <img class="content-image clickable-image" src="assets/arduino2.png" alt="Arduino 传感器模块" style="width: 80%; height: auto;">
                         <p class="image-caption">Arduino 传感器模块</p>
                     </div>
+                    <div class="details-text" style="margin-top: 24px; grid-column: 1 / -1;">
+                        <h3 style="color: #00d4ff; margin-bottom: 16px;">四、软件开发（程序编写与上传）</h3>
+                        
+                        <h4 style="color: #8a9acc; margin: 16px 0 12px;">步骤 1：开发环境准备</h4>
+                        <ol style="padding-left: 20px; margin: 12px 0;">
+                            <li style="margin: 8px 0;">打开 Arduino IDE；</li>
+                            <li style="margin: 8px 0;">选择开发板：工具 → 开发板 → Arduino Uno；</li>
+                            <li style="margin: 8px 0;">选择端口：工具 → 端口 → 对应 COM 7口；</li>
+                            <li style="margin: 8px 0;">用 USB 线连接 Arduino 与电脑。</li>
+                        </ol>
+                        
+                        <h4 style="color: #8a9acc; margin: 16px 0 12px;">步骤 2：编写程序（适配电位器模块最终版）</h4>
+                        <p style="margin: 8px 0; padding: 12px; background: rgba(0, 212, 255, 0.1); border-left: 3px solid #00d4ff; border-radius: 4px;">在此处编写控制逻辑代码，包括超声波测距、电位器读取和 LED 控制。</p>
+                        
+                        <h4 style="color: #8a9acc; margin: 16px 0 12px;">步骤 3：验证与上传</h4>
+                        <ol style="padding-left: 20px; margin: 12px 0;">
+                            <li style="margin: 8px 0;">点击「验证 / 编译」，确保无报错；</li>
+                            <li style="margin: 8px 0;">点击「上传」，等待提示 "上传成功"。</li>
+                        </ol>
+                    </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/sensor-connection.png" alt="传感器连接布局">
+                        <img class="content-image clickable-image" src="assets/sensor-connection.png" alt="传感器连接布局" style="width: 80%; height: auto;">
                         <p class="image-caption">传感器连接布局</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/code1.png" alt="系统页面与代码示例">
+                        <img class="content-image clickable-image" src="assets/code1.png" alt="系统页面与代码示例" style="width: 80%; height: auto;">
                         <p class="image-caption">系统页面与代码示例</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/2.png" alt="训练过程示意">
+                        <img class="content-image clickable-image" src="assets/2.png" alt="训练过程示意" style="width: 80%; height: auto;">
                         <p class="image-caption">训练过程示意</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/6.png" alt="训练界面展示">
+                        <img class="content-image clickable-image" src="assets/6.png" alt="训练界面展示" style="width: 80%; height: auto;">
                         <p class="image-caption">训练界面展示</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/7.png" alt="康复反馈图示">
+                        <img class="content-image clickable-image" src="assets/7.png" alt="康复反馈图示" style="width: 80%; height: auto;">
                         <p class="image-caption">康复反馈图示</p>
                     </div>
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/8.png" alt="互动训练界面">
+                        <img class="content-image clickable-image" src="assets/8.png" alt="互动训练界面" style="width: 80%; height: auto;">
                         <p class="image-caption">互动训练界面</p>
                     </div>
+                </div>
+            </div>
+            <div class="content-block">
+                <h2 class="section-title">五、系统调试与功能测试</h2>
+                <div class="details-text">
+                    <h3 style="color: #00d4ff; margin-bottom: 16px;">步骤 1：串口监视器调试</h3>
+                    <ol style="padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;">打开串口监视器，波特率设为 9600；</li>
+                        <li style="margin: 8px 0;">旋转贝科姆电位器：压力读数应在 0–1023 连续变化；</li>
+                        <li style="margin: 8px 0;">手在超声波前移动：距离读数应随距离变化（单位 cm）。</li>
+                    </ol>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">步骤 2：阈值校准（适配电位器）</h3>
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;"><strong>无压力时：</strong>压力读数≈0；</li>
+                        <li style="margin: 8px 0;"><strong>有压力（模拟足底受压）：</strong>读数上升；</li>
+                        <li style="margin: 8px 0;"><strong>本项目阈值设为 500：</strong>压力 &gt; 500 视为 "压力达标"。</li>
+                    </ul>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">步骤 3：动作模拟测试</h3>
+                    <ol style="padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;"><strong>条件一：</strong>抬腿高度 10–30 cm；</li>
+                        <li style="margin: 8px 0;"><strong>条件二：</strong>足底压力 &gt;500；</li>
+                        <li style="margin: 8px 0;"><strong>同时满足：</strong>绿灯亮、红灯灭（动作标准）；</li>
+                        <li style="margin: 8px 0;"><strong>任一不满足：</strong>红灯亮、绿灯灭（动作不标准）。</li>
+                    </ol>
+                </div>
+            </div>
+            <div class="content-block">
+                <h2 class="section-title">六、问题排查与优化（你遇到红灯常亮的解决过程）</h2>
+                <div class="details-text">
+                    <ol style="padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 12px 0;">
+                            <strong>现象：</strong>无论怎么做，红灯一直亮、绿灯不亮；
+                        </li>
+                        <li style="margin: 12px 0;">
+                            <strong>排查：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 8px 0;">串口观察：压力读数始终 &gt;500；</li>
+                                <li style="margin: 8px 0;">原因：贝科姆电位器未归零、或接线导致一直输出高电平；</li>
+                            </ul>
+                        </li>
+                        <li style="margin: 12px 0;">
+                            <strong>解决：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 8px 0;">确认模块 VCC/GND/OUT 接线无误；</li>
+                                <li style="margin: 8px 0;">旋转电位器，使压力读数能降到 &lt;500；</li>
+                                <li style="margin: 8px 0;">必要时将判断阈值由 500 下调至 300–400。</li>
+                            </ul>
+                        </li>
+                    </ol>
                 </div>
             </div>
             <div class="content-block values-section">
