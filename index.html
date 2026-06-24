@@ -740,7 +740,7 @@ document.addEventListener('DOMContentLoaded', () => {
             '材料': 'docs/材料/材料.html',
             '计算机辅助设计': 'docs/计算机辅助设计/计算机辅助设计.html',
             '项目管理': 'docs/项目管理/项目管理.html',
-            'Arduino': 'docs/Aduino/Arduino.html'
+            'Arduino': 'docs/Arduino/Arduino.html'
         };
         
         const url = categoryPaths[category];
@@ -776,7 +776,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     else if (category === '材料') basePath = 'docs/材料/';
                     else if (category === '计算机辅助设计') basePath = 'docs/计算机辅助设计/';
                     else if (category === '项目管理') basePath = 'docs/项目管理/';
-                    else if (category === 'Arduino') basePath = 'docs/Aduino/';
+                    else if (category === 'Arduino') basePath = 'docs/Arduino/';
                     img.src = `${basePath}${fixed}`;
                 });
                 // 绑定放大图片的点击事件
