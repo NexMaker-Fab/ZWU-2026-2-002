@@ -498,17 +498,12 @@
                 <li class="nav-item has-dropdown" data-page="homework">
                     <span>周作业</span>
                     <div class="dropdown">
-                        <div class="dropdown-weeks">
-                            <button class="week-btn" data-week="1">Week 1</button>
-                            <button class="week-btn" data-week="2">Week 2</button>
-                            <button class="week-btn" data-week="3">Week 3</button>
-                            <button class="week-btn" data-week="4">Week 4</button>
-                            <button class="week-btn" data-week="5">Week 5</button>
-                            <button class="week-btn" data-week="6">Week 6</button>
-                            <button class="week-btn" data-week="7">Week 7</button>
-                            <button class="week-btn" data-week="8">Week 8</button>
-                            <button class="week-btn" data-week="9">Week 9</button>
-                            <button class="week-btn" data-week="10">Week 10</button>
+                        <div class="dropdown-weeks" style="grid-template-columns: repeat(5, 1fr);">
+                            <button class="week-btn" data-week="3D打印">3D 打印</button>
+                            <button class="week-btn" data-week="材料">材料</button>
+                            <button class="week-btn" data-week="计算机辅助设计">计算机辅助设计</button>
+                            <button class="week-btn" data-week="项目管理">项目管理</button>
+                            <button class="week-btn" data-week="Arduino">Arduino</button>
                         </div>
                     </div>
                 </li>
@@ -676,12 +671,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.getElementById('modalClose');
 
-    let currentWeek = 2;
-    const weekTitles = [
-        'V-JESH 需求调研', 'V-JESH 原型设计', '3D建模初版',
-        '电路设计与测试', '软件框架搭建', '交互界面开发', '传感器集成',
-        '用户测试反馈', '产品迭代优化', '最终展示'
-    ];
+    let currentCategory = '3D打印';
+    const categoryTitles = {
+        '3D打印': '3D 打印',
+        '材料': '材料',
+        '计算机辅助设计': '计算机辅助设计',
+        '项目管理': '项目管理',
+        'Arduino': 'Arduino'
+    };
 
     // 进度条初始化（65%）
     if (progressBar) progressBar.style.width = '65%';
@@ -711,37 +708,52 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 周次按钮点击
+    // 分类按钮点击
     weekBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
             e.stopPropagation();
-            const week = parseInt(btn.dataset.week, 10);
+            const category = btn.dataset.week;
             weekBtns.forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            currentWeek = week;
-            if (currentWeekBadge) currentWeekBadge.textContent = `Week ${currentWeek}`;
-            if (weekTitle) weekTitle.textContent = weekTitles[currentWeek - 1] || `第${currentWeek}周内容`;
+            currentCategory = category;
+            if (currentWeekBadge) currentWeekBadge.textContent = categoryTitles[category] || category;
+            if (weekTitle) weekTitle.textContent = categoryTitles[category] || category;
             
-            // 激活作业页并在内容框内动态加载对应周的 HTML
+            // 激活作业页并在内容框内动态加载对应分类的 HTML
             navItems.forEach(i => i.classList.remove('active'));
             document.querySelector('[data-page="homework"]').classList.add('active');
             pages.forEach(p => p.classList.remove('active'));
             document.getElementById('homework').classList.add('active');
-            loadWeekPage(currentWeek);
+            loadCategoryPage(currentCategory);
         });
     });
 
-    // 从 docs/weekN/weekN.html 加载指定周的 section 内容并注入到首页内容框
-    async function loadWeekPage(week) {
+    // 从 docs/分类名/分类名.html 加载指定分类的内容并注入到首页内容框
+    async function loadCategoryPage(category) {
         const container = document.getElementById('weekContent');
         if (!container) return;
-        const url = `docs/week${week}/week${week}.html`;
-        container.innerHTML = '<p>正在加载第 ' + week + ' 周内容…</p>';
+        
+        // 根据分类映射到对应的文件路径
+        const categoryPaths = {
+            '3D打印': 'docs/3D打印/3D打印.html',
+            '材料': 'docs/材料/材料.html',
+            '计算机辅助设计': 'docs/计算机辅助设计/计算机辅助设计.html',
+            '项目管理': 'docs/项目管理/项目管理.html',
+            'Arduino': 'docs/Aduino/Arduino.html'
+        };
+        
+        const url = categoryPaths[category];
+        if (!url) {
+            container.innerHTML = '<p>未找到对应内容</p>';
+            return;
+        }
+        
+        container.innerHTML = '<p>正在加载 ' + categoryTitles[category] + ' 内容…</p>';
         try {
             const res = await fetch(url);
             if (!res.ok) {
-                container.innerHTML = `<p>无法加载第 ${week} 周内容（HTTP ${res.status}）</p>`;
+                container.innerHTML = `<p>无法加载 ${categoryTitles[category]} 内容（HTTP ${res.status}）</p>`;
                 return;
             }
             const text = await res.text();
@@ -749,18 +761,25 @@ document.addEventListener('DOMContentLoaded', () => {
             const secMatch = text.match(/<section[^>]*class=["']week-template["'][\s\S]*?<\/section>/i);
             if (secMatch) {
                 container.innerHTML = secMatch[0];
-                // 修正注入内容中相对图片路径（例如 `assets/xyz.png` -> `docs/week{n}/assets/xyz.png`）
+                // 修正注入内容中相对图片路径
                 container.querySelectorAll('img').forEach(img => {
                     const raw = img.getAttribute('src') || '';
                     if (!raw) return;
                     // 跳过绝对/外部或 data URL
                     if (/^(https?:|data:|\/)/i.test(raw)) return;
-                    // 若已经包含 docs/week，则跳过
-                    if (/^docs\/week\d+\//i.test(raw)) return;
+                    // 若已经包含 docs/，则跳过
+                    if (/^docs\//i.test(raw)) return;
                     const fixed = raw.replace(/^\.\//, '');
-                    img.src = `docs/week${week}/${fixed}`;
+                    // 根据分类确定基础路径
+                    let basePath = 'docs/';
+                    if (category === '3D打印') basePath = 'docs/3D打印/';
+                    else if (category === '材料') basePath = 'docs/材料/';
+                    else if (category === '计算机辅助设计') basePath = 'docs/计算机辅助设计/';
+                    else if (category === '项目管理') basePath = 'docs/项目管理/';
+                    else if (category === 'Arduino') basePath = 'docs/Aduino/';
+                    img.src = `${basePath}${fixed}`;
                 });
-                // 绑定放大图片的点击事件（在修正路径后绑定）
+                // 绑定放大图片的点击事件
                 container.querySelectorAll('.clickable-image').forEach(img => {
                     img.addEventListener('click', () => {
                         const modal = document.getElementById('imageModal') || createModal();
