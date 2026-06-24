@@ -3,94 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>下肢康复训练智能提示器 - 反馈分析</title>
+    <title>下肢康复训练智能提示器 - 项目管理</title>
     <link rel="stylesheet" href="../style.css">
 </head>
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">V-JESH‘team</div>
+            <div class="logo">V-JESH'team</div>
             <ul class="nav-menu">
                 <li class="nav-item" data-page="home"><a href="../../index.html">Home</a></li>
                 <li class="nav-item has-dropdown active" data-page="homework">
-                    <span>weekly work</span>
+                    <span>周作业</span>
                     <div class="dropdown">
-                        <div class="dropdown-weeks">
-                            <a class="week-btn" href="../week1/week1.html">week 1</a>
-                            <a class="week-btn active" href="week2.html">week 2</a>
-                            <a class="week-btn" href="../week3/week3.html">week 3</a>
+                        <div class="dropdown-weeks" style="grid-template-columns: repeat(3, 1fr);">
+                            <button class="week-btn active" data-week="week1">Week 1 - 项目管理</button>
+                            <button class="week-btn" data-week="week2">Week 2 - Arduino</button>
+                            <button class="week-btn" data-week="week3">Week 3 - CAD 设计</button>
+                            <button class="week-btn" data-week="week4">Week 4 - 3D 打印</button>
+                            <button class="week-btn" data-week="week5">Week 5 - 物联网</button>
+                            <button class="week-btn" data-week="week6">Week 6 - 材料</button>
                         </div>
                     </div>
                 </li>
-                <li class="nav-item" data-page="project"><a href="../../index.html#project">project</a></li>
-                <li class="nav-item" data-page="team"><a href="../../index.html#team">team members</a></li>
+                <li class="nav-item" data-page="project"><a href="../../index.html#project">项目</a></li>
+                <li class="nav-item" data-page="team"><a href="../../index.html#team">团队介绍</a></li>
             </ul>
         </div>
     </nav>
     <main class="main-content">
         <section class="week-template">
             <div class="hero-section">
-                <div class="hero-label">Week 2</div>
-                <h1 class="hero-title">下肢康复游戏化互动训练系统</h1>
-                <p class="hero-subtitle">Gamified Interactive Training System for Lower Limb Rehabilitation</p>
+                <h1 class="hero-title">项目管理 —— 网站开发指南</h1>
+                <p class="hero-subtitle">Project Management - Website Development Guide</p>
             </div>
-            <div class="content-block concept-section">
-                <h2 class="section-title">💡 项目概念</h2>
-                <p class="section-text"><strong>面向下肢运动功能障碍人群的游戏化康复系统</strong>，通过数据可视化与智能反馈，将训练过程转化为易懂的互动任务，减少用户焦虑并提高参与感。</p>
-                <p class="section-text">系统将训练数据与用户行为结合，自动生成复盘建议，让康复过程既可追踪又能持续优化。</p>
-            </div>
-            <div class="details-box">
-                <div class="details-grid">
-                    <div class="details-text">
-                        <h3>作业说明</h3>
-                        <p>本周训练主题为“反馈分析模块”，帮助患者和康复师通过可视化结果了解训练效果。</p>
-                        <ul>
-                            <li>动作完成率：统计动作达标次数比例。</li>
-                            <li>姿态偏差：分析膝髋踝角度是否在目标范围内。</li>
-                            <li>稳定性评分：评估训练中的左右摆动与持续时间。</li>
-                        </ul>
-                        <p>通过图形化反馈，用户可以直观判断训练表现，并及时调整下一步练习。</p>
-                    </div>
-                    <div class="details-media">
-                        <div class="detail-card">
-                            <img class="content-image" src="assets/vs-code1.png" alt="页面界面与训练反馈展示" style="width: 80%; height: auto;">
-                            <p class="image-caption">反馈界面与训练数据可视化</p>
-                        </div>
+            <div class="content-block">
+                <h2 class="section-title">准备网站开发所需工具</h2>
+                <div class="details-text" style="margin-bottom: 24px;">
+                    <div style="padding: 20px; background: rgba(0, 212, 255, 0.08); border-left: 4px solid #00d4ff; border-radius: 8px; line-height: 2;">
+                        <p style="margin: 12px 0;"><strong>1. Github：</strong>用于存放我们的网站项目</p>
+                        <p style="margin: 12px 0;"><strong>2. GitHub Desktop：</strong>用于克隆代码仓库、上传本地文件</p>
+                        <p style="margin: 12px 0;"><strong>3. AI 智能开发助手（通义灵码）：</strong>用于编写网站代码</p>
                     </div>
                 </div>
             </div>
             <div class="content-block">
-                <h2 class="section-title">图片一览</h2>
+                <h2 class="section-title">操作步骤</h2>
+                <div class="details-text" style="margin-bottom: 24px;">
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">第一步：在 GitHub 上创建一个新仓库来托管您的网站</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;">登录 GitHub 后，点击右上角的 "+" 按钮，选择 "New repository"（新建仓库），如下图所示：</p>
+                </div>
                 <div class="image-gallery">
                     <div class="detail-card">
-                        <img class="content-image clickable-image" src="assets/vs-code1.png" alt="页面界面与训练反馈展示" style="width: 80%; height: auto;">
-                        <p class="image-caption">页面界面与训练反馈展示</p>
+                        <img class="content-image clickable-image" src="assets/屏幕截图 2026-06-24 165113.png" alt="创建新仓库界面" style="width: 80%; height: auto;">
+                        <p class="image-caption">创建新仓库界面</p>
                     </div>
                 </div>
-            </div>
-            <div class="content-block values-section">
-                <h2 class="section-title">核心价值模块</h2>
-                <div class="value-grid">
-                    <article class="value-card">
-                        <div class="card-icon">🎮</div>
-                        <h3>游戏化动作引导</h3>
-                        <p>将训练动作设计为可执行任务，用户更容易完成每一步。</p>
-                    </article>
-                    <article class="value-card">
-                        <div class="card-icon">✨</div>
-                        <h3>正向激励机制</h3>
-                        <p>实时奖励与成就反馈，增强康复训练的持续动力。</p>
-                    </article>
-                    <article class="value-card">
-                        <div class="card-icon">🧠</div>
-                        <h3>沉浸式专注体验</h3>
-                        <p>简洁操作与明确反馈，帮助用户专注训练而不分心。</p>
-                    </article>
-                    <article class="value-card">
-                        <div class="card-icon">🤝</div>
-                        <h3>低门槛康复参与</h3>
-                        <p>适配不同康复阶段，支持轻松上手的训练方案。</p>
-                    </article>
+                <div class="details-text" style="margin-top: 24px;">
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">第二步：命名您的存储库，选择它是公共的还是私有的。添加一个README文件来共享您的信息，然后单击"创建存储库"按钮。</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;">在创建仓库页面中：</p>
+                    <ul style="line-height: 2; margin: 12px 0 12px 24px;">
+                        <li><strong>1. Repository name（仓库名称）：</strong>输入您的仓库名称</li>
+                        <li><strong>2. Choose visibility（选择可见性）：</strong>选择 Public（公开）或 Private（私有）</li>
+                        <li><strong>3. Add README（添加 README）：</strong>开启此选项以自动生成 README 文件</li>
+                    </ul>
+                    <p style="line-height: 1.8; margin: 12px 0;">完成设置后，点击绿色的 "Create repository"（创建存储库）按钮即可。</p>
+                </div>
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/屏幕截图 2026-06-24 113946.png" alt="配置仓库信息界面" style="width: 80%; height: auto;">
+                        <p class="image-caption">配置仓库信息界面</p>
+                    </div>
                 </div>
             </div>
             <div class="page-actions">
