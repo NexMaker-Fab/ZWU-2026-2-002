@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <!-- 视口设置：确保移动端自适应缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>冯杭钰 Joker | 互动系统应用</title>
+
+    <!-- 加载像素风格字体 (Press Start 2P 标题 / IBM Plex Mono 正文) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=IBM+Plex+Mono:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+                   0. 全局重置 & 基础样式
+                   ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            /* 平滑滚动 */
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            min-height: 100vh;
+            background: #0a1628;
+            /* 深蓝底色 fallback */
+            color: #e0e8f0;
+            line-height: 1.7;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ============================================================
+                   1. 背景层：渐变 + 网格 + 噪点
+                   ============================================================ */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            /* 深浅蓝渐变 */
+            background: linear-gradient(165deg,
+                    #0a1628 0%,
+                    #0f2040 20%,
+                    #162a4a 40%,
+                    #1a2d4a 55%,
+                    #1f3452 70%,
+                    #26405e 85%,
+                    #2a4a6a 100%);
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* ---- 工程基准网格线 (淡灰色) ---- */
+        .bg-layer .grid-lines {
+            position: absolute;
+            inset: 0;
+            background-image:
+                /* 垂直线 */
+                repeating-linear-gradient(90deg,
+                    rgba(180, 200, 220, 0.08) 0px,
+                    rgba(180, 200, 220, 0.08) 1px,
+                    transparent 1px,
+                    transparent 32px),
+                /* 水平线 */
+                repeating-linear-gradient(180deg,
+                    rgba(180, 200, 220, 0.08) 0px,
+                    rgba(180, 200, 220, 0.08) 1px,
+                    transparent 1px,
+                    transparent 32px);
+            pointer-events: none;
+        }
+
+        /* ---- 细密辅助网格 (更淡) ---- */
+        .bg-layer .grid-lines-sub {
+            position: absolute;
+            inset: 0;
+            background-image:
+                repeating-linear-gradient(90deg,
+                    rgba(180, 200, 220, 0.035) 0px,
+                    rgba(180, 200, 220, 0.035) 1px,
+                    transparent 1px,
+                    transparent 8px),
+                repeating-linear-gradient(180deg,
+                    rgba(180, 200, 220, 0.035) 0px,
+                    rgba(180, 200, 220, 0.035) 1px,
+                    transparent 1px,
+                    transparent 8px);
+            pointer-events: none;
+        }
+
+        /* ---- SVG噪点滤镜 (通过filter引用) ---- */
+        .noise-filter {
+            position: absolute;
+            width: 0;
+            height: 0;
+            pointer-events: none;
+        }
+
+        /* ---- 噪点颗粒层 (使用SVG滤镜) ---- */
+        .noise-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            /* 引用SVG噪点滤镜 */
+            filter: url(#pixelNoise);
+            mix-blend-mode: overlay;
+            opacity: 0.35;
+            background: transparent;
+        }
+
+        /* ---- 额外CSS噪点 (增强颗粒感) ---- */
+        .noise-layer-css {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+                radial-gradient(circle at 30% 60%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 50% 10%, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+                radial-gradient(circle at 70% 80%, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                radial-gradient(circle at 90% 40%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 20% 90%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                radial-gradient(circle at 80% 30%, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+                radial-gradient(circle at 45% 70%, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                radial-gradient(circle at 5% 50%, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+                radial-gradient(circle at 95% 75%, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+            background-size: 6px 6px, 8px 8px, 5px 5px, 7px 7px, 6px 6px, 9px 9px, 5px 5px, 7px 7px, 8px 8px, 6px 6px;
+            opacity: 0.6;
+            mix-blend-mode: overlay;
+        }
+
+        /* ============================================================
+                   2. 像素装饰块 (分布在页面边角)
+                   ============================================================ */
+        .pixel-deco {
+            position: fixed;
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+            background: rgba(100, 160, 200, 0.15);
+            border: 1px solid rgba(100, 160, 200, 0.10);
+        }
+
+        /* 不同大小和位置的像素块 */
+        .pixel-deco-1 {
+            top: 48px;
+            left: 32px;
+            width: 20px;
+            height: 20px;
+            background: rgba(70, 140, 190, 0.12);
+            border-color: rgba(70, 140, 190, 0.08);
+        }
+        .pixel-deco-2 {
+            top: 80px;
+            left: 16px;
+            width: 12px;
+            height: 12px;
+            background: rgba(100, 180, 220, 0.08);
+            border-color: rgba(100, 180, 220, 0.06);
+        }
+        .pixel-deco-3 {
+            top: 120px;
+            right: 28px;
+            width: 28px;
+            height: 28px;
+            background: rgba(60, 130, 180, 0.10);
+            border-color: rgba(60, 130, 180, 0.06);
+        }
+        .pixel-deco-4 {
+            top: 60px;
+            right: 52px;
+            width: 8px;
+            height: 8px;
+            background: rgba(120, 190, 230, 0.10);
+            border-color: rgba(120, 190, 230, 0.06);
+        }
+        .pixel-deco-5 {
+            bottom: 80px;
+            left: 24px;
+            width: 16px;
+            height: 16px;
+            background: rgba(80, 150, 200, 0.10);
+            border-color: rgba(80, 150, 200, 0.06);
+        }
+        .pixel-deco-6 {
+            bottom: 48px;
+            left: 52px;
+            width: 24px;
+            height: 24px;
+            background: rgba(100, 170, 210, 0.08);
+            border-color: rgba(100, 170, 210, 0.05);
+        }
+        .pixel-deco-7 {
+            bottom: 100px;
+            right: 20px;
+            width: 18px;
+            height: 18px;
+            background: rgba(60, 140, 190, 0.10);
+            border-color: rgba(60, 140, 190, 0.06);
+        }
+        .pixel-deco-8 {
+            bottom: 52px;
+            right: 48px;
+            width: 10px;
+            height: 10px;
+            background: rgba(130, 200, 240, 0.08);
+            border-color: rgba(130, 200, 240, 0.05);
+        }
+        /* 额外的点阵碎片 (组合) */
+        .pixel-deco-9 {
+            top: 50%;
+            left: 12px;
+            width: 8px;
+            height: 8px;
+            background: rgba(80, 160, 210, 0.06);
+            border-color: rgba(80, 160, 210, 0.04);
+        }
+        .pixel-deco-10 {
+            top: 45%;
+            right: 12px;
+            width: 14px;
+            height: 14px;
+            background: rgba(60, 140, 200, 0.06);
+            border-color: rgba(60, 140, 200, 0.04);
+        }
+        /* 技术标注文字块 (装饰) */
+        .tech-label {
+            position: fixed;
+            z-index: 1;
+            pointer-events: none;
+            user-select: none;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 8px;
+            letter-spacing: 1px;
+            color: rgba(160, 200, 230, 0.15);
+            text-transform: uppercase;
+            writing-mode: vertical-rl;
+        }
+        .tech-label-1 {
+            top: 160px;
+            right: 8px;
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: rgba(160, 200, 230, 0.08);
+        }
+        .tech-label-2 {
+            bottom: 160px;
+            left: 8px;
+            font-size: 7px;
+            letter-spacing: 2px;
+            color: rgba(160, 200, 230, 0.08);
+        }
+
+        /* ============================================================
+                   3. 主容器
+                   ============================================================ */
+        .app-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px 10px;
+        }
+
+        /* ============================================================
+                   4. 顶部像素导航栏 (细网格像素边框)
+                   ============================================================ */
+        .navbar {
+            position: sticky;
+            top: 16px;
+            z-index: 50;
+            width: 100%;
+            max-width: 520px;
+            margin: 0 auto;
+            padding: 12px 16px;
+            background: rgba(10, 22, 40, 0.60);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(100, 160, 210, 0.20);
+            /* 像素风格边框: 细 + 浅 */
+            box-shadow:
+                0 0 0 1px rgba(100, 160, 210, 0.06),
+                inset 0 0 0 1px rgba(100, 160, 210, 0.06);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            flex-wrap: wrap;
+            transition: transform 0.25s ease, box-shadow 0.3s ease;
+            /* 内部网格纹理 (极淡) */
+            background-image:
+                repeating-linear-gradient(90deg,
+                    rgba(180, 200, 220, 0.03) 0px,
+                    rgba(180, 200, 220, 0.03) 1px,
+                    transparent 1px,
+                    transparent 6px),
+                repeating-linear-gradient(180deg,
+                    rgba(180, 200, 220, 0.03) 0px,
+                    rgba(180, 200, 220, 0.03) 1px,
+                    transparent 1px,
+                    transparent 6px);
+            background-size: 8px 8px, 8px 8px;
+        }
+
+        .navbar:hover {
+            transform: translateY(-1px);
+            box-shadow:
+                0 0 0 1px rgba(100, 160, 210, 0.12),
+                inset 0 0 0 1px rgba(100, 160, 210, 0.12),
+                0 8px 32px rgba(0, 20, 40, 0.30);
+        }
+
+        /* 导航按钮 - 像素风格 */
+        .nav-link {
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            font-size: 0.65rem;
+            font-weight: 400;
+            color: #b0c8d8;
+            text-decoration: none;
+            padding: 8px 22px;
+            background: transparent;
+            border: 1px solid transparent;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            letter-spacing: 0.5px;
+            position: relative;
+            white-space: nowrap;
+            text-transform: uppercase;
+        }
+
+        /* 悬浮：像素缩放 + 边框亮起 */
+        .nav-link:hover {
+            transform: scale(1.04);
+            background: rgba(100, 180, 230, 0.06);
+            border-color: rgba(100, 180, 230, 0.20);
+            color: #d0e4f0;
+        }
+
+        /* 激活状态：亮色边框 + 浅色背景 */
+        .nav-link.active {
+            background: rgba(80, 160, 220, 0.08);
+            border: 1px solid rgba(100, 180, 230, 0.25);
+            color: #d8ecf8;
+            box-shadow: inset 0 0 20px rgba(80, 160, 220, 0.04);
+        }
+
+        .nav-link.active:hover {
+            transform: scale(1.03);
+            background: rgba(80, 160, 220, 0.12);
+        }
+
+        /* 导航分隔符 (像素点) */
+        .nav-divider {
+            color: rgba(100, 160, 210, 0.12);
+            font-size: 0.5rem;
+            user-select: none;
+            padding: 0 2px;
+        }
+
+        /* ============================================================
+                   5. 页面容器
+                   ============================================================ */
+        .page-container {
+            flex: 1;
+            width: 100%;
+            padding: 20px 0 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 每个页面默认隐藏，通过 JS 切换 */
+        .page {
+            display: none;
+            animation: pageFadeIn 0.8s ease forwards;
+            padding: 12px 6px 30px;
+            flex: 1;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 页面淡入加载动画 */
+        @keyframes pageFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(16px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 页面切换淡出 */
+        .page-exit {
+            animation: pageFadeOut 0.3s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+        }
+
+        /* ============================================================
+                   6. 首页 (Home)
+                   ============================================================ */
+        .page-home {
+            min-height: 70vh;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 16px 50px;
+            position: relative;
+        }
+
+        /* 首页主标题 - 像素点阵解构效果 */
+        .home-title {
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            font-size: 2.8rem;
+            font-weight: 400;
+            color: #d8ecf8;
+            line-height: 1.4;
+            letter-spacing: 4px;
+            text-shadow:
+                0 0 10px rgba(80, 160, 220, 0.15),
+                0 0 30px rgba(80, 160, 220, 0.05);
+            position: relative;
+            display: inline-block;
+            padding: 0 20px;
+        }
+
+        /* 解构效果：用伪元素添加像素块装饰 */
+        .home-title::before {
+            content: '◆';
+            position: absolute;
+            left: -32px;
+            top: 4px;
+            font-size: 12px;
+            color: rgba(100, 180, 230, 0.15);
+            opacity: 0.5;
+        }
+        .home-title::after {
+            content: '◆';
+            position: absolute;
+            right: -32px;
+            bottom: 4px;
+            font-size: 12px;
+            color: rgba(100, 180, 230, 0.15);
+            opacity: 0.5;
+        }
+
+        .home-title .slash {
+            color: rgba(160, 200, 230, 0.20);
+            font-weight: 300;
+            margin: 0 8px;
+        }
+
+        .home-title .joker {
+            color: #8ac0e0;
+            text-shadow:
+                0 0 10px rgba(100, 180, 230, 0.20),
+                0 0 40px rgba(80, 160, 220, 0.06);
+        }
+
+        /* 像素标题周围的点阵装饰 */
+        .title-pixel-deco {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            font-size: 6px;
+            color: rgba(100, 180, 230, 0.10);
+            letter-spacing: 0;
+        }
+        .title-pixel-deco.d1 {
+            top: -12px;
+            right: -20px;
+        }
+        .title-pixel-deco.d2 {
+            bottom: -12px;
+            left: -20px;
+        }
+
+        .home-subtitle {
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #8ab0c8;
+            letter-spacing: 6px;
+            margin-top: 12px;
+            padding: 6px 20px;
+            border: 1px solid rgba(100, 160, 210, 0.10);
+            display: inline-block;
+            background: rgba(10, 22, 40, 0.20);
+            backdrop-filter: blur(2px);
+        }
+
+        .home-meta {
+            margin-top: 24px;
+            font-family: 'IBM Plex Mono', monospace;
+            font-size: 0.85rem;
+            font-weight: 400;
+            color: #8ab0c8;
+            letter-spacing: 2px;
+            padding: 8px 28px;
+            border: 1px solid rgba(100, 160, 210, 0.08);
+            background: rgba(10, 22, 40, 0.15);
+            backdrop-filter: blur(2px);
+            display: inline-block;
+        }
+
+        .home-meta .sep {
+            margin: 0 10px;
+            color: rgba(100, 160, 210, 0.15);
+        }
+
+        /* 首页底部像素装饰线 */
+        .home-deco-line {
+            margin-top: 36px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 12px;
+            color: rgba(100, 160, 210, 0.10);
+            user-select: none;
+        }
+
+        /* ============================================================
+                   7. 个人介绍页 (About Me)
+                   ============================================================ */
+        .page-about {
+            min-height: 70vh;
+            justify-content: center;
+            padding: 20px 8px 40px;
+        }
+
+        /* 半透明磨砂网格像素卡片 */
+        .about-card {
+            width: 100%;
+            max-width: 820px;
+            padding: 40px 44px 36px;
+            background: rgba(10, 26, 48, 0.55);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 160, 210, 0.12);
+            box-shadow:
+                0 0 0 1px rgba(100, 160, 210, 0.04),
+                inset 0 0 40px rgba(20, 60, 100, 0.08);
+            position: relative;
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            /* 内部网格纹理 */
+            background-image:
+                repeating-linear-gradient(90deg,
+                    rgba(180, 200, 220, 0.02) 0px,
+                    rgba(180, 200, 220, 0.02) 1px,
+                    transparent 1px,
+                    transparent 16px),
+                repeating-linear-gradient(180deg,
+                    rgba(180, 200, 220, 0.02) 0px,
+                    rgba(180, 200, 220, 0.02) 1px,
+                    transparent 1px,
+                    transparent 16px);
+            background-size: 16px 16px, 16px 16px;
+        }
+
+        .about-card:hover {
+            transform: translateY(-2px);
+            box-shadow:
+                0 0 0 1px rgba(100, 160, 210, 0.08),
+                inset 0 0 40px rgba(20, 60, 100, 0.12),
+                0 12px 48px rgba(0, 10, 30, 0.30);
+        }
+
+        /* 卡片内的像素装饰 */
+        .about-card .card-pixel {
+            position: absolute;
+            pointer-events: none;
+            user-select: none;
+            background: rgba(100, 180, 230, 0.04);
+            border: 1px solid rgba(100, 180, 230, 0.03);
+        }
+        .card-pixel-1 {
+            top: -6px;
+            right: -6px;
+            width: 12px;
+            height: 12px;
+        }
+        .card-pixel-2 {
+            bottom: -6px;
+            left: -6px;
+            width: 16px;
+            height: 16px;
+            background: rgba(60, 140, 200, 0.04);
+            border-color: rgba(60, 140, 200, 0.03);
+        }
+        .card-pixel-3 {
+            top: 20px;
+            right: -10px;
+            width: 6px;
+            height: 6px;
+            background: rgba(130, 200, 240, 0.04);
+            border-color: rgba(130, 200, 240, 0.02);
+        }
+        .card-pixel-4 {
+            bottom: 30px;
+            left: -8px;
+            width: 8px;
+            height: 8px;
+            background: rgba(80, 160, 210, 0.04);
+            border-color: rgba(80, 160, 210, 0.02);
+        }
+
+        /* 卡片标题 */
+        .about-title {
+            font-family: 'Press Start 2P', 'Courier New', monospace;
+            font-size: 1.4rem;
+            font-weight: 400;
+            color: #d0e4f0;
+            text-align: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid rgba(100, 160, 210, 0.08);
+            letter-spacing: 4px;
+            position: relative;
+        }
+        .about-title .highlight {
+            color: #8ac0e0;
+            text-shadow: 0 0 20px rgba(80, 160, 220, 0.10);
+        }
+
+        /* 正文内容 */
+        .about-body {
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            font-weight: 300;
+            font-size: 0.92rem;
+            line-height: 2.0;
+            color: #c8d8e4;
+            letter-spacing: 0.3px;
+            padding: 4px 2px;
+        }
+
+        .about-body p {
+            margin-bottom: 16px;
+            text-indent: 2em;
+        }
+
+        .about-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 正文中的像素标签 (技术强调) */
+        .about-body .pixel-tag {
+            display: inline-block;
+            font-weight: 500;
+            color: #8ac0e0;
+            background: rgba(60, 140, 200, 0.06);
+            border: 1px solid rgba(100, 180, 230, 0.08);
+            padding: 0 10px;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+            line-height: 1.6;
+        }
+
+        .about-body .pixel-tag.blue {
+            color: #80c0e0;
+            border-color: rgba(80, 180, 230, 0.10);
+            background: rgba(40, 120, 180, 0.06);
+        }
+        .about-body .pixel-tag.cyan {
+            color: #70c8e8;
+            border-color: rgba(60, 200, 230, 0.08);
+            background: rgba(40, 160, 200, 0.05);
+        }
+        .about-body .pixel-tag.gray {
+            color: #a0b8c8;
+            border-color: rgba(160, 180, 200, 0.06);
+            background: rgba(100, 120, 140, 0.04);
+        }
+        .about-body .pixel-tag.dark {
+            color: #8aa8c0;
+            border-color: rgba(80, 140, 180, 0.06);
+            background: rgba(20, 60, 100, 0.06);
+        }
+
+        /* 卡片底部装饰 */
+        .about-footer-deco {
+            text-align: center;
+            margin-top: 24px;
+            font-family: 'Press Start 2P', monospace;
+            font-size: 0.5rem;
+            letter-spacing: 8px;
+            color: rgba(100, 160, 210, 0.10);
+            border-top: 1px solid rgba(100, 160, 210, 0.04);
+            padding-top: 16px;
+            user-select: none;
+        }
+
+        /* ============================================================
+                   8. 全局页脚
+                   ============================================================ */
+        .global-footer {
+            width: 100%;
+            max-width: 1200px;
+            padding: 16px 16px 14px;
+            text-align: center;
+            font-family: 'IBM Plex Mono', 'Courier New', monospace;
+            font-size: 0.70rem;
+            font-weight: 300;
+            color: rgba(160, 190, 210, 0.35);
+            letter-spacing: 1.5px;
+            border-top: 1px solid rgba(100, 160, 210, 0.04);
+            margin-top: 8px;
+            background: rgba(10, 22, 40, 0.20);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .global-footer .footer-sep {
+            margin: 0 6px;
+            opacity: 0.20;
+            color: rgba(100, 160, 210, 0.15);
+        }
+
+        .global-footer .footer-pixel {
+            display: inline-block;
+            width: 6px;
+            height: 6px;
+            background: rgba(100, 180, 230, 0.15);
+            border: 1px solid rgba(100, 180, 230, 0.05);
+            margin: 0 4px;
+            animation: pixelPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pixelPulse {
+            0%,
+            100% {
+                opacity: 0.15;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.40;
+                transform: scale(1.15);
+            }
+        }
+
+        /* ============================================================
+                   9. 响应式适配 (移动端优先)
+                   ============================================================ */
+
+        /* 小屏手机 (≤ 480px) */
+        @media (max-width: 480px) {
+            .app-wrapper {
+                padding: 0 10px 6px;
+            }
+
+            /* 导航 */
+            .navbar {
+                top: 10px;
+                padding: 8px 8px;
+                gap: 2px;
+                max-width: 100%;
+                border-width: 1px;
+            }
+            .nav-link {
+                font-size: 0.45rem;
+                padding: 6px 12px;
+                letter-spacing: 0.3px;
+            }
+            .nav-divider {
+                font-size: 0.4rem;
+                padding: 0 1px;
+            }
+
+            /* 首页 */
+            .home-title {
+                font-size: 1.6rem;
+                letter-spacing: 2px;
+                padding: 0 10px;
+            }
+            .home-title::before,
+            .home-title::after {
+                display: none;
+            }
+            .home-title .slash {
+                margin: 0 4px;
+            }
+            .home-subtitle {
+                font-size: 0.55rem;
+                letter-spacing: 3px;
+                padding: 4px 12px;
+            }
+            .home-meta {
+                font-size: 0.60rem;
+                padding: 6px 16px;
+                letter-spacing: 1px;
+            }
+            .home-meta .sep {
+                margin: 0 4px;
+            }
+            .home-deco-line {
+                font-size: 0.4rem;
+                letter-spacing: 8px;
+                margin-top: 24px;
+            }
+            .title-pixel-deco {
+                display: none;
+            }
+
+            /* 介绍卡片 */
+            .about-card {
+                padding: 20px 16px 18px;
+                border-width: 1px;
+                background: rgba(10, 26, 48, 0.60);
+            }
+            .about-card:hover {
+                transform: none;
+            }
+            .about-title {
+                font-size: 0.95rem;
+                letter-spacing: 2px;
+                padding-bottom: 10px;
+                border-width: 1px;
+            }
+            .about-body {
+                font-size: 0.72rem;
+                line-height: 1.9;
+                letter-spacing: 0.1px;
+            }
+            .about-body p {
+                margin-bottom: 12px;
+                text-indent: 1.8em;
+            }
+            .about-body .pixel-tag {
+                font-size: 0.70rem;
+                padding: 0 6px;
+                border-width: 1px;
+            }
+            .about-footer-deco {
+                font-size: 0.4rem;
+                letter-spacing: 4px;
+                margin-top: 16px;
+                padding-top: 12px;
+                border-width: 1px;
+            }
+
+            /* 卡片内像素装饰 */
+            .about-card .card-pixel {
+                transform: scale(0.6);
+            }
+            .card-pixel-1 {
+                top: -4px;
+                right: -4px;
+            }
+            .card-pixel-2 {
+                bottom: -4px;
+                left: -4px;
+            }
+            .card-pixel-3,
+            .card-pixel-4 {
+                display: none;
+            }
+
+            /* 页脚 */
+            .global-footer {
+                font-size: 0.50rem;
+                padding: 10px 6px 8px;
+                letter-spacing: 0.5px;
+                border-width: 1px;
+                gap: 3px;
+            }
+            .global-footer .footer-sep {
+                margin: 0 3px;
+            }
+            .global-footer .footer-pixel {
+                width: 4px;
+                height: 4px;
+            }
+
+            /* 像素装饰块移动端缩放/隐藏 */
+            .pixel-deco {
+                transform: scale(0.5);
+            }
+            .pixel-deco-1 {
+                top: 24px;
+                left: 12px;
+                width: 16px;
+                height: 16px;
+            }
+            .pixel-deco-2 {
+                display: none;
+            }
+            .pixel-deco-3 {
+                top: 20px;
+                right: 10px;
+                width: 20px;
+                height: 20px;
+            }
+            .pixel-deco-4 {
+                display: none;
+            }
+            .pixel-deco-5 {
+                bottom: 40px;
+                left: 10px;
+                width: 12px;
+                height: 12px;
+            }
+            .pixel-deco-6 {
+                display: none;
+            }
+            .pixel-deco-7 {
+                bottom: 30px;
+                right: 8px;
+                width: 14px;
+                height: 14px;
+            }
+            .pixel-deco-8 {
+                display: none;
+            }
+            .pixel-deco-9,
+            .pixel-deco-10 {
+                display: none;
+            }
+            .tech-label-1,
+            .tech-label-2 {
+                display: none;
+            }
+        }
+
+        /* 平板 / 中屏 (481px ~ 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .home-title {
+                font-size: 2.2rem;
+                letter-spacing: 3px;
+            }
+            .home-title::before,
+            .home-title::after {
+                font-size: 8px;
+                left: -20px;
+                right: -20px;
+            }
+            .home-subtitle {
+                font-size: 0.65rem;
+            }
+            .about-card {
+                padding: 28px 24px 24px;
+            }
+            .about-title {
+                font-size: 1.1rem;
+            }
+            .about-body {
+                font-size: 0.80rem;
+            }
+            .navbar {
+                max-width: 90%;
+                padding: 8px 12px;
+            }
+            .nav-link {
+                font-size: 0.50rem;
+                padding: 6px 14px;
+            }
+
+            /* 像素装饰适度缩放 */
+            .pixel-deco {
+                transform: scale(0.7);
+            }
+            .pixel-deco-1 {
+                top: 32px;
+                left: 20px;
+            }
+            .pixel-deco-3 {
+                top: 28px;
+                right: 18px;
+            }
+            .pixel-deco-5 {
+                bottom: 48px;
+                left: 16px;
+            }
+            .pixel-deco-7 {
+                bottom: 40px;
+                right: 16px;
+            }
+            .pixel-deco-9,
+            .pixel-deco-10 {
+                display: none;
+            }
+            .tech-label-1,
+            .tech-label-2 {
+                font-size: 6px;
+            }
+        }
+
+        /* 大屏桌面微调 */
+        @media (min-width: 1200px) {
+            .home-title {
+                font-size: 3.4rem;
+                letter-spacing: 6px;
+            }
+            .about-card {
+                padding: 48px 56px 44px;
+            }
+            .about-body {
+                font-size: 0.98rem;
+            }
+        }
+
+        /* ============================================================
+                   10. 工具类 & 辅助
+                   ============================================================ */
+
+        /* 文字淡入 (用于首页) */
+        .fade-in-text {
+            opacity: 0;
+            animation: textFadeIn 1.0s ease forwards;
+        }
+        .fade-in-text.delay-1 {
+            animation-delay: 0.2s;
+        }
+        .fade-in-text.delay-2 {
+            animation-delay: 0.5s;
+        }
+        .fade-in-text.delay-3 {
+            animation-delay: 0.8s;
+        }
+
+        @keyframes textFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(12px) scale(0.97);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 页面切换过渡 */
+        .page {
+            transition: opacity 0.3s ease;
+        }
+
+        /* ============================================================
+                   11. 滚动条美化 (蓝调科技)
+                   ============================================================ */
+        ::-webkit-scrollbar {
+            width: 5px;
+            background: #0a1628;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0a1628;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(80, 160, 220, 0.20);
+            border: 1px solid rgba(80, 160, 220, 0.05);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(80, 160, 220, 0.30);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    背景层：渐变 + 网格 + 噪点 (固定)
+    ============================================================ -->
+    <div class="bg-layer" aria-hidden="true">
+        <!-- 主网格线 -->
+        <div class="grid-lines"></div>
+        <!-- 辅助细网格 -->
+        <div class="grid-lines-sub"></div>
+
+        <!-- SVG噪点滤镜定义 -->
+        <svg class="noise-filter" xmlns="http://www.w3.org/2000/svg">
+            <filter id="pixelNoise">
+                <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch" />
+                <feColorMatrix type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.25 0" />
+            </filter>
+        </svg>
+
+        <!-- 噪点颗粒层 (SVG滤镜) -->
+        <div class="noise-layer"></div>
+
+        <!-- 额外CSS噪点 (增强颗粒感) -->
+        <div class="noise-layer-css"></div>
+    </div>
+
+    <!-- ============================================================
+    像素装饰块 (固定在页面边角)
+    ============================================================ -->
+    <div class="pixel-deco pixel-deco-1"></div>
+    <div class="pixel-deco pixel-deco-2"></div>
+    <div class="pixel-deco pixel-deco-3"></div>
+    <div class="pixel-deco pixel-deco-4"></div>
+    <div class="pixel-deco pixel-deco-5"></div>
+    <div class="pixel-deco pixel-deco-6"></div>
+    <div class="pixel-deco pixel-deco-7"></div>
+    <div class="pixel-deco pixel-deco-8"></div>
+    <div class="pixel-deco pixel-deco-9"></div>
+    <div class="pixel-deco pixel-deco-10"></div>
+
+    <!-- 技术标注文字块 -->
+    <div class="tech-label tech-label-1">SYS_GRID // PIXEL</div>
+    <div class="tech-label tech-label-2">DATA // BLUE</div>
+
+    <!-- ============================================================
+    主内容容器
+    ============================================================ -->
+    <div class="app-wrapper">
+
+        <!-- ============================================================
+        顶部像素导航栏 (细网格像素边框)
+        ============================================================ -->
+        <nav class="navbar" role="navigation" aria-label="主导航">
+            <a href="#" class="nav-link active" data-page="home">Home</a>
+            <span class="nav-divider">◆</span>
+            <a href="#" class="nav-link" data-page="about">About Me</a>
+        </nav>
+
+        <!-- ============================================================
+        页面容器
+        ============================================================ -->
+        <div class="page-container">
+
+            <!-- ===== 首页 (Home) ===== -->
+            <section class="page page-home active" id="page-home" role="main" aria-label="首页">
+                <div class="fade-in-text">
+                    <h1 class="home-title">
+                        冯杭钰 <span class="slash">/</span> <span class="joker">Joker</span>
+                        <span class="title-pixel-deco d1">◆ ◆</span>
+                        <span class="title-pixel-deco d2">◆ ◆</span>
+                    </h1>
+                </div>
+                <div class="fade-in-text delay-1">
+                    <div class="home-subtitle">24 艺科 A2</div>
+                </div>
+                <div class="fade-in-text delay-2">
+                    <div class="home-meta">
+                        <span>◈</span>
+                        <span>互动系统应用</span>
+                        <span class="sep">·</span>
+                        <span>◈</span>
+                    </div>
+                </div>
+                <div class="fade-in-text delay-3 home-deco-line">
+                    ◆ ◆ ◆ ◆ ◆
+                </div>
+            </section>
+
+            <!-- ===== 个人介绍页 (About Me) ===== -->
+            <section class="page page-about" id="page-about" role="main" aria-label="个人介绍">
+                <div class="about-card">
+                    <!-- 卡片内像素装饰 -->
+                    <span class="card-pixel card-pixel-1"></span>
+                    <span class="card-pixel card-pixel-2"></span>
+                    <span class="card-pixel card-pixel-3"></span>
+                    <span class="card-pixel card-pixel-4"></span>
+
+                    <h2 class="about-title">
+                        <span class="highlight">About</span> Me
+                    </h2>
+
+                    <div class="about-body">
+                        <p>
+                            大家好，我是小组组员 <span class="pixel-tag">Joker</span>，在本次网页项目中主要负责
+                            <span class="pixel-tag blue">硬件工程</span> 相关工作。
+                        </p>
+                        <p>
+                            项目前期完成整套交互装置硬件整体方案规划，开展元器件选型、电路线路搭建、
+                            传感器接线与硬件设备调试工作；对接前端页面交互需求，
+                            打通硬件设备与网页之间的 <span class="pixel-tag cyan">数据传输链路</span>，
+                            实现软硬件联动交互效果。
+                        </p>
+                        <p>
+                            熟练掌握硬件电路搭建、传感器调试、设备故障排查等实操工作，
+                            能够根据网页交互需求调整硬件参数，优化硬件 <span class="pixel-tag gray">运行稳定性</span>
+                            与 <span class="pixel-tag dark">响应速度</span>。
+                        </p>
+                        <p>
+                            团队协作中配合3D建模、前端开发组员对接软硬件联动需求，
+                            反复测试硬件与网页的联动适配效果，及时修正硬件适配漏洞，
+                            保障整套互动系统 <span class="pixel-tag blue">软硬件协同稳定运行</span>。
+                        </p>
+                    </div>
+
+                    <div class="about-footer-deco">
+                        ◈ PIXEL · GRID · TECH ◈
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ============================================================
+        全局页脚
+        ============================================================ -->
+        <footer class="global-footer">
+            <span>冯杭钰（Joker）</span>
+            <span class="footer-sep">|</span>
+            <span>24艺科A2</span>
+            <span class="footer-sep">|</span>
+            <span>《互动系统应用》课程个人展示网站</span>
+            <span class="footer-pixel"></span>
+        </footer>
+
+    </div>
+    <!-- ===== app-wrapper 结束 ===== -->
+
+
+    <!-- ============================================================
+    JavaScript：页面切换、导航激活、平滑过渡
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ----- 获取所有导航链接和页面 -----
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = {
+                home: document.getElementById('page-home'),
+                about: document.getElementById('page-about')
+            };
+
+            let currentPage = 'home';
+            let isTransitioning = false;
+
+            /**
+             * 切换到指定页面
+             * @param {string} pageId - 'home' 或 'about'
+             */
+            function switchPage(pageId) {
+                if (isTransitioning || currentPage === pageId) return;
+
+                const targetPage = pages[pageId];
+                if (!targetPage) return;
+
+                const currentPageEl = pages[currentPage];
+
+                isTransitioning = true;
+
+                // 1. 当前页面淡出
+                if (currentPageEl) {
+                    currentPageEl.classList.add('page-exit');
+                    currentPageEl.classList.remove('active');
+                }
+
+                // 2. 延迟后显示新页面 (等待淡出动画)
+                setTimeout(function() {
+                    // 隐藏所有页面
+                    Object.keys(pages).forEach(key => {
+                        pages[key].classList.remove('active', 'page-exit');
+                    });
+
+                    // 显示目标页面
+                    targetPage.classList.add('active');
+                    // 重置动画以触发淡入
+                    targetPage.style.animation = 'none';
+                    void targetPage.offsetHeight;
+                    targetPage.style.animation = '';
+
+                    // 更新导航激活状态
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.dataset.page === pageId) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                    currentPage = pageId;
+                    isTransitioning = false;
+
+                    // 滚动到顶部
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                }, 280);
+            }
+
+            // ----- 为导航链接绑定点击事件 -----
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.dataset.page;
+                    if (pageId) {
+                        switchPage(pageId);
+                    }
+                });
+            });
+
+            // ----- 页面加载完成后确保首页激活 -----
+            window.addEventListener('DOMContentLoaded', function() {
+                const activeLink = document.querySelector('.nav-link.active');
+                if (activeLink) {
+                    const pageId = activeLink.dataset.page;
+                    if (pageId && pages[pageId]) {
+                        Object.keys(pages).forEach(key => {
+                            pages[key].classList.remove('active', 'page-exit');
+                        });
+                        pages[pageId].classList.add('active');
+                        currentPage = pageId;
+                    }
+                } else {
+                    // 默认首页
+                    Object.keys(pages).forEach(key => {
+                        pages[key].classList.remove('active', 'page-exit');
+                    });
+                    pages.home.classList.add('active');
+                    document.querySelector('.nav-link[data-page="home"]')?.classList.add('active');
+                    currentPage = 'home';
+                }
+
+                // 触发首页淡入动画 (重新播放)
+                const homePage = pages.home;
+                if (homePage) {
+                    homePage.style.animation = 'none';
+                    void homePage.offsetHeight;
+                    homePage.style.animation = '';
+                }
+
+                // 对 .fade-in-text 元素重启动画
+                document.querySelectorAll('.fade-in-text').forEach(el => {
+                    el.style.animation = 'none';
+                    void el.offsetHeight;
+                    el.style.animation = '';
+                });
+            });
+
+            // ----- 键盘快捷键: 1=首页, 2=介绍 (方便演示) -----
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '1') {
+                    e.preventDefault();
+                    switchPage('home');
+                } else if (e.key === '2') {
+                    e.preventDefault();
+                    switchPage('about');
+                }
+            });
+
+            // 暴露切换函数到全局 (方便调试)
+            window.switchPage = switchPage;
+
+            console.log('◈ 冯杭钰 Joker 个人网站已加载 | 像素点阵蓝调颗粒科技风');
+            console.log('📌 按键盘 1=首页, 2=个人介绍');
+
+        })();
+    </script>
+
+</body>
+</html>

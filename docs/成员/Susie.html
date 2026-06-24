@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8" />
+    <!-- 视口设置：确保移动端自适应缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
+    <title>李遂遂 Susie | 互动系统应用</title>
+
+    <!-- 加载 Google Font 圆润无衬线字体 (Inter + 备用系统字体) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600&display=swap" rel="stylesheet" />
+
+    <style>
+        /* ============================================================
+                   0. 全局重置 & 基础样式
+                   ============================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            /* 平滑滚动 */
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+            min-height: 100vh;
+            background: #e8edf0;
+            /* fallback 底色 */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #3d4a54;
+            line-height: 1.6;
+            overflow-x: hidden;
+            /* 防止水平溢出 */;
+        }
+
+        /* ============================================================
+                   1. 手绘油画海滨背景 (纯CSS绘制)
+                   ============================================================ */
+        .painting-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            width: 100%;
+            height: 100%;
+            /* 基底：奶油浅蓝渐变 — 模拟油画底色 */
+            background:
+                /* 第一层：柔和的大面积渐变 (天空 → 海面) */
+                linear-gradient(180deg,
+                    #f5f0e8 0%,
+                    #e2e9ed 25%,
+                    #d4e2e8 50%,
+                    #c5d8e0 70%,
+                    #b8ced8 85%,
+                    #aac2ce 100%);
+            /* 叠加手绘厚涂肌理：使用多个径向渐变模拟油画笔触与质感 */
+            background-image:
+                /* 笔触纹理：细密的不规则点斑 (模拟油画颜料颗粒) */
+                radial-gradient(circle at 20% 30%, rgba(255, 248, 240, 0.25) 2px, transparent 2px),
+                radial-gradient(circle at 70% 50%, rgba(255, 248, 240, 0.20) 3px, transparent 3px),
+                radial-gradient(circle at 40% 80%, rgba(240, 235, 230, 0.30) 4px, transparent 4px),
+                radial-gradient(circle at 85% 15%, rgba(255, 248, 240, 0.15) 2px, transparent 2px),
+                radial-gradient(circle at 10% 65%, rgba(240, 235, 230, 0.20) 3px, transparent 3px),
+                radial-gradient(circle at 55% 40%, rgba(255, 248, 240, 0.10) 5px, transparent 5px),
+                /* 厚涂笔触：大块柔和色斑 */
+                radial-gradient(ellipse at 15% 20%, rgba(235, 225, 215, 0.30) 120px, transparent 120px),
+                radial-gradient(ellipse at 80% 35%, rgba(225, 235, 240, 0.25) 160px, transparent 160px),
+                radial-gradient(ellipse at 50% 70%, rgba(200, 215, 225, 0.20) 200px, transparent 200px),
+                radial-gradient(ellipse at 30% 85%, rgba(210, 220, 225, 0.25) 140px, transparent 140px),
+                /* 主渐变层 (重新覆盖，让肌理叠加在颜色之上) */
+                linear-gradient(180deg,
+                    #f5f0e8 0%,
+                    #e2e9ed 25%,
+                    #d4e2e8 50%,
+                    #c5d8e0 70%,
+                    #b8ced8 85%,
+                    #aac2ce 100%);
+            background-blend-mode: normal, normal, normal, normal, normal, normal, normal, normal, normal, normal;
+            background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+            pointer-events: none;
+            /* 让背景不干扰点击 */;
+        }
+
+        /* ---------- 手绘云朵 (使用伪元素绘制) ---------- */
+        .painting-bg .clouds {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        /* 云朵1 - 大而蓬松 */
+        .cloud-1 {
+            position: absolute;
+            top: 6%;
+            left: 5%;
+            width: 320px;
+            height: 120px;
+            background: radial-gradient(ellipse at 30% 50%, rgba(255, 252, 248, 0.70) 0%, rgba(255, 252, 248, 0.30) 60%, transparent 80%);
+            border-radius: 50%;
+            filter: blur(12px);
+            transform: rotate(-2deg);
+            animation: cloudFloat 18s ease-in-out infinite alternate;
+        }
+        .cloud-1::before {
+            content: '';
+            position: absolute;
+            top: -30px;
+            left: 60px;
+            width: 200px;
+            height: 100px;
+            background: radial-gradient(ellipse at 50% 50%, rgba(255, 252, 248, 0.65) 0%, rgba(255, 252, 248, 0.20) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+        .cloud-1::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 180px;
+            width: 150px;
+            height: 80px;
+            background: radial-gradient(ellipse at 50% 50%, rgba(255, 252, 248, 0.55) 0%, rgba(255, 252, 248, 0.15) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        /* 云朵2 - 中号 */
+        .cloud-2 {
+            position: absolute;
+            top: 18%;
+            right: 8%;
+            width: 280px;
+            height: 100px;
+            background: radial-gradient(ellipse at 60% 40%, rgba(255, 252, 248, 0.60) 0%, rgba(255, 252, 248, 0.20) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(14px);
+            animation: cloudFloat 22s ease-in-out infinite alternate-reverse;
+        }
+        .cloud-2::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 40px;
+            width: 180px;
+            height: 90px;
+            background: radial-gradient(ellipse at 50% 50%, rgba(255, 252, 248, 0.55) 0%, rgba(255, 252, 248, 0.15) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+        .cloud-2::after {
+            content: '';
+            position: absolute;
+            top: 30px;
+            left: 140px;
+            width: 130px;
+            height: 70px;
+            background: radial-gradient(ellipse at 50% 50%, rgba(255, 252, 248, 0.45) 0%, rgba(255, 252, 248, 0.10) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        /* 云朵3 - 小号，远处 */
+        .cloud-3 {
+            position: absolute;
+            top: 32%;
+            left: 45%;
+            width: 200px;
+            height: 70px;
+            background: radial-gradient(ellipse at 40% 50%, rgba(255, 252, 248, 0.40) 0%, rgba(255, 252, 248, 0.10) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(16px);
+            animation: cloudFloat 26s ease-in-out infinite alternate;
+            opacity: 0.6;
+        }
+        .cloud-3::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            width: 140px;
+            height: 60px;
+            background: radial-gradient(ellipse at 50% 50%, rgba(255, 252, 248, 0.35) 0%, rgba(255, 252, 248, 0.08) 70%, transparent 90%);
+            border-radius: 50%;
+            filter: blur(10px);
+        }
+
+        /* ---------- 远山 (手绘波浪轮廓) ---------- */
+        .mountains {
+            position: absolute;
+            bottom: 32%;
+            left: 0;
+            width: 100%;
+            height: 160px;
+            pointer-events: none;
+            /* 使用多个椭圆叠加形成山峦轮廓 */
+            background:
+                radial-gradient(ellipse at 10% 100%, rgba(180, 200, 210, 0.35) 0%, rgba(180, 200, 210, 0.10) 60%, transparent 80%),
+                radial-gradient(ellipse at 30% 100%, rgba(170, 190, 200, 0.30) 0%, rgba(170, 190, 200, 0.08) 55%, transparent 75%),
+                radial-gradient(ellipse at 55% 100%, rgba(190, 210, 220, 0.25) 0%, rgba(190, 210, 220, 0.06) 50%, transparent 70%),
+                radial-gradient(ellipse at 75% 100%, rgba(160, 185, 195, 0.30) 0%, rgba(160, 185, 195, 0.08) 55%, transparent 75%),
+                radial-gradient(ellipse at 92% 100%, rgba(175, 195, 205, 0.28) 0%, rgba(175, 195, 205, 0.06) 50%, transparent 70%);
+            filter: blur(6px);
+            opacity: 0.7;
+        }
+
+        /* ---------- 海面 (底部浅滩) ---------- */
+        .sea-surface {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 32%;
+            pointer-events: none;
+            background:
+                /* 海面渐变 */
+                linear-gradient(180deg,
+                    rgba(180, 210, 220, 0.30) 0%,
+                    rgba(160, 195, 210, 0.35) 30%,
+                    rgba(140, 180, 195, 0.40) 60%,
+                    rgba(130, 170, 185, 0.45) 100%);
+            /* 模拟海浪笔触 */
+            background-image:
+                radial-gradient(ellipse at 20% 50%, rgba(200, 225, 235, 0.25) 80px, transparent 80px),
+                radial-gradient(ellipse at 60% 30%, rgba(200, 225, 235, 0.20) 120px, transparent 120px),
+                radial-gradient(ellipse at 85% 60%, rgba(200, 225, 235, 0.18) 100px, transparent 100px),
+                linear-gradient(180deg,
+                    rgba(180, 210, 220, 0.30) 0%,
+                    rgba(160, 195, 210, 0.35) 30%,
+                    rgba(140, 180, 195, 0.40) 60%,
+                    rgba(130, 170, 185, 0.45) 100%);
+            background-blend-mode: overlay, overlay, overlay, normal;
+            filter: blur(2px);
+        }
+
+        /* ---------- 栈桥 / 茅草凉亭 抽象装饰 ---------- */
+        .pier-decor {
+            position: absolute;
+            bottom: 28%;
+            right: 8%;
+            width: 120px;
+            height: 80px;
+            pointer-events: none;
+            opacity: 0.20;
+            transform: rotate(-4deg);
+        }
+        .pier-decor::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 30px;
+            width: 6px;
+            height: 50px;
+            background: rgba(180, 170, 160, 0.35);
+            border-radius: 4px;
+            transform: rotate(6deg);
+            box-shadow: 20px -8px 0 rgba(180, 170, 160, 0.25), 40px -14px 0 rgba(180, 170, 160, 0.20);
+        }
+        .pier-decor::after {
+            content: '⛱️';
+            position: absolute;
+            bottom: 40px;
+            left: -10px;
+            font-size: 28px;
+            opacity: 0.25;
+            filter: blur(1px);
+            transform: rotate(6deg);
+        }
+
+        /* 棕榈叶装饰 (极简) */
+        .palm-leaf {
+            position: absolute;
+            bottom: 30%;
+            left: 4%;
+            font-size: 32px;
+            opacity: 0.12;
+            transform: rotate(-12deg);
+            pointer-events: none;
+            filter: blur(1.5px);
+        }
+        .palm-leaf-2 {
+            position: absolute;
+            bottom: 35%;
+            left: 10%;
+            font-size: 24px;
+            opacity: 0.08;
+            transform: rotate(20deg);
+            pointer-events: none;
+            filter: blur(1px);
+        }
+
+        /* ---------- 云朵浮动动画 ---------- */
+        @keyframes cloudFloat {
+            0% {
+                transform: translateX(-8px) scale(1);
+            }
+            100% {
+                transform: translateX(12px) scale(1.02);
+            }
+        }
+
+        /* ---------- 额外油画肌理叠加层 ---------- */
+        .painting-texture-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            /* 使用细密噪点模拟油画布纹理 */
+            background-image:
+                radial-gradient(circle at 30% 20%, rgba(255, 248, 240, 0.06) 1px, transparent 1px),
+                radial-gradient(circle at 70% 80%, rgba(200, 190, 180, 0.06) 1px, transparent 1px),
+                radial-gradient(circle at 10% 70%, rgba(255, 248, 240, 0.04) 1px, transparent 1px),
+                radial-gradient(circle at 90% 30%, rgba(200, 190, 180, 0.04) 1px, transparent 1px);
+            background-size: 8px 8px, 12px 12px, 10px 10px, 14px 14px;
+            opacity: 0.5;
+            mix-blend-mode: soft-light;
+        }
+
+        /* ============================================================
+                   2. 主内容容器 (位于背景之上)
+                   ============================================================ */
+        .app-wrapper {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            max-width: 1200px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 0 20px 10px;
+            /* 让内容在背景上呼吸 */;
+        }
+
+        /* ============================================================
+                   3. 顶部胶囊导航栏 (固定)
+                   ============================================================ */
+        .navbar {
+            position: sticky;
+            top: 16px;
+            z-index: 50;
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            background: rgba(255, 252, 248, 0.45);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border-radius: 60px;
+            box-shadow: 0 8px 40px rgba(140, 170, 190, 0.10), 0 0 0 1px rgba(255, 255, 255, 0.30);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+            transition: box-shadow 0.4s ease, transform 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.40);
+        }
+
+        .navbar:hover {
+            box-shadow: 0 12px 48px rgba(140, 170, 190, 0.14), 0 0 0 1px rgba(255, 255, 255, 0.40);
+            transform: translateY(-1px);
+        }
+
+        /* 胶囊导航按钮 */
+        .nav-link {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 500;
+            color: #4d5f6b;
+            text-decoration: none;
+            padding: 8px 24px;
+            border-radius: 40px;
+            background: transparent;
+            transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            letter-spacing: 0.3px;
+            border: 1px solid transparent;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        /* 导航悬浮：轻微上浮 + 提亮 */
+        .nav-link:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.60);
+            box-shadow: 0 4px 16px rgba(140, 170, 190, 0.08);
+            color: #2d3e4a;
+            border-color: rgba(255, 255, 255, 0.50);
+        }
+
+        /* 激活状态 */
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.70);
+            color: #2d3e4a;
+            border-color: rgba(255, 255, 255, 0.60);
+            box-shadow: 0 2px 12px rgba(140, 170, 190, 0.08);
+            font-weight: 600;
+        }
+
+        /* ============================================================
+                   4. 页面容器
+                   ============================================================ */
+        .page-container {
+            flex: 1;
+            width: 100%;
+            padding: 24px 0 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 每个页面默认隐藏，通过 JS 切换 */
+        .page {
+            display: none;
+            animation: pageFadeIn 0.9s ease forwards;
+            padding: 10px 4px 30px;
+            flex: 1;
+        }
+
+        .page.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* 页面淡入加载动画 */
+        @keyframes pageFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(20px) scale(0.98);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* 页面切换时的淡出效果 (由JS控制) */
+        .page-exit {
+            animation: pageFadeOut 0.3s ease forwards;
+        }
+        @keyframes pageFadeOut {
+            0% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: scale(0.97);
+            }
+        }
+
+        /* ============================================================
+                   5. 首页 (Home)
+                   ============================================================ */
+        .page-home {
+            min-height: 70vh;
+            justify-content: center;
+            text-align: center;
+            padding: 30px 16px 40px;
+        }
+
+        /* 首页主标题 - 柔和圆润 */
+        .home-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 4.8rem;
+            letter-spacing: 4px;
+            color: #3d4a54;
+            line-height: 1.2;
+            margin-bottom: 6px;
+            text-shadow: 0 2px 30px rgba(255, 252, 248, 0.30);
+        }
+
+        .home-title strong {
+            font-weight: 500;
+            color: #2d3e4a;
+        }
+
+        .home-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: #5a6f7c;
+            letter-spacing: 6px;
+            margin-top: 4px;
+            opacity: 0.85;
+        }
+
+        .home-meta {
+            margin-top: 20px;
+            font-size: 1.05rem;
+            font-weight: 400;
+            color: #6a7f8c;
+            letter-spacing: 2px;
+            background: rgba(255, 252, 248, 0.30);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            padding: 12px 28px;
+            border-radius: 60px;
+            display: inline-block;
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 0 2px 20px rgba(140, 170, 190, 0.04);
+        }
+
+        .home-meta span {
+            margin: 0 6px;
+        }
+        .home-meta .sep {
+            color: rgba(140, 170, 190, 0.35);
+            margin: 0 10px;
+        }
+
+        /* 首页底部小装饰 (极简) */
+        .home-decor-line {
+            margin-top: 28px;
+            font-size: 0.9rem;
+            letter-spacing: 12px;
+            color: rgba(140, 170, 190, 0.25);
+            user-select: none;
+        }
+
+        /* ============================================================
+                   6. 个人介绍页 (About Me)
+                   ============================================================ */
+        .page-about {
+            min-height: 70vh;
+            justify-content: center;
+            padding: 20px 8px 40px;
+        }
+
+        /* 磨砂玻璃卡片 - 大尺寸圆角 */
+        .about-card {
+            width: 100%;
+            max-width: 820px;
+            padding: 48px 52px 44px;
+            background: rgba(255, 252, 248, 0.40);
+            backdrop-filter: blur(24px) saturate(180%);
+            -webkit-backdrop-filter: blur(24px) saturate(180%);
+            border-radius: 48px;
+            border: 1px solid rgba(255, 255, 255, 0.45);
+            box-shadow:
+                0 12px 60px rgba(140, 170, 190, 0.08),
+                0 0 0 1px rgba(255, 255, 255, 0.20) inset;
+            transition: box-shadow 0.5s ease, transform 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .about-card:hover {
+            box-shadow:
+                0 20px 80px rgba(140, 170, 190, 0.12),
+                0 0 0 1px rgba(255, 255, 255, 0.30) inset;
+            transform: translateY(-2px);
+        }
+
+        /* 卡片内装饰：极简海边小元素 */
+        .about-card .deco-icon {
+            position: absolute;
+            font-size: 28px;
+            opacity: 0.10;
+            pointer-events: none;
+            user-select: none;
+            filter: blur(1px);
+        }
+        .deco-icon-1 {
+            top: 20px;
+            right: 28px;
+            transform: rotate(12deg);
+        }
+        .deco-icon-2 {
+            bottom: 20px;
+            left: 28px;
+            transform: rotate(-8deg);
+        }
+        .deco-icon-3 {
+            top: 50%;
+            right: 16px;
+            font-size: 20px;
+            opacity: 0.06;
+            transform: translateY(-50%) rotate(20deg);
+        }
+
+        /* 卡片标题 */
+        .about-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 300;
+            font-size: 2.4rem;
+            letter-spacing: 4px;
+            color: #3d4a54;
+            text-align: center;
+            margin-bottom: 24px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.30);
+            position: relative;
+        }
+        .about-title span {
+            font-weight: 500;
+            color: #2d3e4a;
+        }
+
+        /* 正文内容 */
+        .about-body {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 1.02rem;
+            line-height: 2.0;
+            color: #3d4a54;
+            letter-spacing: 0.3px;
+            padding: 6px 2px;
+        }
+
+        .about-body p {
+            margin-bottom: 18px;
+            text-indent: 2em;
+        }
+
+        .about-body p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* 卡片底部装饰 */
+        .about-footer-deco {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 0.8rem;
+            letter-spacing: 6px;
+            color: rgba(140, 170, 190, 0.25);
+            border-top: 1px solid rgba(255, 255, 255, 0.20);
+            padding-top: 18px;
+            user-select: none;
+        }
+
+        /* ============================================================
+                   7. 全局页脚
+                   ============================================================ */
+        .global-footer {
+            width: 100%;
+            max-width: 1200px;
+            padding: 22px 16px 18px;
+            text-align: center;
+            font-size: 0.80rem;
+            font-weight: 400;
+            color: rgba(70, 90, 100, 0.55);
+            letter-spacing: 1.5px;
+            border-top: 1px solid rgba(255, 255, 255, 0.15);
+            margin-top: 10px;
+            background: rgba(255, 252, 248, 0.12);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 40px 40px 0 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .global-footer .footer-sep {
+            margin: 0 6px;
+            opacity: 0.30;
+        }
+
+        .global-footer .footer-heart {
+            color: rgba(180, 200, 210, 0.35);
+            margin: 0 4px;
+        }
+
+        /* ============================================================
+                   8. 响应式适配 (移动端优先)
+                   ============================================================ */
+
+        /* 小屏手机 (≤ 480px) */
+        @media (max-width: 480px) {
+            .app-wrapper {
+                padding: 0 10px 6px;
+            }
+
+            /* 导航 */
+            .navbar {
+                top: 10px;
+                padding: 8px 12px;
+                gap: 6px;
+                border-radius: 40px;
+                max-width: 100%;
+            }
+            .nav-link {
+                font-size: 0.75rem;
+                padding: 6px 14px;
+                white-space: nowrap;
+            }
+
+            /* 首页 */
+            .home-title {
+                font-size: 2.6rem;
+                letter-spacing: 2px;
+            }
+            .home-subtitle {
+                font-size: 1.0rem;
+                letter-spacing: 3px;
+            }
+            .home-meta {
+                font-size: 0.85rem;
+                padding: 8px 16px;
+                letter-spacing: 1px;
+            }
+            .home-meta .sep {
+                margin: 0 4px;
+            }
+            .home-decor-line {
+                font-size: 0.7rem;
+                letter-spacing: 8px;
+            }
+
+            /* 介绍卡片 */
+            .about-card {
+                padding: 28px 18px 24px;
+                border-radius: 32px;
+            }
+            .about-title {
+                font-size: 1.6rem;
+                letter-spacing: 2px;
+                margin-bottom: 16px;
+                padding-bottom: 10px;
+            }
+            .about-body {
+                font-size: 0.88rem;
+                line-height: 1.9;
+                letter-spacing: 0.2px;
+            }
+            .about-body p {
+                margin-bottom: 14px;
+                text-indent: 1.8em;
+            }
+            .about-card .deco-icon {
+                font-size: 18px;
+            }
+            .deco-icon-1 {
+                top: 12px;
+                right: 14px;
+            }
+            .deco-icon-2 {
+                bottom: 12px;
+                left: 14px;
+            }
+            .deco-icon-3 {
+                display: none;
+            }
+            .about-footer-deco {
+                font-size: 0.6rem;
+                letter-spacing: 4px;
+                margin-top: 16px;
+                padding-top: 12px;
+            }
+
+            /* 页脚 */
+            .global-footer {
+                font-size: 0.65rem;
+                padding: 14px 10px 12px;
+                letter-spacing: 0.5px;
+                border-radius: 28px 28px 0 0;
+            }
+            .global-footer .footer-sep {
+                margin: 0 3px;
+            }
+
+            /* 背景云朵适配 */
+            .cloud-1 {
+                width: 160px;
+                height: 70px;
+                top: 4%;
+                left: 2%;
+                filter: blur(8px);
+            }
+            .cloud-1::before {
+                width: 120px;
+                height: 60px;
+                top: -20px;
+                left: 30px;
+            }
+            .cloud-1::after {
+                width: 100px;
+                height: 50px;
+                top: 10px;
+                left: 100px;
+            }
+            .cloud-2 {
+                width: 140px;
+                height: 60px;
+                top: 12%;
+                right: 2%;
+                filter: blur(10px);
+            }
+            .cloud-2::before {
+                width: 100px;
+                height: 50px;
+                top: -10px;
+                left: 20px;
+            }
+            .cloud-2::after {
+                width: 80px;
+                height: 40px;
+                top: 15px;
+                left: 80px;
+            }
+            .cloud-3 {
+                display: none;
+            }
+            .mountains {
+                height: 100px;
+                bottom: 28%;
+                filter: blur(4px);
+            }
+            .sea-surface {
+                height: 28%;
+                filter: blur(1.5px);
+            }
+            .pier-decor {
+                display: none;
+            }
+            .palm-leaf,
+            .palm-leaf-2 {
+                display: none;
+            }
+        }
+
+        /* 平板 / 中屏 (481px ~ 768px) */
+        @media (min-width: 481px) and (max-width: 768px) {
+            .home-title {
+                font-size: 3.6rem;
+            }
+            .home-subtitle {
+                font-size: 1.2rem;
+            }
+            .about-card {
+                padding: 36px 32px 32px;
+            }
+            .about-title {
+                font-size: 2.0rem;
+            }
+            .about-body {
+                font-size: 0.95rem;
+            }
+            .navbar {
+                max-width: 90%;
+                padding: 8px 16px;
+            }
+            .nav-link {
+                font-size: 0.85rem;
+                padding: 6px 18px;
+            }
+            .cloud-1 {
+                width: 220px;
+                height: 90px;
+            }
+            .cloud-2 {
+                width: 200px;
+                height: 80px;
+            }
+            .cloud-3 {
+                width: 150px;
+                height: 60px;
+            }
+            .mountains {
+                height: 130px;
+                bottom: 30%;
+            }
+            .sea-surface {
+                height: 30%;
+            }
+            .pier-decor {
+                transform: scale(0.7);
+                right: 2%;
+                bottom: 26%;
+            }
+            .palm-leaf {
+                font-size: 24px;
+                left: 2%;
+                bottom: 28%;
+            }
+            .palm-leaf-2 {
+                display: none;
+            }
+        }
+
+        /* 大屏桌面微调 */
+        @media (min-width: 1200px) {
+            .home-title {
+                font-size: 5.6rem;
+            }
+            .about-card {
+                padding: 56px 64px 50px;
+            }
+            .about-body {
+                font-size: 1.08rem;
+            }
+        }
+
+        /* ============================================================
+                   9. 工具类 & 辅助
+                   ============================================================ */
+
+        /* 文字缓慢浮现 (用于首页) */
+        .fade-in-text {
+            opacity: 0;
+            animation: textFadeIn 1.4s ease forwards;
+        }
+        .fade-in-text.delay-1 {
+            animation-delay: 0.25s;
+        }
+        .fade-in-text.delay-2 {
+            animation-delay: 0.55s;
+        }
+        .fade-in-text.delay-3 {
+            animation-delay: 0.85s;
+        }
+
+        @keyframes textFadeIn {
+            0% {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* 页面切换时防止内容闪烁 */
+        .page {
+            transition: opacity 0.3s ease;
+        }
+
+        /* ============================================================
+                   10. 滚动条美化 (可选)
+                   ============================================================ */
+        ::-webkit-scrollbar {
+            width: 6px;
+            background: transparent;
+        }
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 252, 248, 0.15);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: rgba(180, 200, 210, 0.30);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(180, 200, 210, 0.45);
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ============================================================
+    背景层：手绘油画海滨 (固定)
+    ============================================================ -->
+    <div class="painting-bg" aria-hidden="true">
+        <!-- 云朵 -->
+        <div class="clouds">
+            <div class="cloud-1"></div>
+            <div class="cloud-2"></div>
+            <div class="cloud-3"></div>
+        </div>
+        <!-- 远山 -->
+        <div class="mountains"></div>
+        <!-- 海面 -->
+        <div class="sea-surface"></div>
+        <!-- 栈桥/凉亭装饰 -->
+        <div class="pier-decor"></div>
+        <!-- 棕榈叶 -->
+        <div class="palm-leaf">🌴</div>
+        <div class="palm-leaf-2">🌿</div>
+    </div>
+
+    <!-- 油画肌理叠加层 (增强笔触感) -->
+    <div class="painting-texture-overlay" aria-hidden="true"></div>
+
+    <!-- ============================================================
+    主内容容器
+    ============================================================ -->
+    <div class="app-wrapper">
+
+        <!-- ============================================================
+        顶部胶囊导航栏 (固定)
+        ============================================================ -->
+        <nav class="navbar" role="navigation" aria-label="主导航">
+            <a href="#" class="nav-link active" data-page="home">Home</a>
+            <a href="#" class="nav-link" data-page="about">About Me</a>
+        </nav>
+
+        <!-- ============================================================
+        页面容器
+        ============================================================ -->
+        <div class="page-container">
+
+            <!-- ===== 首页 (Home) ===== -->
+            <section class="page page-home active" id="page-home" role="main" aria-label="首页">
+                <div class="fade-in-text">
+                    <h1 class="home-title">
+                        李遂遂 <strong>/</strong> Susie
+                    </h1>
+                </div>
+                <div class="fade-in-text delay-1">
+                    <p class="home-subtitle">24 艺科 A2</p>
+                </div>
+                <div class="fade-in-text delay-2">
+                    <div class="home-meta">
+                        <span>📘</span>
+                        <span>互动系统应用</span>
+                        <span class="sep">·</span>
+                        <span>🌊</span>
+                    </div>
+                </div>
+                <div class="fade-in-text delay-3 home-decor-line">
+                    ✦ ✦ ✦
+                </div>
+            </section>
+
+            <!-- ===== 个人介绍页 (About Me) ===== -->
+            <section class="page page-about" id="page-about" role="main" aria-label="个人介绍">
+                <div class="about-card">
+                    <!-- 极简海边装饰 -->
+                    <span class="deco-icon deco-icon-1">⛱️</span>
+                    <span class="deco-icon deco-icon-2">🌊</span>
+                    <span class="deco-icon deco-icon-3">☀️</span>
+
+                    <h2 class="about-title">
+                        <span>About</span> Me
+                    </h2>
+
+                    <div class="about-body">
+                        <p>
+                            大家好，我是小组组员 Susie，在本次网页项目中主要承担调研相关工作。
+                        </p>
+                        <p>
+                            在项目前期，我负责查阅资料、搜集相关素材、整理项目有关参考数据，梳理完整调研框架，汇总各类案例与参考信息，为大作业项目方案搭建提供完整、可靠的支撑。
+                        </p>
+                        <p>
+                            日常做事耐心细致，擅长信息筛选、分类归纳与文档整理，能够把零散的调研资料系统化排版，清晰梳理调研结论，同步分享给小组其他成员，方便大家完成项目工作。
+                        </p>
+                        <p>
+                            团队沟通中积极对接需求，根据需求调整调研方向，及时补充缺失资料，配合组员修改完善项目相关文字内容，保障整体项目资料完整、逻辑通顺。
+                        </p>
+                    </div>
+
+                    <div class="about-footer-deco">
+                        ✦ 海边 · 治愈 ✦
+                    </div>
+                </div>
+            </section>
+
+        </div>
+
+        <!-- ============================================================
+        全局页脚
+        ============================================================ -->
+        <footer class="global-footer">
+            <span>李遂遂（Susie）</span>
+            <span class="footer-sep">|</span>
+            <span>24艺科A2</span>
+            <span class="footer-sep">|</span>
+            <span>《互动系统应用》课程个人展示网站</span>
+            <span class="footer-heart">♥</span>
+        </footer>
+
+    </div>
+    <!-- ===== app-wrapper 结束 ===== -->
+
+
+    <!-- ============================================================
+    JavaScript：页面切换、导航激活、平滑过渡
+    ============================================================ -->
+    <script>
+        (function() {
+            'use strict';
+
+            // ----- 获取所有导航链接和页面 -----
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = {
+                home: document.getElementById('page-home'),
+                about: document.getElementById('page-about')
+            };
+
+            let currentPage = 'home';
+            let isTransitioning = false;
+
+            /**
+             * 切换到指定页面
+             * @param {string} pageId - 'home' 或 'about'
+             */
+            function switchPage(pageId) {
+                if (isTransitioning || currentPage === pageId) return;
+
+                const targetPage = pages[pageId];
+                if (!targetPage) return;
+
+                const currentPageEl = pages[currentPage];
+
+                isTransitioning = true;
+
+                // 1. 当前页面淡出
+                if (currentPageEl) {
+                    currentPageEl.classList.add('page-exit');
+                    currentPageEl.classList.remove('active');
+                }
+
+                // 2. 延迟后显示新页面 (等待淡出动画)
+                setTimeout(function() {
+                    // 隐藏所有页面
+                    Object.keys(pages).forEach(key => {
+                        pages[key].classList.remove('active', 'page-exit');
+                    });
+
+                    // 显示目标页面
+                    targetPage.classList.add('active');
+                    // 重置动画以触发淡入
+                    targetPage.style.animation = 'none';
+                    void targetPage.offsetHeight;
+                    targetPage.style.animation = '';
+
+                    // 更新导航激活状态
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.dataset.page === pageId) {
+                            link.classList.add('active');
+                        }
+                    });
+
+                    currentPage = pageId;
+                    isTransitioning = false;
+
+                    // 滚动到顶部
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+                }, 280);
+            }
+
+            // ----- 为导航链接绑定点击事件 -----
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.dataset.page;
+                    if (pageId) {
+                        switchPage(pageId);
+                    }
+                });
+            });
+
+            // ----- 页面加载完成后确保首页激活 -----
+            window.addEventListener('DOMContentLoaded', function() {
+                const activeLink = document.querySelector('.nav-link.active');
+                if (activeLink) {
+                    const pageId = activeLink.dataset.page;
+                    if (pageId && pages[pageId]) {
+                        Object.keys(pages).forEach(key => {
+                            pages[key].classList.remove('active', 'page-exit');
+                        });
+                        pages[pageId].classList.add('active');
+                        currentPage = pageId;
+                    }
+                } else {
+                    // 默认首页
+                    Object.keys(pages).forEach(key => {
+                        pages[key].classList.remove('active', 'page-exit');
+                    });
+                    pages.home.classList.add('active');
+                    document.querySelector('.nav-link[data-page="home"]')?.classList.add('active');
+                    currentPage = 'home';
+                }
+
+                // 触发首页淡入动画 (重新播放)
+                const homePage = pages.home;
+                if (homePage) {
+                    homePage.style.animation = 'none';
+                    void homePage.offsetHeight;
+                    homePage.style.animation = '';
+                }
+
+                // 对 .fade-in-text 元素重启动画
+                document.querySelectorAll('.fade-in-text').forEach(el => {
+                    el.style.animation = 'none';
+                    void el.offsetHeight;
+                    el.style.animation = '';
+                });
+            });
+
+            // ----- 键盘快捷键: 1=首页, 2=介绍 (方便演示) -----
+            document.addEventListener('keydown', function(e) {
+                if (e.key === '1') {
+                    e.preventDefault();
+                    switchPage('home');
+                } else if (e.key === '2') {
+                    e.preventDefault();
+                    switchPage('about');
+                }
+            });
+
+            // 暴露切换函数到全局 (方便调试)
+            window.switchPage = switchPage;
+
+            console.log('🌊 李遂遂 Susie 个人网站已加载 | 手绘油画夏日海滨治愈风');
+            console.log('📌 按键盘 1=首页, 2=个人介绍');
+
+        })();
+    </script>
+
+</body>
+</html>
