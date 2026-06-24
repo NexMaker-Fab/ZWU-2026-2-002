@@ -505,12 +505,13 @@
                 <li class="nav-item has-dropdown" data-page="homework">
                     <span>周作业</span>
                     <div class="dropdown">
-                        <div class="dropdown-weeks" style="grid-template-columns: repeat(5, 1fr);">
-                            <button class="week-btn" data-week="3D打印">3D 打印</button>
-                            <button class="week-btn" data-week="材料">材料</button>
-                            <button class="week-btn" data-week="计算机辅助设计">计算机辅助设计</button>
-                            <button class="week-btn" data-week="项目管理">项目管理</button>
-                            <button class="week-btn" data-week="Arduino">Arduino</button>
+                        <div class="dropdown-weeks" style="grid-template-columns: repeat(3, 1fr);">
+                            <button class="week-btn" data-week="week1">Week 1 - 项目管理</button>
+                            <button class="week-btn" data-week="week2">Week 2 - Arduino</button>
+                            <button class="week-btn" data-week="week3">Week 3 - CAD 设计</button>
+                            <button class="week-btn" data-week="week4">Week 4 - 3D 打印</button>
+                            <button class="week-btn" data-week="week5">Week 5 - 物联网</button>
+                            <button class="week-btn" data-week="week6">Week 6 - 材料</button>
                         </div>
                     </div>
                 </li>
@@ -688,13 +689,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const modalImage = document.getElementById('modalImage');
     const modalClose = document.getElementById('modalClose');
 
-    let currentCategory = '3D打印';
+    let currentCategory = 'week1';
     const categoryTitles = {
-        '3D打印': '3D 打印',
-        '材料': '材料',
-        '计算机辅助设计': '计算机辅助设计',
-        '项目管理': '项目管理',
-        'Arduino': 'Arduino'
+        'week1': 'Week 1 - 项目管理',
+        'week2': 'Week 2 - Arduino',
+        'week3': 'Week 3 - CAD设计',
+        'week4': 'Week 4 - 3D打印',
+        'week5': 'Week 5 - 物联网',
+        'week6': 'Week 6 - 材料'
     };
 
     // 进度条初始化（65%）
@@ -746,18 +748,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 从 docs/分类名/分类名.html 加载指定分类的内容并注入到首页内容框
+    // 从 docs/文件夹名/文件名.html 加载指定分类的内容并注入到首页内容框
     async function loadCategoryPage(category) {
         const container = document.getElementById('weekContent');
         if (!container) return;
         
         // 根据分类映射到对应的文件路径
         const categoryPaths = {
-            '3D打印': 'docs/3D打印/3D打印.html',
-            '材料': 'docs/材料/材料.html',
-            '计算机辅助设计': 'docs/计算机辅助设计/计算机辅助设计.html',
-            '项目管理': 'docs/项目管理/项目管理.html',
-            'Arduino': 'docs/Arduino/Arduino.html'
+            'week1': 'docs/week1-项目管理/week1-项目管理.html',
+            'week2': 'docs/week2-Arduino/week2-Arduino.html',
+            'week3': 'docs/week3-CAD设计/week3-CAD设计.html',
+            'week4': 'docs/week4-3D打印/week4-3D打印.html',
+            'week5': 'docs/week5-物联网/week5-物联网.html',
+            'week6': 'docs/week6-材料/week6-材料.html'
         };
         
         const url = categoryPaths[category];
@@ -789,11 +792,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const fixed = raw.replace(/^\.\//, '');
                     // 根据分类确定基础路径
                     let basePath = 'docs/';
-                    if (category === '3D打印') basePath = 'docs/3D打印/';
-                    else if (category === '材料') basePath = 'docs/材料/';
-                    else if (category === '计算机辅助设计') basePath = 'docs/计算机辅助设计/';
-                    else if (category === '项目管理') basePath = 'docs/项目管理/';
-                    else if (category === 'Arduino') basePath = 'docs/Arduino/';
+                    if (category === 'week1') basePath = 'docs/week1-项目管理/';
+                    else if (category === 'week2') basePath = 'docs/week2-Arduino/';
+                    else if (category === 'week3') basePath = 'docs/week3-CAD设计/';
+                    else if (category === 'week4') basePath = 'docs/week4-3D打印/';
+                    else if (category === 'week5') basePath = 'docs/week5-物联网/';
+                    else if (category === 'week6') basePath = 'docs/week6-材料/';
                     img.src = `${basePath}${fixed}`;
                 });
                 // 绑定放大图片的点击事件
