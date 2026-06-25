@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>下肢康复训练智能提示器 - 3D 打印</title>
+    <link rel="stylesheet" href="../../style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">V-JESH'team</div>
+            <ul class="nav-menu">
+                <li class="nav-item" data-page="home"><a href="../../index.html">Home</a></li>
+                <li class="nav-item has-dropdown active" data-page="homework">
+                    <span>周作业</span>
+                    <div class="dropdown">
+                        <div class="dropdown-weeks" style="grid-template-columns: repeat(3, 1fr);">
+                            <button class="week-btn" data-week="week1">Week 1 - 项目管理</button>
+                            <button class="week-btn" data-week="week2">Week 2 - Arduino</button>
+                            <button class="week-btn" data-week="week3">Week 3 - CAD 设计</button>
+                            <button class="week-btn active" data-week="week4">Week 4 - 3D 打印</button>
+                            <button class="week-btn" data-week="week5">Week 5 - 物联网</button>
+                            <button class="week-btn" data-week="week6">Week 6 - 材料</button>
+                        </div>
+                    </div>
+                </li>
+                <li class="nav-item" data-page="project"><a href="../../index.html#project">项目</a></li>
+                <li class="nav-item" data-page="team"><a href="../../index.html#team">团队介绍</a></li>
+            </ul>
+        </div>
+    </nav>
+    <main class="main-content">
+        <section class="week-template">
+            <div class="hero-section">
+                <h1 class="hero-title">3D 打印技术实践</h1>
+                <p class="hero-subtitle">3D Printing Technology Practice</p>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title">Bambu Lab 3D 打印操作教程</h2>
+                <p class="section-text">本章节将详细介绍如何使用 Bambu Lab（拓竹）打印机进行 3D 打印。Bambu Lab 以其高速、多色打印和智能化体验著称，主要流程包括模型准备、切片软件设置以及打印机操作。</p>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title">一、准备工作</h2>
+                
+                <div class="details-text" style="margin-bottom: 24px;">
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;"><strong>硬件检查：</strong>确保打印机已通电，耗材（Filament）已正确装入 AMS（自动供料系统）或直接插入后方进料口。</li>
+                        <li style="margin: 8px 0;"><strong>平台清洁：</strong>使用异丙醇或清水清洁打印平台，确保无油污和灰尘，以保证首层粘附力。</li>
+                        <li style="margin: 8px 0;"><strong>网络连接：</strong>确保打印机已连接 Wi-Fi，并在手机或电脑上安装 <em>Bambu Handy</em> App 或 <em>Bambu Studio</em> 软件。</li>
+                    </ul>
+                </div>
+                
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/微信图片_20260529100945_119_1167.jpg" alt="3D打印机硬件检查" style="width: 80%; height: auto;">
+                        <p class="image-caption">3D打印机硬件检查</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title">二、使用 Bambu Studio 进行切片</h2>
+                <p class="section-text">Bambu Studio 是官方推荐的切片软件，基于 PrusaSlicer 开发，针对拓竹打印机进行了优化。</p>
+                
+                <div class="details-text" style="margin-top: 24px;">
+                    <ol style="line-height: 2; margin: 12px 0 12px 24px;">
+                        <li><strong>导入模型：</strong>打开 Bambu Studio，将 .STL 或 .OBJ 格式的 3D 模型拖入工作区。</li>
+                        <li><strong>调整模型：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 4px 0;">使用移动、旋转和缩放工具调整模型位置和大小。</li>
+                                <li style="margin: 4px 0;">若需多色打印，使用"颜色绘画"功能为模型不同部分指定颜色，并对应 AMS 中的耗材槽位。</li>
+                            </ul>
+                        </li>
+                        <li><strong>参数设置：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 4px 0;"><strong>打印机型号：</strong>选择对应的型号（如 X1-Carbon, P1P, A1 等）。</li>
+                                <li style="margin: 4px 0;"><strong>耗材类型：</strong>选择与实物一致的耗材（如 PLA, PETG, ABS），并匹配颜色。</li>
+                                <li style="margin: 4px 0;"><strong>打印质量：</strong>根据需求选择"快速"、"标准"或"高质量"预设。对于初学者，建议使用"标准"模式。</li>
+                                <li style="margin: 4px 0;"><strong>支撑结构：</strong>如果模型有悬空部分，勾选"生成支撑"，推荐选择"树状支撑"以节省材料且易于去除。</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+                
+                <div class="image-gallery" style="margin-top: 24px;">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/屏幕截图 2026-06-25 220503.png" alt="Bambu Studio 软件界面" style="width: 80%; height: auto;">
+                        <p class="image-caption">Bambu Studio 软件界面</p>
+                    </div>
+                </div>
+                
+                <div class="details-text" style="margin-top: 24px;">
+                    <ol start="4" style="line-height: 2; margin: 12px 0 12px 24px;">
+                        <li><strong>切片预览：</strong>点击右侧的"切片"按钮。完成后，切换到"预览"标签页，逐层检查打印路径，确保没有异常。</li>
+                        <li><strong>发送打印：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 4px 0;"><strong>云端打印：</strong>登录 Bambu Cloud 账号，点击"打印板"图标，选择打印机并发送任务。</li>
+                                <li style="margin: 4px 0;"><strong>本地打印：</strong>将 microSD 卡插入电脑，导出 .3mf 或 .gcode 文件到卡中，再将卡插入打印机。</li>
+                            </ul>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title">三、打印机端操作</h2>
+                
+                <div class="details-text" style="margin-bottom: 24px;">
+                    <ol style="line-height: 2; margin: 12px 0 12px 24px;">
+                        <li><strong>接收任务：</strong>如果是云端发送，打印机屏幕会弹出打印请求，点击"确认"开始打印。</li>
+                        <li><strong>自动调平与振动补偿：</strong>X1 系列会自动进行床面调平和振动补偿；P1 和 A1 系列可能会提示进行手动或半自动校准，请按照屏幕指引操作。</li>
+                    </ol>
+                </div>
+                
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/屏幕截图 2026-06-25 220513.png" alt="打印机操作界面" style="width: 80%; height: auto;">
+                        <p class="image-caption">打印机操作界面</p>
+                    </div>
+                </div>
+                
+                <div class="details-text" style="margin-top: 24px;">
+                    <ol start="3" style="line-height: 2; margin: 12px 0 12px 24px;">
+                        <li><strong>监控打印：</strong>
+                            <ul style="list-style: none; padding-left: 20px; margin-top: 8px;">
+                                <li style="margin: 4px 0;">通过打印机屏幕或 Bambu Handy App 实时查看摄像头画面。</li>
+                                <li style="margin: 4px 0;">注意观察首层打印效果，确保线条均匀且牢固粘附在平台上。</li>
+                            </ul>
+                        </li>
+                        <li><strong>处理异常：</strong>如果发生堵头或脱料，打印机会自动暂停并推送通知。根据 App 指引清理喷头或重新装料后继续打印。</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title">四、打印完成与后处理</h2>
+                
+                <div class="details-text" style="margin-bottom: 24px;">
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;"><strong>取件：</strong>打印完成后，等待热床冷却（如有柔性 PEI 板，可取下板材轻轻弯曲即可脱落模型）。</li>
+                        <li style="margin: 8px 0;"><strong>去除支撑：</strong>使用钳子或专用工具小心去除支撑结构。</li>
+                        <li style="margin: 8px 0;"><strong>清理现场：</strong>清理打印平台残留物，为下一次打印做准备。</li>
+                    </ul>
+                </div>
+                
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/微信图片_20260529101026_123_1167.jpg" alt="打印成品展示" style="width: 80%; height: auto;">
+                        <p class="image-caption">打印成品展示</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title">五、实战案例展示</h2>
+                
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/微信图片_20260529101035_125_1167.jpg" alt="3D打印过程记录" style="width: 80%; height: auto;">
+                        <p class="image-caption">3D打印过程记录</p>
+                    </div>
+                </div>
+                
+                <div class="image-gallery" style="margin-top: 24px;">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/微信图片_20260624182839_353_1167.jpg" alt="打印成品细节" style="width: 80%; height: auto;">
+                        <p class="image-caption">打印成品细节</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="content-block">
+                <h2 class="section-title"> 小贴士</h2>
+                
+                <div class="details-text" style="padding: 20px; background: rgba(0, 212, 255, 0.08); border-left: 4px solid #00d4ff; border-radius: 8px;">
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;">首次使用新耗材时，建议在 Bambu Studio 中进行"耗材校准"以获得最佳挤出效果。</li>
+                        <li style="margin: 8px 0;">保持打印环境通风良好，特别是在打印 ABS 或 ASA 等材料时。</li>
+                        <li style="margin: 8px 0;">定期备份 microSD 卡中的数据，并格式化卡片以保持文件系统健康。</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="page-actions">
+                <a class="button button-primary" href="../../index.html">返回首页</a>
+            </div>
+        </section>
+    </main>
+    <div class="modal image-modal" id="imageModal">
+        <div class="image-modal-content">
+            <span class="modal-close" id="modalClose">&times;</span>
+            <img src="" alt="放大预览" id="modalImage">
+        </div>
+    </div>
+
+    <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const modal = document.getElementById('imageModal');
+    const modalImage = document.getElementById('modalImage');
+    const modalClose = document.getElementById('modalClose');
+
+    document.querySelectorAll('.clickable-image').forEach(img => {
+        img.addEventListener('click', () => {
+            modalImage.src = img.src;
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+    });
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    if (modalClose) modalClose.addEventListener('click', closeModal);
+    if (modal) modal.addEventListener('click', (event) => {
+        if (event.target === modal) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) {
+            closeModal();
+        }
+    });
+});
+    </script>
+</body>
+</html>

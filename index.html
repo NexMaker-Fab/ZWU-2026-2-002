@@ -178,43 +178,50 @@
             margin: 16px 0 24px 0;
         }
 
-        /* 首页卡片 */
+        /* 首页卡片 - 垂直布局，浅色方框 */
         .cards-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            display: flex;
+            flex-direction: column;
             gap: 24px;
             margin-top: 32px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .feature-card {
-            background: rgba(15, 21, 53, 0.8);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(0, 212, 255, 0.2);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             border-radius: 20px;
-            padding: 24px;
+            padding: 32px;
             cursor: pointer;
             transition: all 0.3s;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-5px) scale(1.02);
             border-color: #00d4ff;
-            box-shadow: 0 12px 28px rgba(0, 212, 255, 0.15);
+            box-shadow: 0 16px 40px rgba(0, 212, 255, 0.25);
         }
 
         .card-icon {
-            font-size: 2.5rem;
+            font-size: 3rem;
             margin-bottom: 16px;
         }
 
         .feature-card h3 {
-            margin-bottom: 8px;
-            color: #00d4ff;
+            margin-bottom: 12px;
+            color: #0f1535;
+            font-size: 1.5rem;
+            font-weight: 700;
         }
 
         .feature-card p {
-            color: #8a9acc;
-            font-size: 0.9rem;
+            color: #4a5b9e;
+            font-size: 1rem;
+            line-height: 1.6;
         }
 
         /* 进度条 */
@@ -499,7 +506,7 @@
 <body>
     <nav class="navbar">
         <div class="nav-container">
-            <div class="logo">下肢康复训练 <span class="logo-sub">V-JESH</span></div>
+            <div class="logo">V-JESH 康复训练提示器</div>
             <ul class="nav-menu">
                 <li class="nav-item active" data-page="home">Home</li>
                 <li class="nav-item has-dropdown" data-page="homework">
@@ -524,19 +531,6 @@
     <main class="main-content">
         <!-- 首页 -->
         <section id="home" class="page active">
-            <div class="home-header">
-                <h1 class="page-title">V-JESH 康复训练提示器</h1>
-                <div class="title-divider"></div>
-            </div>
-            <div class="progress-section">
-                <div class="progress-card">
-                    <span class="progress-label">项目进度</span>
-                    <div class="progress-bar-container">
-                        <div class="progress-bar"></div>
-                    </div>
-                    <span class="progress-text">已完成 <span id="completedWeeks">65</span>% 开发进度</span>
-                </div>
-            </div>
             <div class="cards-section">
                 <div class="feature-card" data-navigate-to="homework">
                     <div class="card-icon">📝</div>
@@ -827,7 +821,11 @@ document.addEventListener('DOMContentLoaded', () => {
         modal = document.createElement('div');
         modal.className = 'modal image-modal active';
         modal.id = 'imageModal';
-        modal.innerHTML = `\n            <div class="image-modal-content">\n                <span class="modal-close" id="modalClose">&times;</span>\n                <img src="" alt="放大预览" id="modalImage">\n            </div>`;
+        modal.innerHTML = `
+            <div class="image-modal-content">
+                <span class="modal-close" id="modalClose">&times;</span>
+                <img src="" alt="放大预览" id="modalImage">
+            </div>`;
         document.body.appendChild(modal);
         const modalClose = modal.querySelector('#modalClose');
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
@@ -848,17 +846,6 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-
-    // 点击进度卡片跳转到项目页
-    const progressCard = document.querySelector('.progress-card');
-    if (progressCard) {
-        progressCard.addEventListener('click', () => {
-            navItems.forEach(i => i.classList.remove('active'));
-            document.querySelector('[data-page="project"]').classList.add('active');
-            pages.forEach(p => p.classList.remove('active'));
-            document.getElementById('project').classList.add('active');
-        });
-    }
 });
     </script>
 </body>
