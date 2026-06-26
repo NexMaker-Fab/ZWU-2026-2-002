@@ -65,6 +65,54 @@
                         <img class="content-image clickable-image" src="assets/图片19.png" alt="3D 打印外壳实物" style="width: 80%; height: auto;">
                     </div>
                 </div>
+                <div class="details-text" style="margin-top: 24px; margin-bottom: 24px;">
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">二、Arduino IDE 开发环境与硬件连接说明</h3>
+                    <h4 style="color: #8a9acc; margin: 16px 0 12px;">（一）Arduino IDE 学习内容</h4>
+                    <p style="line-height: 1.8; margin: 12px 0;">Arduino IDE 是配套开发板使用的跨平台集成开发环境，支持代码编写、语法校验、程序编译与固件上传等全套功能。使用前需完成软件开发板选型、电脑串口配置，通过 USB 数据线建立开发板与计算机的通信。软件内置串口监视器，可设定对应波特率，实时查看传感器采集数据、程序运行信息，是硬件调试的核心工具。</p>
+                    <p style="line-height: 1.8; margin: 12px 0;">Arduino 程序拥有固定的基础框架，包含两大核心函数：setup() 初始化函数，设备上电后仅执行一次，主要用于定义引脚工作模式、初始化串口、外设参数等；loop() 循环函数，程序会不间断循环执行该函数内代码，实现设备持续运行的功能逻辑。</p>
+                    <p style="line-height: 1.8; margin: 12px 0;">在引脚使用上，数字引脚可通过 pinMode()、digitalRead()、digitalWrite() 实现输入、输出控制；模拟引脚依靠 analogRead() 读取外部模拟电压信号。同时软件支持加载官方内置库与第三方函数库，简化复杂外设的驱动代码编写工作。</p>
+                    <h4 style="color: #8a9acc; margin: 16px 0 12px;">（二）硬件连接规范</h4>
+                    <p style="line-height: 1.8; margin: 12px 0;">硬件接线遵循统一供电、共地连接的基本原则。将所有电子器件的 GND 引脚连接至同一公共地，保证整个电路电压参考基准统一，避免出现信号紊乱、数据漂移等问题；所有传感器、指示灯等外设统一使用 5V 电源供电。</p>
+                    <p style="line-height: 1.8; margin: 12px 0;">电路分为模拟信号线路与数字信号线路：电位器、FSR 薄膜压力传感器等模拟类器件，接入开发板模拟引脚；LED、蜂鸣器、轻触按键等数字类器件，接入数字引脚。LED 工作时必须串联 220Ω 限流电阻，限制工作电流，防止器件因过流烧毁。</p>
+                </div>
+                <div class="details-text" style="margin-bottom: 24px;">
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">三、基础示例程序运行测试</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>示例用例：</strong>模拟量控制 LED 亮度（电位器 + LED）</p>
+                    <h4 style="color: #8a9acc; margin: 16px 0 12px;">一、硬件接线</h4>
+                    <ul style="list-style: none; padding-left: 20px; margin: 12px 0;">
+                        <li style="margin: 8px 0;">电位器 中间脚 → A0</li>
+                        <li style="margin: 8px 0;">电位器 一端 → 5V</li>
+                        <li style="margin: 8px 0;">电位器 另一端 → GND</li>
+                        <li style="margin: 8px 0;">LED 长脚 → D9</li>
+                        <li style="margin: 8px 0;">LED 短脚 → 220Ω 电阻 → GND</li>
+                    </ul>
+                </div>
+                <div class="image-gallery">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/图片20.png" alt="Arduino IDE 开发环境与硬件连接" style="width: 80%; height: auto;">
+                    </div>
+                </div>
+                <div class="details-text" style="margin-top: 24px;">
+                    <h4 style="color: #8a9acc; margin: 16px 0 12px;">完整代码：</h4>
+                    <pre style="background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 14px; line-height: 1.6; margin: 12px 0;"><code>// 电位器控制LED亮度
+void setup() {
+  pinMode(9, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(A0);
+  analogWrite(9, value / 4);
+  Serial.print("电位器值：");
+  Serial.println(value);
+  delay(50);
+}</code></pre>
+                </div>
+                <div class="image-gallery" style="margin-top: 24px;">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/图片21.png" alt="电位器控制LED亮度代码运行" style="width: 80%; height: auto;">
+                    </div>
+                </div>
             </div>
 
             <div class="content-block concept-section">
