@@ -113,6 +113,22 @@ void loop() {
                         <img class="content-image clickable-image" src="assets/图片21.png" alt="电位器控制LED亮度代码运行" style="width: 80%; height: auto;">
                     </div>
                 </div>
+                <div class="details-text" style="margin-top: 24px;">
+                    <h4 style="color: #8a9acc; margin: 16px 0 12px;">完整代码：</h4>
+                    <pre style="background: #1e1e1e; color: #d4d4d4; padding: 16px; border-radius: 8px; overflow-x: auto; font-family: 'Consolas', monospace; font-size: 14px; line-height: 1.6; margin: 12px 0; text-align: left;"><code>// 电位器控制LED亮度
+void setup() {
+  pinMode(9, OUTPUT);
+  Serial.begin(9600);
+}
+
+void loop() {
+  int value = analogRead(A0);
+  analogWrite(9, value / 4);
+  Serial.print("电位器值：");
+  Serial.println(value);
+  delay(50);
+}</code></pre>
+                </div>
             </div>
 
             <div class="content-block concept-section">
