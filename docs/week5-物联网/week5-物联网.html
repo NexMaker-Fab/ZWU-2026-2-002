@@ -58,6 +58,32 @@
                         <p class="image-caption">智能快递柜物联网架构图</p>
                     </div>
                 </div>
+                <div class="image-gallery" style="margin-top: 24px;">
+                    <div class="detail-card">
+                        <img class="content-image clickable-image" src="assets/微信图片_20260626112129_406_1167.jpg" alt="物联网架构分层图" style="width: 80%; height: auto;">
+                    </div>
+                </div>
+                <div class="details-text" style="margin-top: 24px;">
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">1. Cloud 云端应用层（顶层）</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>标题：</strong>Cloud 云端应用层</p>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>内容：</strong>用户身份校验、验证取件码/快递员权限；生成开锁控制指令；超时计费、推送取件通知；存储开锁、存取件日志；运维设备监控、运营数据分析。</p>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">2. Communication Module 通信模块层</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>标题：</strong>Communication Module 通信传输层</p>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>内容：</strong>4G物联网模组双向传输；上行上传传感器状态、开锁回执；下行转发云端开锁指令；离线缓存业务记录，网络恢复同步数据。</p>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">3. Sensors 感知采集层</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>标题：</strong>Sensors 传感器感知层</p>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>内容：</strong>红外检测包裹、门磁识别柜门开关、震动防撬采集；捕捉用户扫码/输码操作；将物理信号转为数字报文上传。</p>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">4. Controller 执行层（独立开锁模块）</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>标题：</strong>Controller 设备执行层</p>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>内容：</strong>接收感知层与通信层指令；核心单元：电磁锁开锁模块；驱动对应格口弹开柜门；动作完成后反馈执行状态给传感器与通信模块；断网支持本地开锁。</p>
+                    
+                    <h3 style="color: #00d4ff; margin: 20px 0 16px;">5. Things World 真实世界与用户（底层）</h3>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>标题：</strong>Things World 真实物理场景</p>
+                    <p style="line-height: 1.8; margin: 12px 0;"><strong>内容：</strong>智能柜体、快递包裹；消费者、快递员、运维人员；存件、取件、扫码、输码等线下操作；输入末端物流业务需求。</p>
+                </div>
             </div>
             
             <div class="content-block">
