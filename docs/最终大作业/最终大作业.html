@@ -6,25 +6,25 @@
     body {
         font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
         line-height: 1.8;
-        color: #333;
+        color: #cbd5e1;
         max-width: 900px;
         margin: 0 auto;
         padding: 20px;
-        background-color: #fdfdfd;
+        background-color: transparent;
     }
 
     /* 目录导航样式 */
     .toc-container {
-        background: #f4f7f6;
-        border: 1px solid #e0e6e4;
+        background: rgba(30, 41, 59, 0.6);
+        border: 1px solid rgba(112, 243, 255, 0.15);
         border-radius: 10px;
         padding: 25px 30px;
         margin-bottom: 40px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
     }
     .toc-container h2 {
         text-align: center;
-        color: #2c3e50;
+        color: #70F3FF;
         margin-top: 0;
         margin-bottom: 20px;
         font-size: 1.5em;
@@ -44,7 +44,7 @@
     }
     .toc-list a {
         text-decoration: none;
-        color: #2980b9;
+        color: #60a5fa;
         font-weight: 500;
         font-size: 1.05em;
         transition: all 0.3s ease;
@@ -64,14 +64,14 @@
         scroll-margin-top: 20px; /* 防止跳转时标题被遮挡 */
     }
     .content-section h2 {
-        color: #2c3e50;
+        color: #70F3FF;
         border-left: 5px solid #3498db;
         padding-left: 15px;
         margin-bottom: 20px;
         font-size: 1.6em;
     }
     .content-section h3 {
-        color: #2980b9;
+        color: #60a5fa;
         margin-top: 25px;
         margin-bottom: 15px;
         font-size: 1.25em;
@@ -90,7 +90,7 @@
         text-align: justify;
     }
     .content-section li strong {
-        color: #2c3e50;
+        color: #70F3FF;
     }
     
     /* 强调文本 */
@@ -116,6 +116,11 @@
 
 <!-- 正文内容部分 -->
 <main>
+    <!-- 整体概览图 -->
+    <div style="margin: 24px 0; text-align: center;">
+        <img src="assets/3.png" alt="最终大作业概览" style="width: 80%; max-width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+    </div>
+
     <!-- 一、项目主题 -->
     <section id="topic" class="content-section">
         <h2>一、项目主题（Topic）</h2>
@@ -144,7 +149,7 @@
             <li><strong>交互创新：光影趣味互动替代机械训练</strong><br>
             摒弃枯燥的重复动作训练，以光影小游戏、视觉反馈互动为载体，让用户在趣味体验中无意识完成手指屈伸、按压、精细操控训练，大幅提升训练主动性与坚持度。</li>
             <li><strong>效果可视化创新</strong><br>
-            通过传感器实时采集手部动作数据，将手指灵活度、动作精准度、反应能力转化为光影效果变化与训练评分，让康复进度可视化、成长可量化。</li>
+            游戏开始（OLED 显示开始提示）→ 用户按照提示按压三个传感器（灯带不同结果反馈、蜂鸣器即时反馈正误、OLED 更新得分）→ 小屋灯带随得分变化呈现动态光效 → 游戏结束（OLED 显示总分与鼓励语）→ 旋转定位器调节难度进入下一轮。通过 “触觉 + 视觉 + 听觉” 多感官联动，将枯燥的康复训练转化为有目标、有反馈、有成就感的互动游戏，让用户在光影与得分中持续获得坚持的动力。</li>
         </ol>
     </section>
 
@@ -159,6 +164,9 @@
             <li><strong>市场渠道</strong><br>
             可面向社区康养中心、老年日间照料中心、特殊康复机构、幼儿园美育课堂、普通家庭用户推广，依托社区公益试点、校园科创展示、线上康养科普渠道落地，推广门槛低、应用场景丰富。</li>
         </ol>
+        <div style="margin: 24px 0; text-align: center;">
+            <img src="assets/2.png" alt="市场分析" style="width: 80%; max-width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
     </section>
 
     <!-- 五、核心技术与潜在技术问题 -->
@@ -167,10 +175,12 @@
         
         <h3>1. 核心技术</h3>
         <ol>
-            <li><strong>手部精细动作感知技术：</strong>利用MPU6050姿态传感器与FSR薄膜压力传感器，高精度捕捉手指弯曲角度、按压力度、动作反应速度，识别手部精细控制能力；</li>
-            <li><strong>嵌入式智能交互技术：</strong>基于ESP32主控实现数据实时采集、运算与逻辑判断，结合程序算法实现光影效果联动、游戏互动计分、训练效果评级；</li>
-            <li><strong>艺术光影反馈疗愈技术：</strong>将手部动作数据转化为灯光光影变化、交互特效，以柔和视觉反馈营造治愈氛围，实现情绪舒缓与艺术沉浸体验；</li>
-            <li><strong>量化康复测评技术：</strong>通过多次训练数据统计，分析用户手部灵活度恢复趋势，完成康复效果的科学化评估。</li>
+            <li><strong>总传感器按压模块：</strong>控制游戏的开始与停止。</li>
+            <li><strong>三传感器按压模块：</strong>三传感器按压模块分别对应三种不同颜色（紫绿蓝），用户需按灯带提示颜色分别按动三个传感器，每个传感器感应不同力度阈值，训练手指力量控制与精细动作协调能力。</li>
+            <li><strong>OLED 屏幕反馈：</strong>实时显示当前得分、游戏开始/结束提示及操作引导，让用户清晰了解每一次互动的结果与整体进度。</li>
+            <li><strong>旋转定位器调节：</strong>支持三级游戏难度调节（简易/中等/进阶），不同难度对应不同的力度要求和按压节奏，适配不同康复阶段的用户需求。</li>
+            <li><strong>蜂鸣器提示：</strong>按压正确时播放柔和短促的"正确"音效，错误时发出温和提示音，与灯带颜色形成视听双重反馈。</li>
+            <li><strong>3D 打印互动小屋反馈：</strong>小屋采用 3D 打印，内部装有 WS2812B 全彩灯带。互动正确时呈现五颜六色流动光效，错误时转为红色警示光效，通过即时灯光反馈带来情绪安抚与视觉享受。</li>
         </ol>
 
         <h3>2. 潜在技术问题</h3>
@@ -186,9 +196,20 @@
         <h2>六、材料与制作工艺（Material and how to make it）</h2>
         
         <h3>1. 核心硬件与结构材料选型</h3>
-        <p>本装置核心控制硬件采用ESP32开发板，负责全域数据运算、光影交互联动与训练逻辑控制；手部感知硬件搭载MPU6050姿态传感器、FSR薄膜压力传感器，精准捕捉手指微小屈伸角度与精细按压力度，适配手部精细化康复检测需求；疗愈交互硬件搭配LED柔光光影灯组、低噪声光提示模块，打造柔和治愈的艺术交互氛围；供电系统采用3.7V锂电池搭配TP4056稳压充电模块，实现安全便携续航，适配居家日常使用场景。</p>
+        <p>本装置核心控制硬件采用Arduino UNO：整套设备的控制核心，统筹所有器件信号。
+WS2812B 灯带：装在 3D 打印小屋内，用不同灯光反馈按压正误。
+旋转电位器：旋钮调节简易、中等、进阶三档训练难度。
+蜂鸣器：发出提示音，实现听觉反馈。
+1.54 寸 OLED 屏：实时显示得分、操作提示与训练结果。
+杜邦线：连接所有电子元件，传输电路信号。
+薄膜压力传感器：采集手指按压力度，作为游戏操作输入。
+3D 打印机：打印互动小屋外壳，容纳灯带完成视觉交互。</p>
         
         <p>装置主体穿戴支架、传感器固定卡扣、光影承载外壳均采用PLA 1.75mm哑光白3D打印材质一体制作，辅助搭配5cm加宽亲肤魔术贴、高密度EVA海绵内衬，辅以螺丝、热缩管、扎带等基础辅料完成整机组装。PLA哑光白打印材质为本项目核心结构材料，适配装置艺术疗愈的核心定位与老人、儿童双人群使用需求，选型优势突出：一是材质哑光纯白、外观简洁高级，无工业塑料廉价感，完美契合艺术疗愈设备的美学设计调性，适配美育、康养场景展示使用；二是PLA材料低温成型、无毒无味、安全亲肤，韧性适中不易脆裂，儿童、老年用户长期佩戴接触无安全隐患；三是3D打印可个性化定制曲面结构，能贴合人手弧度精准建模，适配不同年龄段手部尺寸，保障传感器贴合度与数据采集精度；四是材料成本低廉、打印成功率高，易于学生建模制作、打磨修改，适配课程作业样机开发与迭代优化。</p>
+
+        <div style="margin: 24px 0; text-align: center;">
+            <img src="assets/1.png" alt="材料说明" style="width: 80%; max-width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
 
         <h3>2. 制作流程（聚焦3D打印结构制作）</h3>
         <p><strong>第一步：</strong>结合人体手部工学尺寸，适配老人康复、儿童训练双使用场景，通过Fusion 360完成个性化穿戴支架、传感器固定卡扣、光影外壳的三维建模，优化曲面贴合结构与光影通透结构；</p>
@@ -196,6 +217,17 @@
         <p><strong>第三步：</strong>完成ESP32主控、各类传感器、光影灯组的电路焊接、线路规整与模块组装，搭配EVA海绵、加宽魔术贴优化穿戴贴合度；</p>
         <p><strong>第四步：</strong>基于Arduino IDE编写手部数据采集、光影艺术交互、趣味康复游戏、训练评分测评程序，完成程序烧录与基础调试；</p>
         <p><strong>第五步：</strong>整机联调校准传感精度、光影反馈灵敏度与游戏交互逻辑，优化结构适配性，最终实现艺术疗愈、手部精细康复训练、量化测评一体化功能，完成样机制作。</p>
+
+        <h3>3. 制作过程视频</h3>
+        <div style="margin: 24px 0; text-align: center;">
+            <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116851296240518&bvid=BV1PFTn6JEu3&cid=39599408900&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 80%; max-width: 800px; height: 500px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
+        </div>
+        <div style="margin: 24px 0; text-align: center;">
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116851396971429&bvid=BV1soTJ6HEtr&cid=39599868353&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 80%; max-width: 800px; height: 500px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
+        </div>
+        <div style="margin: 24px 0; text-align: center;">
+<iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116852202145791&bvid=BV11fTH6oEJh&cid=39602358207&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 80%; max-width: 800px; height: 500px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
+        </div>
     </section>
 
     <!-- 七、SDG可持续发展解决方向 -->

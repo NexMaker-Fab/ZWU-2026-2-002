@@ -817,7 +817,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // 如果已经加载过，则不再重复加载
         if (container.dataset.loaded === 'true') return;
         
-        const url = 'docs/最终大作业/assets/最终大作业.html';
+        const url = 'docs/最终大作业/最终大作业.html';
         container.innerHTML = '<p>正在加载最终大作业内容…</p>';
         
         try {
@@ -827,16 +827,36 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
             const text = await res.text();
+            
+            // 提取 style 标签内容
+            const styleMatch = text.match(/<style[\s\S]*?<\/style>/i);
             // 提取 main 标签内的内容
             const mainMatch = text.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+            
             if (mainMatch) {
-                container.innerHTML = mainMatch[1];
+                // 如果有样式，先插入样式再插入内容
+                if (styleMatch) {
+                    container.innerHTML = styleMatch[0] + mainMatch[1];
+                } else {
+                    container.innerHTML = mainMatch[1];
+                }
+                // 修正图片路径：将相对路径转换为绝对路径
+                container.querySelectorAll('img').forEach(img => {
+                    const src = img.getAttribute('src') || '';
+                    // 跳过已经是绝对路径或包含 docs/ 的
+                    if (/^(https?:|data:|\/)/i.test(src)) return;
+                    if (/^docs\//i.test(src)) return; 
+                    // 如果已经包含 assets/ 前缀
+                    if (/^assets\//i.test(src)) {
+                        img.src = 'docs/最终大作业/' + src;
+                    } else {
+                        img.src = 'docs/最终大作业/assets/' + src.replace(/^\.\//, '');
+                    }
+                });
                 container.dataset.loaded = 'true';
             } else {
                 // 如果没有 main 标签，直接插入全部内容
-                // 去除 style 和 nav 标签，只保留正文内容
-                const cleanContent = text.replace(/<style[\s\S]*?<\/style>/gi, '')
-                                        .replace(/<nav[\s\S]*?<\/nav>/gi, '');
+                const cleanContent = text.replace(/<nav[\s\S]*?<\/nav>/gi, '');
                 container.innerHTML = cleanContent;
                 container.dataset.loaded = 'true';
             }
