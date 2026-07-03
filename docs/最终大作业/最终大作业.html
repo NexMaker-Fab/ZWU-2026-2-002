@@ -168,7 +168,25 @@
             可面向社区康养中心、老年日间照料中心、特殊康复机构、幼儿园美育课堂、普通家庭用户推广，依托社区公益试点、校园科创展示、线上康养科普渠道落地，推广门槛低、应用场景丰富。</li>
         </ol>
         <div style="margin: 24px 0; text-align: center;">
-            <img src="assets/2.png" alt="市场分析" style="width: 80%; max-width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+            <img src="assets/2.png" alt="市场分析" style="width: 90%; max-width: 1000px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 24px 0;">
+            <div style="text-align: center;">
+                <img src="assets/5.jpg" alt="医用手部康复机器人" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <p style="font-size: 0.85em; color: #a0b0d0; margin-top: 8px;">医用手部康复机器人</p>
+            </div>
+            <div style="text-align: center;">
+                <img src="assets/6.png" alt="传统机械握力器" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <p style="font-size: 0.85em; color: #a0b0d0; margin-top: 8px;">传统机械握力器</p>
+            </div>
+            <div style="text-align: center;">
+                <img src="assets/7.png" alt="儿童手部益智玩具" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <p style="font-size: 0.85em; color: #a0b0d0; margin-top: 8px;">儿童手部益智玩具</p>
+            </div>
+            <div style="text-align: center;">
+                <img src="assets/8.jpg" alt="艺术疗愈智能康复装置" style="width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                <p style="font-size: 0.85em; color: #a0b0d0; margin-top: 8px;">艺术疗愈智能康复装置</p>
+            </div>
         </div>
     </section>
 
@@ -180,7 +198,7 @@
         <ol>
             <li><strong>总传感器按压模块：</strong>控制游戏的开始与停止。</li>
             <li><strong>三传感器按压模块：</strong>三传感器按压模块分别对应三种不同颜色（白绿蓝），用户需按灯带提示颜色分别按动三个传感器，每个传感器感应不同力度阈值，训练手指力量控制与精细动作协调能力。</li>
-            <li><strong>OLED 屏幕反馈：</strong>实时显示当前得分、游戏开始/结束提示及操作引导，让用户清晰了解每一次互动的结果与整体进度。</li>
+            <li><strong>OLED 屏幕反馈：</strong>实时显示当前正确和错误、游戏开始/结束提示及操作引导，让用户清晰了解每一次互动的结果与整体进度。</li>
             <li><strong>旋转定位器调节：</strong>支持三级游戏难度调节（简易/中等/进阶），不同难度对应不同的力度要求和按压节奏，适配不同康复阶段的用户需求。</li>
             <li><strong>蜂鸣器提示：</strong>按压正确时播放柔和短促的"滴"音效，错误时发出温和提示音，与灯带颜色形成视听双重反馈。</li>
             <li><strong>3D 打印互动小屋反馈：</strong>小屋采用 3D 打印，内部装有 WS2812B 全彩灯带。互动正确时呈现五颜六色流动光效，错误时转为红色警示光效，通过即时灯光反馈带来情绪安抚与视觉享受。</li>
@@ -199,14 +217,16 @@
         <h2>六、材料与制作工艺（Material and how to make it）</h2>
         
         <h3>1. 核心硬件与结构材料选型</h3>
-        <p>本装置核心控制硬件采用Arduino UNO：整套设备的控制核心，统筹所有器件信号。
-WS2812B 灯带：装在 3D 打印小屋内，用不同灯光反馈按压正误。
-旋转电位器：旋钮调节简易、中等、进阶三档训练难度。
-蜂鸣器：发出提示音，实现听觉反馈。
-1.54 寸 OLED 屏：实时显示得分、操作提示与训练结果。
-杜邦线：连接所有电子元件，传输电路信号。
-薄膜压力传感器：采集手指按压力度，作为游戏操作输入。
-3D 打印机：打印互动小屋外壳，容纳灯带完成视觉交互。</p>
+        <ul style="list-style: none; padding-left: 0;">
+            <li style="margin: 8px 0;"><strong>Arduino UNO：</strong>整套设备的控制核心，统筹所有器件信号。</li>
+            <li style="margin: 8px 0;"><strong>WS2812B 灯带：</strong>装在 3D 打印小屋内，用不同灯光反馈按压正误。</li>
+            <li style="margin: 8px 0;"><strong>旋转电位器：</strong>旋钮调节简易、中等、进阶三档训练难度。</li>
+            <li style="margin: 8px 0;"><strong>蜂鸣器：</strong>发出提示音，实现听觉反馈。</li>
+            <li style="margin: 8px 0;"><strong>1.54 寸 OLED 屏：</strong>实时显示正确和错误、操作提示与训练结果。</li>
+            <li style="margin: 8px 0;"><strong>杜邦线：</strong>连接所有电子元件，传输电路信号。</li>
+            <li style="margin: 8px 0;"><strong>薄膜压力传感器：</strong>采集手指按压力度，作为游戏操作输入。</li>
+            <li style="margin: 8px 0;"><strong>3D 打印机：</strong>打印互动小屋外壳，容纳灯带完成视觉交互。</li>
+        </ul>
         
         <p>装置主体是一座 3D 打印成型的双层卡通咖啡馆小屋，整体造型童趣柔和，摒弃了传统康复器械冰冷刻板的外观。小屋内部中空，内置 WS2812B 全彩灯带，是整套设备的视觉反馈核心；小屋外部搭配配套按压传感配件，兼具桌面摆件的装饰性与康复训练交互功能，柔和治愈的外观能降低老人、儿童对训练设备的抵触感。。</p>
 
@@ -225,12 +245,15 @@ WS2812B 灯带：装在 3D 打印小屋内，用不同灯光反馈按压正误�
         <p><strong>第五步：</strong>整机联调校准传感精度、光影反馈灵敏度与游戏交互逻辑，优化结构适配性，最终实现艺术疗愈、手部精细康复训练、量化测评一体化功能，完成样机制作。</p>
 
         <h3>3. 制作过程视频</h3>
+        <h3>互动过程展示</h3>
         <div style="margin: 24px 0; text-align: center;">
             <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116851296240518&bvid=BV1PFTn6JEu3&cid=39599408900&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 80%; max-width: 800px; height: 500px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
         </div>
+        <h3>组装过程展示</h3>
         <div style="margin: 24px 0; text-align: center;">
 <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116851396971429&bvid=BV1soTJ6HEtr&cid=39599868353&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 80%; max-width: 800px; height: 500px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
         </div>
+        <h3>最终成品过程展示</h3>
         <div style="margin: 24px 0; text-align: center;">
 <iframe src="//player.bilibili.com/player.html?isOutside=true&aid=116852202145791&bvid=BV11fTH6oEJh&cid=39602358207&p=1" scrolling="no" border="0" frameborder="no" framespacing="0" allowfullscreen="true" style="width: 80%; max-width: 800px; height: 500px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);"></iframe>
         </div>
@@ -239,6 +262,9 @@ WS2812B 灯带：装在 3D 打印小屋内，用不同灯光反馈按压正误�
     <!-- 七、SDG可持续发展解决方向 -->
     <section id="sdg" class="content-section">
         <h2>七、SDG可持续发展解决方向（Solve some problem in SDG）</h2>
+        <div style="margin: 24px 0; text-align: center;">
+            <img src="assets/OIP-C.webp" alt="SDG可持续发展" style="width: 80%; max-width: 800px; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+        </div>
         <p>本项目主要对应联合国可持续发展目标 <span class="highlight">SDG 3：良好健康与福祉</span> 与 <span class="highlight">SDG 4：优质教育</span>。</p>
         <ol>
             <li><strong>助力普惠康养：</strong>以低成本艺术疗愈康复装置，为中老年功能障碍人群提供居家康复途径，缓解医疗资源压力，提升康复人群身心健康与生活品质。</li>
